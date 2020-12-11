@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+    New book: step 1 
+{% endblock %}
+{% block content %}
+    <h1>Enter the title: </h1>
+<form action="" method="POST" accept-charset="utf-8">
+    {{ form.hidden_tag() }}
+    <p>
+    {{ form.title.label }}
+    {{ form.title(size=32) }}
+    {% for error in form.title.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+    <h1>Enter the author: </h1>
+<form action="" method="POST" accept-charset="utf-8">
+    {{ person_form.hidden_tag() }}
+    <p>
+    {{ person_form.name.label }}
+    {{ person_form.name(size=32) }}
+    {% for error in person_form.name.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    </p>
+    <p>{{ person_form.submit() }}</p>
+</form>
+<script charset="utf-8">
+document.addEventListener("DOMContentLoaded", function(){
+    let authorInput = document.querySelector('#name')
+    authorInput.addEventListener("beforeinput", e => {
+        if (authorInput.value.length > 2){
+        console.log(authorInput.value)
+            }
+    })
+})
+</script>
+{% endblock %}

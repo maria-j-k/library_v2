@@ -1,0 +1,7 @@
+FLASK_APP=setup.py
+FLASK_DEBUG=1
+ELASTICSEARCH_URL="http://localhost:9200"
+DATABASE_URL="127.0.0.1:5432"
+DATABASE_USER="admin"
+DATABASE_PW="verysimple"
+DATABASE_DB="flask_library"

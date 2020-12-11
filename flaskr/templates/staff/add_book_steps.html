@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+    New book: step 2 
+{% endblock %}
+{% block content %}
+    <h1>Enter the authors: </h1>
+<form action="" method="POST" accept-charset="utf-8">
+    {{ form.hidden_tag() }}
+    <p>
+    {{ form.person.label }}
+    {{ form.person(size=32) }}
+    {% for error in form.person.errors %}
+        <span style="color: red">{{ error }}</span>   
+    </p>
+    {{ form.submit() }}
+  {% endfor %}
+</form>
+{% endblock %}
