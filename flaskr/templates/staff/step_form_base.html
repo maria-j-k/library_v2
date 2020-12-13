@@ -7,6 +7,13 @@
 {% endblock %}
 
     {% block scripts %}
+	<style>
+		#autocomplete.ui-autocomplete-loading {
+			background-image: url(loading.gif);
+			background-position: right center;
+			background-repeat: no-repeat;
+        }
+	</style>
         {{ super() }}
     <link rel="stylesheet" href="{{ url_for('static', filename='step_form.css')  }}" type="text/css" media="screen" title="no title" charset="utf-8">
 <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
@@ -15,28 +22,13 @@
      <script type="text/javascript" src="{{ url_for('static', filename='autocomplete.js') }}"></script>
  {% endblock %}
 {% block body %}
-    <h1>Enter the title: </h1>
-<form action="" method="POST" accept-charset="utf-8">
-    {{ form.hidden_tag() }}
-    <p>
-    {{ form.title.label }}
-    {{ form.title(size=32) }}
-    {% for error in form.title.errors %}
-        <span style="color: red">{{ error }}</span>   
-    {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
-<h1>Enter the author: </h1>
-<form action="" method="POST" accept-charset="utf-8">
-    {{ person_form.hidden_tag() }}
-    <p>
-    {{ person_form.name.label }}
-    {{ person_form.name(size=32, class_="creator") }}
-    {% for error in person_form.name.errors %}
-        <span style="color: red">{{ error }}</span>   
-    {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
+<div id="step-1" class="step active">
+{% include "staff/step_one.html" %}
+</div>
+<div id="step-2" class="step invisible">
+{% include "staff/step_two.html" %}
+</div>
+<div id="step-3" class="step invisible">
+{% include "staff/step_three.html" %}
+</div>
 {% endblock %}

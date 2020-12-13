@@ -8,7 +8,6 @@
 
 
 	<style>
-		/* autocomplete adds the ui-autocomplete-loading class to the textbox when it is _busy_ */
 		#autocomplete.ui-autocomplete-loading {
 			background-image: url(loading.gif);
 			background-position: right center;
@@ -24,38 +23,15 @@
     
     {% block scripts %}
         {{ super() }}
-    <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
 <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='autocomplete.js') }}"></script>
 
-<script type="text/javascript">
-$(function() {
-    $("#autocomplete").autocomplete({
-        source:function(request, response) {
-            $.getJSON("{{url_for('main.autocomplete_person')}}",{
-                q: request.term, 
-            }, function(data) {
-                response(data.matching_persons); 
-                console.log(data.matching_persons)
-            });
-        },
-
-        minLength: 3,
-        select: function(event, ui) {
-            console.log(ui.item.value); 
-            console.log(ui.item.label)
-            event.preventDefault();
-					// manually update the textbox and hidden field
-					$(this).val(ui.item.label);
-					$("#autocomplete-value").val(ui.item.value);
-        }
-    });
-})
-
-</script>
     {% endblock %}
-	<form action="" method="get">
-		<input id="autocomplete" type="text" placeholder="Name" name="q">
-		<input id="autocomplete-value" type="hidden" placeholder="Name" name="q-value">
+	<form action="" method="post">
+		<input id="title" type="text" placeholder="Name" name="q" value="">
+        <input id="title-value" type="hidden" placeholder="Name" name="q-value">
+        <input type="submit" value="submit" name="" id=""/>
     </form>
 {% endblock %}

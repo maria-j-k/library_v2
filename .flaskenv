@@ -5,3 +5,5 @@ DATABASE_URL="127.0.0.1:5432"
 DATABASE_USER="admin"
 DATABASE_PW="verysimple"
 DATABASE_DB="flask_library"
+
+G_API_KEY=AIzaSyAW53jC8Ung-iGUoKxqHUzgZjddtBsE6og
