@@ -5,6 +5,7 @@
 *local_config.py
 .flaskenv
 scripts/
+old_scripts/
 old_migrations/
 ### Flask ###
 instance/*
