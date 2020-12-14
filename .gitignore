@@ -3,6 +3,9 @@
 
 *notes*
 *local_config.py
+.flaskenv
+scripts/
+old_migrations/
 ### Flask ###
 instance/*
 !instance/.gitignore
