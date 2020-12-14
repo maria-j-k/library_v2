@@ -37,6 +37,11 @@ def autocomplete_person():
     return jsonify(matching_persons=persons)
 
 
+@bp.route('/autocomplete_publisher') # do API
+def autoomplete_publisher():
+    q = request.args.get('q')
+    publishers = Publisher.search(q)
+    return jsonify(matching_publishers=publishers)
 
 
 

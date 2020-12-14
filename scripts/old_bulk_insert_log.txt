@@ -1,0 +1,111 @@
+
+Saturday, 28/11/2020, 14:41:04
+Saturday, 28/11/2020, 14:41:04
+Rows in total: 8045
+Publishers created: 1219
+Books created: 7521
+Persons created: 5271
+Roles created: 10969
+Collections created: 20
+Locations created: 47
+Copies created: 8045
+Collections got from database: 7975
+Locations got from database: 6558
+Publishers got from database: 6826
+Series created: 237
+Persons got from database: 6408
+Books got from database: 524
+Roles got from database: 710
+Series got from database: 1363
+
+Saturday, 28/11/2020, 22:09:01
+Rows in total: 91
+Publishers got from database: 91
+Books got from database: 91
+Persons got from database: 149
+Roles got from database: 149
+Collections got from database: 86
+Locations got from database: 68
+Copies created: 91
+Collections created: 4
+Series got from database: 2
+End of transcript
+*3Saturday, 28/11/2020, 22:28:23
+Rows in total: 91
+Publishers got from database: 91
+Books got from database: 91
+Persons got from database: 149
+Roles got from database: 149
+Collections got from database: 90
+Locations got from database: 68
+Copies created: 91
+Series got from database: 2
+End of transcript
+*3Sunday, 29/11/2020, 11:06:31
+Rows in total: 91
+Publishers got from database: 91
+Books got from database: 91
+Persons got from database: 149
+Roles got from database: 149
+Collections got from database: 90
+Locations got from database: 68
+Copies created: 91
+Series got from database: 2
+End of transcript
+*3Sunday, 29/11/2020, 11:08:19
+Rows in total: 91
+Publishers got from database: 91
+Books got from database: 91
+Persons got from database: 149
+Roles got from database: 149
+Collections got from database: 90
+Locations got from database: 68
+Copies created: 91
+Series got from database: 2
+End of transcript
+*3Sunday, 29/11/2020, 11:21:16
+Rows in total: 91
+Publishers created: 56
+Books created: 89
+Persons created: 101
+Roles created: 144
+Collections created: 5
+Locations created: 7
+Copies created: 91
+Collections got from database: 85
+Locations got from database: 61
+Publishers got from database: 35
+Series created: 2
+Persons got from database: 48
+Books got from database: 2
+Roles got from database: 5
+End of transcript
+*3Sunday, 29/11/2020, 11:37:03
+Rows in total: 91
+Publishers created: 56
+Books created: 89
+Persons created: 101
+Roles created: 144
+Collections created: 5
+Locations created: 7
+Copies created: 91
+Collections got from database: 85
+Locations got from database: 61
+Publishers got from database: 35
+Series created: 2
+Persons got from database: 48
+Books got from database: 2
+Roles got from database: 5
+End of transcript
+*3Sunday, 29/11/2020, 12:25:55
+Rows in total: 91
+Publishers got from database: 91
+Books got from database: 91
+Persons got from database: 149
+Roles got from database: 149
+Collections got from database: 180
+Locations got from database: 68
+Copies created: 91
+Series got from database: 2
+End of transcript
+*3

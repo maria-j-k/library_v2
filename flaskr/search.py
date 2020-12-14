@@ -1,15 +1,7 @@
 from flask import current_app
 
-
-
-def create_index():
-    """można przekazywać model 
-            indeks wyciągać z model.__tablename__
-            zrobić klucz properties i dic comp dla każego pola z searchable
-            """
-    if not current_app.elasticsearch:
-        return
-    index = 'person'
+def create_body(searchable_fields):
+    sayt = {"type": "search_as_you_type"}
     body = {
         "settings": {
                 "number_of_shards": 1,
@@ -18,11 +10,38 @@ def create_index():
         "mappings":{
             "properties": {
                 "id": {"type": "integer"},
-                "name": {"type": "search_as_you_type"}
             }
         }
-}
+    }
+    for item in searchable_fields:
+        body['mappings']['properties'][item] = sayt
+    return body
+
+
+def create_index(model):
+    """można przekazywać model 
+            indeks wyciągać z model.__tablename__
+            zrobić klucz properties i dict dla każego pola z searchable
+            """
+    if not current_app.elasticsearch:
+        return
+    index = model.__tablename__
+    searchable = model.__searchable__
+    body = create_body(searchable)
+#    body = {
+#        "settings": {
+#                "number_of_shards": 1,
+#                "number_of_replicas": 1
+#            },
+#        "mappings":{
+#            "properties": {
+#                "id": {"type": "integer"},
+#                "name": {"type": "search_as_you_type"}
+#            }
+#        }
+#}
     current_app.elasticsearch.indices.create(index=index, body=body)
+
 
 
 def add_to_index(obj):
