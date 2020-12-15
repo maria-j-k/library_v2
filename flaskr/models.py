@@ -43,16 +43,33 @@ db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 
+#TODO
+#on delete - cascade czy protect
+#skrypty
+
+
+class FormChoices(enum.Enum):
+    PO = 'Poetry'
+    PR = 'Prose'
+    DR = 'Drama'
+
+
+class BookRoles(enum.Enum):
+    A = 'Author'
+    T = 'Translation'
+    R = 'Redaction'
+    I = 'Introduction'
+
 
 
 
 class Person(SearchableMixin, db.Model):
     __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), index=True)
+    name = db.Column(db.String(128))
     born = db.Column(db.String(64), nullable=True)
-    books = db.relationship('Creators', backref='person', lazy=True)
-
+    creator = db.relationship('Creator', backref='person', lazy=True)
+    
     def __str__(self):
         if self.born:
             return f'{self.name}, ur. {self.born}'
@@ -65,6 +82,7 @@ class Publisher(db.Model):
     name = db.Column(db.String(128), index=True)
     city = db.Column(db.String(64))
     series = db.relationship('Serie', backref='publisher', lazy='dynamic')
+    books = db.relationship('Book', backref='publisher', lazy='dynamic') 
     
     def __str__(self):
         return f'{self.name}, {self.city}'
@@ -99,12 +117,6 @@ class Location(db.Model):
         return self.room
 
 
-class FormChoices(enum.Enum):
-    PO = 'Poetry'
-    PR = 'Prose'
-    DR = 'Drama'
-
-
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ISBN_REGEX=r'^(97(8|9))?\d{9}(\d|X)$'
@@ -116,31 +128,24 @@ class Book(db.Model):
     periodic_num = db.Column(db.String(64), nullable=True)
     fiction = db.Column(db.Boolean(), nullable=True)
     genre = db.Column(db.String(64), nullable=True)
-    literary_form = db.Column(db.Enum(FormChoices))
+    literary_form = db.Column(db.Enum(FormChoices), nullable=True)
     subject = db.Column(db.String(64), nullable=True)
     precision = db.Column(db.Text, nullable=True)
     nukat = db.Column(db.Text, nullable=True)
     publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'), nullable=True) #potem zmienić na False
-    creators = db.relationship('Creators', backref='book')
+    creator = db.relationship('Creator', backref='book', lazy=True)
+    copies = db.relationship('Copy', backref='book', lazy='dynamic') 
 
     def __str__(self):
         return self.title
 
 
-class BookRoles(enum.Enum):
-    A = 'Author'
-    T = 'Translation'
-    R = 'Redaction'
-    I = 'Introduction'
-
-
-class Creators(db.Model):
+class Creator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), primary_key=True)
-    person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True)
     role = db.Column(db.Enum(BookRoles))
-#    book = db.relationship('Book', backref='books')
-#    creator =  db.relationship('Person', backref='creators')
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+
 
 class Copy(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -150,6 +155,6 @@ class Copy(db.Model):
     signature_mark = db.Column(db.String(32), nullable=True)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=True)
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
 
-    
-    
+

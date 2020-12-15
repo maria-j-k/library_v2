@@ -18,40 +18,23 @@ def create_body(searchable_fields):
     return body
 
 
-def create_index(model):
-    """można przekazywać model 
-            indeks wyciągać z model.__tablename__
-            zrobić klucz properties i dict dla każego pola z searchable
-            """
+def create_index(index, model):
     if not current_app.elasticsearch:
         return
-    index = model.__tablename__
-    searchable = model.__searchable__
-    body = create_body(searchable)
-#    body = {
-#        "settings": {
-#                "number_of_shards": 1,
-#                "number_of_replicas": 1
-#            },
-#        "mappings":{
-#            "properties": {
-#                "id": {"type": "integer"},
-#                "name": {"type": "search_as_you_type"}
-#            }
-#        }
-#}
+    body = create_body(model.__searchable__)
     current_app.elasticsearch.indices.create(index=index, body=body)
 
 
 
-def add_to_index(obj):
+def add_to_index(index, model):
     if not current_app.elasticsearch:
         return
     if not current_app.elasticsearch.indices.exists(index=index):
-        create_index(obj)
-    index = 'person'
-    body = {'id': obj.id, 'name': obj.name}
-    current_app.elasticsearch.index(index=index, id=model.id, body=payload)
+        create_index(index, model)
+    body = {}
+    for field in model.__searchable__:
+        body[field] = getattr(model, field)
+    current_app.elasticsearch.index(index=index, id=model.id, body=body)
 
 
 def remove_from_index(index, model):
