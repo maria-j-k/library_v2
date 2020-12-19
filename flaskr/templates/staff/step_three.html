@@ -1,6 +1,17 @@
 <h1>Copy Information: </h1>
 
-<p>Bla bla bla</p>
-<button class="fake btn btn-info step--prev">Back</button> 
+
+ <div class="container" id="copy-info">
+      <h5>{{ form.copy.label }}</h5>
+      <p>{{ form.copy.signature_mark.label }} {{ form.copy.signature_mark() }}</p>
+      <p> {{ form.copy.on_shelf.label }} {{form.copy.on_shelf() }}</p>
+      <p> {{ form.copy.section.label }} {{ form.copy.section() }}</p>
+      <p> {{ form.copy.location.label }} {{ form.copy.location() }}</p>
+      <p> {{ form.copy.collection.label }} {{ form.copy.collection() }}</p>
+      <p> {{ form.copy.remarques.label }} {{ form.copy.remarques() }}</p>
+ </div> {# book-copy #}
+ 
+ 
+ <button class="fake btn btn-info step--prev">Back</button> 
  <p>{{ form.submit() }}</p>
   </form>

@@ -12,7 +12,7 @@
 <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
 <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
-     <script type="text/javascript" src="{{ url_for('static', filename='autocomplete.js') }}"></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='search_author.js') }}"></script>
  {% endblock %}
 {% block body %}
     <h1>Enter the title: </h1>
@@ -20,23 +20,12 @@
     {{ form.hidden_tag() }}
     <p>
     {{ form.title.label }}
-    {{ form.title(size=32) }}
+    {{ form.title(size=32, class_="title") }}
     {% for error in form.title.errors %}
         <span style="color: red">{{ error }}</span>   
     {% endfor %}
     </p>
     <p>{{ form.submit() }}</p>
 </form>
-<h1>Enter the author: </h1>
-<form action="" method="POST" accept-charset="utf-8">
-    {{ person_form.hidden_tag() }}
-    <p>
-    {{ person_form.name.label }}
-    {{ person_form.name(size=32, class_="creator") }}
-    {% for error in person_form.name.errors %}
-        <span style="color: red">{{ error }}</span>   
-    {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
+
 {% endblock %}

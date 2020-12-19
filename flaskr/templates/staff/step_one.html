@@ -3,14 +3,13 @@
 <form class="form form-horizontal" action="" method="POST" accept-charset="utf-8">
   {{ form.hidden_tag() }}
   <div class="container" id="title">
-  <h3>Title: </h3>
+  <h5>{{ form.title.label }}</h5>
       <p> {{ form.title(size=64, class="title") }}</p>
 </div>
 <br>
 
 
 <div class="container" id="creators">
-    <h3>Book Creators:</h3>
    
     <div class="container" id="authors">
   <h5>{{ form.authors.label }}</h5>
@@ -41,7 +40,7 @@
       <h5>{{ form.translators.label }}</h5>
   {% for f in form.translators %}
     {% if loop.first %}
-      <p>{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
+      <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
 
       <p>{{ f.form.role }}</p>
       <p>{{ f.form.id_ }}</p>
@@ -58,11 +57,79 @@
     <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>
  </div>
  <br>
+
+
+ <div class="add-role">
+ <button class="btn btn-light fake" id="r">Redaction</button>
+ <br>  
+ <br>
+</div>
+
+<div class="container invisible" id="redactors">
+      <h5>{{ form.redactors.label }}</h5>
+  {% for f in form.redactors %}
+    {% if loop.first %}
+      <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
+
+      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.id_ }}</p>
+    {% else %}
+      <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
+      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.id_ }}</p>
+      {%  endif %}
+
+  {% endfor %}
+  {% for error in form.redactors.errors %}
+      <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>
+ </div>
+ <br>
+
+
+
+ <div class="add-role">
+ <button class="btn btn-light fake" id="i">Introduction</button>
+ <br>  
+ <br>
+</div>
+
+<div class="container invisible" id="intro">
+      <h5>{{ form.intro.label }}</h5>
+  {% for f in form.intro %}
+    {% if loop.first %}
+      <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
+
+      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.id_ }}</p>
+    {% else %}
+      <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
+      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.id_ }}</p>
+      {%  endif %}
+
+  {% endfor %}
+  {% for error in form.intro.errors %}
+      <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>
+ </div>
+ <br>
+
+
+
+
+
+<br>
  </div> {# creators #}
  
  <div class="container" id="published">
-  <h3>Published: </h3>
-   
+      <h5>{{ form.published.label }}</h5>
+      <p>{{ form.published.publisher_name.label }} {{ form.published.publisher_name() }}</p>
+      <p> {{ form.published.city.label }} {{form.published.city() }}</p>
+      <p> {{ form.book.pub_year.label }} {{ form.published.pub_year() }}</p>
+      <p> {{ form.published.serie.label }} {{ form.published.serie() }}</p>
  </div> {# published #}
  
  

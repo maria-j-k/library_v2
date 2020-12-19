@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block autocomplete %}
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='step_form.css')  }}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='search_author.js') }}"></script>
+ {% endblock %}
+{% block body %}
+
+<h1>You were searching for: {{ ctx.title }}</h1>
+
+<br>
+    <h3>Results:</h3>
+<h5>Select one of existing records to add a new copy or enter a new record.</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <td></td>
+            <td>Title</td>
+            <td>Author</td>
+            <td>Publisher</td>
+            <td>Place of publication</td>
+            <td>Year of publication</td>
+            <td>Incorrect</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in ctx.books%}
+      <tr>
+        <td>{{ loop.index }}</td>        
+        <td>{{ book.title }}</td>
+        <td>{{ book.print_authors() }}</td>
+        <td>{{ book.publisher.name }}</td>
+        <td>{{ book.publisher.city }}</td>
+        <td>{{ book.pub_year }}</td>
+        <td><a href="" style="color: black;">X</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<button class="btn btn-primary fake" type="submit"> <a style="color: white" href="{{ url_for('staff.add_book') }}">New Record</a>  </button>
+{% endblock %}

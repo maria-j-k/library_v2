@@ -1,5 +1,19 @@
 <h1>Book Information:</h1>
 
+ <div class="container" id="book-info">
+      <h5>{{ form.book.label }}</h5>
+      <p>{{ form.book.isbn_issn.label }} {{ form.book.isbn_issn() }}</p>
+      <p> {{ form.book.origin_language }} {{form.book.origin_language() }}</p>
+      <p> {{ form.book.first_edition.label }} {{ form.book.first_edition() }}</p>
+      <p> {{ form.book.periodic_num.label }} {{ form.book.periodic_num() }}</p>
+      <p> {{ form.book.fiction.label }} {{ form.book.fiction() }}</p>
+      <p> {{ form.book.genre.label }} {{ form.book.genre() }}</p>
+      <p> {{ form.book.literary_form.label }} {{ form.book.literary_form() }}</p>
+      <p> {{ form.book.subject.label }} {{ form.book.subject() }}</p>
+      <p> {{ form.book.precision.label }} {{ form.book.precision() }}</p>
+      <p> {{ form.book.nukat.label }} {{ form.book.nukat() }}</p>
+ </div> {# book-info #}
+ 
 
 <button class="fake btn btn-info step--prev">Back</button> 
 <button class="fake btn btn-info step--next">Next</button> 

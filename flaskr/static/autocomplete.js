@@ -26,13 +26,14 @@ $(function() {
 //            let thisInputId = $(this).attr('id')
 //            $("#" + thisInputId + "_val").val(ui.item.value);
             $('#' + idsId).val(parseInt(ui.item.value));
-            console.log(`this: ${$(this).val()}`)
-            console.log($('#'+idsId).val())
-            console.log(`ui item label: ${ui.item.label}`)
-            console.log(`ui item value: ${ui.item.value}`)
-            console.log(nameId)
-            console.log(idsId)
-//            console.log(`thisInputId: ${thisInputId}`)
+//            console.log(`this: ${$(this).val()}`)
+//            console.log($('#'+idsId))
+//            console.log($('#'+idsId).val())
+//            console.log(`ui item label: ${ui.item.label}`)
+//            console.log(`ui item value: ${ui.item.value}`)
+//            console.log(nameId)
+//            console.log(idsId)
+////            console.log(`thisInputId: ${thisInputId}`)
         }
     });
     $(".title").autocomplete({
@@ -40,8 +41,8 @@ $(function() {
             $.getJSON($SCRIPT_ROOT + '/autocomplete_person',{
                 q: request.term, 
             }, function(data) {
-                response(data.matching_persons); 
-                console.log(data.matching_persons)
+                response(data.matching_results); 
+                console.log(data.matching_results)
             });
         },
 
@@ -57,6 +58,7 @@ $(function() {
             $("#" + thisInputId + "_val").val(ui.item.value);
         }
     });
+
 /*
  *switching steps 
  **/
@@ -107,7 +109,7 @@ prevBtns.forEach(btn => {
  *Step one: addRole, addPerson
  * 
  *
- *TODO przycisk do usuwania niepotrzebnych okienek, dodający z powrotem klasę 'invisible' do add-person, jeśli jej nie ma
+ *TODO przycisk do usuwania niepotrzebnych okienek, dodający z powrotem klasę 'invisible' do add-person
  *TODO validacja: 
  * jeśli dam przy add person, nie będzie się walidowac ostatnia.
  * add person - dodaje do listy 'authors' etc kolejne nazwiska
@@ -117,12 +119,29 @@ prevBtns.forEach(btn => {
  * */
 
 //functions
+const newPerson = function(btn)  {
+    let person = btn.closest('div').querySelector('.active')
+    let nextPerson = btn.closest('div').querySelectorAll('.invisible')
+    if (nextPerson.length == 1){
+    btn.classList.add('invisible')
+    }
+    if (person.querySelector('input').value){ 
+        person.classList.remove('active')
+        nextPerson[0].classList.add('active')
+        nextPerson[0].classList.remove('invisible')
+    }
+    else {
+        alert('Before adding a new person, please enter a value!')
+    };
+}
+
 
 
 
 //variables
 let addRole = document.querySelectorAll('.add-role');
 let addPerson = document.querySelectorAll('.add-person');
+let authors = document.querySelectorAll('#authors .creator')
 //events
 
 addRole.forEach(role=> {
@@ -134,22 +153,16 @@ addRole.forEach(role=> {
 
 addPerson.forEach(btn => {
     btn.addEventListener('click', e => {
-        let nextPerson = btn.closest('div').querySelector('.invisible') 
-        let person = nextPerson.previousElementSibling.querySelector('input')
-        console.log(person.value)
-        if (person.value != ''){ 
-            nextPerson.classList.remove('invisible')
-        if (!nextPerson.nextElementSibling.classList.contains('invisible')) {
-            btn.classList.add('invisible')
-        };
-        }
-        else {
-            alert('Before adding a new person, please enter a value!')
-        }
+        newPerson(btn)
     });
 });
 
-
+authors.forEach(inp => {
+    inp.addEventListener('change', e => {
+        console.log('authors event')
+        console.log(inp.value)
+    })
+});
 
 
 

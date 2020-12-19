@@ -3,10 +3,6 @@ from flask import current_app
 def create_body(searchable_fields):
     sayt = {"type": "search_as_you_type"}
     body = {
-        "settings": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1
-            },
         "mappings":{
             "properties": {
                 "id": {"type": "integer"},
@@ -60,6 +56,21 @@ def autocomplete(index, query):
             for hit in search_res['hits']['hits']]
     
 
+def autocomplete_title(index, query):
+    if not current_app.elasticsearch:
+        return [], 0
+    search_res = current_app.elasticsearch.search(
+            index=index,
+            body={'query': 
+                {'multi_match': 
+                    {'query': query, 
+                    'type': 'bool_prefix', 
+                    'fields': ['*']}
+                    }, 'size': 100})
+
+#    search_res = [(hit['_id'],hit['_source']['name']) for hit in hits]
+    return  [{'value': hit['_id'], 'label': hit['_source']['title']} 
+            for hit in search_res['hits']['hits']]
 
 
 

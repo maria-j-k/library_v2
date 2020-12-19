@@ -3,14 +3,24 @@ import enum
 from flaskr import db
 # null true, required false
 from flaskr.search import autocomplete, add_to_index, remove_from_index
-
+from flaskr.es_search import fts
 
 class SearchableMixin(object):
     @classmethod
     def search(cls, expression):
         res = autocomplete(cls.__tablename__, expression)
         return res
+    
+    @classmethod
+    def es_search(cls, expression, fields):
+        res = fts(cls.__tablename__, expression, fields)
+        return res
 
+#    @classmethod
+#    def search_title(cls, expression):
+#        res = autocomplete_t(cls.__tablename__, expression)
+#        return res
+#    
     @classmethod
     def before_commit(cls, session):
         session._changes = {
@@ -117,10 +127,11 @@ class Location(db.Model):
         return self.room
 
 
-class Book(db.Model):
+class Book(SearchableMixin, db.Model):
+    __searchable__=['title']
     id = db.Column(db.Integer, primary_key=True)
     ISBN_REGEX=r'^(97(8|9))?\d{9}(\d|X)$'
-    isbnIssn = db.Column(db.String(13), nullable=True)
+    isbn_issn = db.Column(db.String(13), nullable=True)
     title = db.Column(db.String(255), nullable=False)
     origin_language = db.Column(db.String(32), nullable=True)
     pub_year = db.Column(db.String(32), nullable=True) #potem zmienić na False
@@ -139,6 +150,10 @@ class Book(db.Model):
     def __str__(self):
         return self.title
 
+    def print_authors(self):
+        authors = [c.person.name for c in self.creator
+                if c.role._name_ == 'A']
+        return ", ".join(authors)
 
 class Creator(db.Model):
     id = db.Column(db.Integer, primary_key=True)

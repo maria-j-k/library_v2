@@ -26,6 +26,9 @@ def create_app(config_class=Config):
     from flaskr.staff import bp as staff_bp
     app.register_blueprint(staff_bp)
 
+    from flaskr.es_api import bp as es_bp
+    app.register_blueprint(es_bp)
+
     return app
 
 
