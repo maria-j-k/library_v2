@@ -7,6 +7,9 @@
 scripts/
 old_scripts/
 old_migrations/
+flaskr/bulk_insert_utils.py
+*load-data-via-ajax.html
+*new.html
 ### Flask ###
 instance/*
 !instance/.gitignore
