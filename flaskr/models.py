@@ -86,8 +86,8 @@ class Person(SearchableMixin, db.Model):
         return self.name
 
 
-class Publisher(db.Model):
-    __searchable__=['name']
+class Publisher(SearchableMixin, db.Model):
+    __searchable__=['name', 'city']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
     city = db.Column(db.String(64))
@@ -97,9 +97,19 @@ class Publisher(db.Model):
     def __str__(self):
         return f'{self.name}, {self.city}'
 
+    def to_dict(self):
+        data = {
+                'id': self.id,
+                'name': self.name,
+                'city': self.city,
+                'series': [s.id for s in self.series.all()]
+                }
+        return data
 
-class Serie(db.Model):
-    __searchable__=['name']
+
+
+class Serie(SearchableMixin, db.Model):
+    __searchable__=['name', 'publisher_id']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'))

@@ -26,9 +26,10 @@ class PersonForm(FlaskForm):
 
 class PublisherForm(FlaskForm):
     publisher_name = StringField('Name') # autocomplete z możliwością wpisania    
+    id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     city = StringField('City')
     serie = StringField('Serie') # autocomplete z możliwością wpisania
-    pub_year = StringField('Publication date') # regex validator
+    s_id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
 
 
 class BookForm(FlaskForm):

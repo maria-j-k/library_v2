@@ -126,10 +126,12 @@
  
  <div class="container" id="published">
       <h5>{{ form.published.label }}</h5>
-      <p>{{ form.published.publisher_name.label }} {{ form.published.publisher_name() }}</p>
-      <p> {{ form.published.city.label }} {{form.published.city() }}</p>
-      <p> {{ form.book.pub_year.label }} {{ form.published.pub_year() }}</p>
-      <p> {{ form.published.serie.label }} {{ form.published.serie() }}</p>
+      <p>{{ form.published.publisher_name.label }} {{ form.published.publisher_name(size=32, class_="publisher") }}<button class="clear fake btn btn-danger btn-sm">Clear</button> <button class="fake btn btn-warning btn-sm">Error</button>  </p>
+      <p>{{ form.published.id_ }}</p>
+      <p> {{ form.published.city.label }} {{form.published.city(size=32) }}</p>
+      <p> {{ form.book.pub_year.label }} {{ form.book.pub_year(size=32) }}</p>
+      <p> {{ form.published.serie.label }} {{ form.published.serie(size=32, class_="serie") }} <button class="fake btn btn-warning btn-sm">Error</button> </p>
+      <p>{{ form.published.s_id_ }}</p>
  </div> {# published #}
  
  

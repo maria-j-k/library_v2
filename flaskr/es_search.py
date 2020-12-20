@@ -21,24 +21,24 @@ def fts(index, q_term, fields):
     pass
 
 
-#
-#def autocomplete(index, query):
-#    if not current_app.elasticsearch:
-#        return [], 0
-#    search_res = current_app.elasticsearch.search(
-#            index=index,
-#            body={'query': 
-#                {'multi_match': 
-#                    {'query': query, 
-#                    'type': 'bool_prefix', 
-#                    'fields': ['*']}
-#                    }, 'size': 100})
-#
-##    search_res = [(hit['_id'],hit['_source']['name']) for hit in hits]
-#    return  [{'value': hit['_id'], 'label': hit['_source']['name']} 
-#            for hit in search_res['hits']['hits']]
-#    
-#
+
+def autocomplete(index, query):
+    if not current_app.elasticsearch:
+        return [], 0
+    search_res = current_app.elasticsearch.search(
+            index=index,
+            body={'query': 
+                {'multi_match': 
+                    {'query': query, 
+                    'type': 'bool_prefix', 
+                    'fields': ['*']}
+                    }, 'size': 100})
+
+#    search_res = [(hit['_id'],hit['_source']['name']) for hit in hits]
+    return  [{'value': hit['_id'], 'label': hit['_source']['name']} 
+            for hit in search_res['hits']['hits']]
+    
+
 #def autocomplete_title(index, query):
 #    if not current_app.elasticsearch:
 #        return [], 0

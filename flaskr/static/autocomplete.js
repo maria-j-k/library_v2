@@ -36,9 +36,25 @@ $(function() {
 ////            console.log(`thisInputId: ${thisInputId}`)
         }
     });
-    $(".title").autocomplete({
+
+
+function findCity(publisher) {
+    $.get($SCRIPT_ROOT + '/db_pub_place', {
+        q: publisher,
+    }).done(function(response) {
+       $('#published-city').val(response.city)
+        publisher.city = response.city
+    $("#published-city").prop("readonly", true);
+    $("#published-publisher_name").prop("readonly", true);
+    }).fail(function() {
+        console.log('nieudane')
+    });
+};
+
+
+    $(".publisher").autocomplete({
         source:function(request, response) {
-            $.getJSON($SCRIPT_ROOT + '/autocomplete_person',{
+            $.getJSON($SCRIPT_ROOT + '/autocomplete_publisher',{
                 q: request.term, 
             }, function(data) {
                 response(data.matching_results); 
@@ -54,10 +70,57 @@ $(function() {
         select: function(event, ui) {
             event.preventDefault();
             $(this).val(ui.item.label);
-            let thisInputId = $(this).attr('id')
-            $("#" + thisInputId + "_val").val(ui.item.value);
+            $('#published-id_').val(parseInt(ui.item.value));
+//            console.log(`this: ${$(this).val()}`)
+//            console.log($('#published-id_').val())
+//            console.log(`ui item label: ${ui.item.label}`)
+//            console.log(`ui item value: ${ui.item.value}`)
+            publisher_id = ui.item.value
+??            console.log(`publisher: ${publisher_id}`)
+            findCity(publisher_id)
         }
     });
+
+
+    $(".serie").autocomplete({
+        source:function(request, response) {
+            $.getJSON($SCRIPT_ROOT + '/autocomplete_serie',{
+                q: request.term, publisher: publisher_id 
+            }, function(data) {
+                response(data.matching_results); 
+                console.log(data.matching_results)
+            });
+        },
+
+        minLength: 3,
+        focus: function(event, ui) {
+		event.preventDefault();
+        $(this).val(ui.item.label);
+				},
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#published-s_id_').val(parseInt(ui.item.value));
+//            console.log(`this: ${$(this).val()}`)
+//            console.log($('#published-s_id_').val())
+//            console.log(`ui item label: ${ui.item.label}`)
+//            console.log(`ui item value: ${ui.item.value}`)
+        }
+    });
+
+let publisher_id = null
+let clear = document.querySelectorAll('.clear')
+
+clear.forEach(btn => {
+    btn.addEventListener('click', e => {
+    let outer = btn.closest('div');
+    let inputs = btn.closest('div').querySelectorAll('input')
+        inputs.forEach(inp => {
+            inp.value = "";
+            inp.readOnly = false;
+        })
+    });
+});
 
 /*
  *switching steps 
