@@ -14,8 +14,11 @@
 <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
      <script type="text/javascript" src="{{ url_for('static', filename='search_author.js') }}"></script>
  {% endblock %}
-{% block body %}
+ {% block body %}
+     
+<div class="mx-auto px-auto" style="width: 800px;">
     <h1>Enter the title: </h1>
+    <br>
 <form action="" method="POST" accept-charset="utf-8">
     {{ form.hidden_tag() }}
     <p>
@@ -25,7 +28,8 @@
         <span style="color: red">{{ error }}</span>   
     {% endfor %}
     </p>
-    <p>{{ form.submit() }}</p>
+    <p>{{ form.submit(class_="btn btn-info") }}</p>
 </form>
 
+</div>
 {% endblock %}

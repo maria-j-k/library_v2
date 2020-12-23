@@ -12,13 +12,17 @@
 <link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
 <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
 <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
-     <script type="text/javascript" src="{{ url_for('static', filename='search_author.js') }}"></script>
+{#     <script type="text/javascript" src="{{ url_for('static', filename='search_author.js') }}"></script> #}
  {% endblock %}
 {% block body %}
 
-<h1>You were searching for: {{ ctx.title }}</h1>
+<div class="mx-auto px-auto">
+    <h3 >You are searching for:</h3> 
+    <h2 > {{ ctx.title }}</h2>
+</div>
 
 <br>
+{% if ctx.books %}
     <h3>Results:</h3>
 <h5>Select one of existing records to add a new copy or enter a new record.</h5>
 <table class="table">
@@ -47,6 +51,9 @@
     {% endfor %}
     </tbody>
 </table>
+{% else %}
+    <h4>No results found. Please enter a new record.</h4>
+{% endif %}
 
 <button class="btn btn-primary fake" type="submit"> <a style="color: white" href="{{ url_for('staff.add_book') }}">New Record</a>  </button>
 {% endblock %}

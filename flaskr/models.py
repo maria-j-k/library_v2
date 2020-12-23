@@ -58,12 +58,6 @@ db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 #skrypty
 
 
-class FormChoices(enum.Enum):
-    PO = 'Poetry'
-    PR = 'Prose'
-    DR = 'Drama'
-
-
 class BookRoles(enum.Enum):
     A = 'Author'
     T = 'Translation'
@@ -113,6 +107,7 @@ class Serie(SearchableMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'))
+    books = db.relationship('Book', backref='serie', lazy='dynamic')
     
     def __str__(self):
         return self.name
@@ -137,23 +132,36 @@ class Location(db.Model):
         return self.room
 
 
+class FormChoices(enum.Enum):
+#    NA = 'N/A'
+    PO = 'Poetry'
+    PR = 'Prose'
+    DR = 'Drama'
+
+
+class FictionChoices(enum.Enum):
+    F = 'Fiction'
+    NF = 'Non-fiction'
+
+
 class Book(SearchableMixin, db.Model):
     __searchable__=['title']
     id = db.Column(db.Integer, primary_key=True)
     ISBN_REGEX=r'^(97(8|9))?\d{9}(\d|X)$'
-    isbn_issn = db.Column(db.String(13), nullable=True)
+    isbn = db.Column(db.String(13), nullable=True)
     title = db.Column(db.String(255), nullable=False)
     origin_language = db.Column(db.String(32), nullable=True)
     pub_year = db.Column(db.String(32), nullable=True) #potem zmienić na False
     first_edition = db.Column(db.String(64), nullable=True) #potem zmienić na False
-    periodic_num = db.Column(db.String(64), nullable=True)
-    fiction = db.Column(db.Boolean(), nullable=True)
     genre = db.Column(db.String(64), nullable=True)
     literary_form = db.Column(db.Enum(FormChoices), nullable=True)
+    #fiction = db.Column(db.Enum(FictionChoices), nullable=True)
+    fiction = db.Column(db.Boolean(), nullable=True)
     subject = db.Column(db.String(64), nullable=True)
     precision = db.Column(db.Text, nullable=True)
     nukat = db.Column(db.Text, nullable=True)
     publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'), nullable=True) #potem zmienić na False
+    serie_id = db.Column(db.Integer, db.ForeignKey('serie.id'), nullable=True)
     creator = db.relationship('Creator', backref='book', lazy=True)
     copies = db.relationship('Copy', backref='book', lazy='dynamic') 
 
@@ -176,7 +184,7 @@ class Copy(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     on_shelf = db.Column(db.Boolean(), nullable=False)
     section = db.Column(db.String(255), nullable=True)
-    remarques = db.Column(db.String(255), nullable=False)
+    remarques = db.Column(db.String(255), nullable=True)
     signature_mark = db.Column(db.String(32), nullable=True)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=True)
     location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)

@@ -84,12 +84,15 @@ function findCity(publisher) {
 
     $(".serie").autocomplete({
         source:function(request, response) {
+            if (publisher_id){
             $.getJSON($SCRIPT_ROOT + '/autocomplete_serie',{
                 q: request.term, publisher: publisher_id 
             }, function(data) {
                 response(data.matching_results); 
+                console.log(publisher_id)
                 console.log(data.matching_results)
             });
+            }
         },
 
         minLength: 3,
@@ -110,6 +113,13 @@ function findCity(publisher) {
 
 let publisher_id = null
 let clear = document.querySelectorAll('.clear')
+let serieInp = document.querySelector("#published-serie")
+serieInp.addEventListener('click', e => {
+    if (!document.querySelector("#published-publisher_name").value){
+        alert("You must fill publisher field first.")
+    }
+})
+
 
 clear.forEach(btn => {
     btn.addEventListener('click', e => {
@@ -118,6 +128,7 @@ clear.forEach(btn => {
         inputs.forEach(inp => {
             inp.value = "";
             inp.readOnly = false;
+            publisher_id = null
         })
     });
 });

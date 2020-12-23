@@ -18,35 +18,37 @@ class PersonForm(FlaskForm):
     role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
     id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
 
-    def __init__(self, *args, **kwargs):
-        if 'csrf_enabled' not in kwargs:
-            kwargs['csrf_enabled'] = False
-        super(PersonForm, self).__init__(*args, **kwargs)
+    class Meta:
+        csrf = False
 
 
 class PublisherForm(FlaskForm):
-    publisher_name = StringField('Name') # autocomplete z możliwością wpisania    
+    publisher_name = StringField('Name', validators=[DataRequired()]) # autocomplete z możliwością wpisania    
     id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     city = StringField('City')
     serie = StringField('Serie') # autocomplete z możliwością wpisania
     s_id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
 
+    class Meta:
+        csrf = False
+
 
 class BookForm(FlaskForm):
-    isbn_issn = StringField()
+    isbn = StringField()
     title = StringField('Title')
     origin_language = StringField('Origin language')
-    pub_year = StringField('Publication year')
+    pub_year = StringField('Publication year', validators=[DataRequired()])
     first_edition = StringField('First edition')
     periodic_num = StringField('Periodic number')
     fiction = SelectField('Fiction', choices=[
-                    (None, '---'),
-                    (True, 'fiction'),
-                    (False, 'non-fiction')
-        ])
+                    ('', '---'),
+                    (1, 'fiction'),
+                    (0, 'non-fiction')
+        ], 
+        coerce=bool)
     genre = StringField('Genre')
     literary_form = SelectField('Literary form', choices=[
-                    (None, '---'),
+                    ('', '---'),
                     ('PO', 'Poetry'),
                     ('PR', 'Prose'),
                     ('DR', 'Drama')
@@ -54,6 +56,9 @@ class BookForm(FlaskForm):
     subject = TextAreaField('Subject')
     precision = TextAreaField('Precision')
     nukat = TextAreaField('NUKAT themes')
+    
+    class Meta:
+        csrf = False
 
 
 def all_collections():
@@ -71,11 +76,14 @@ class CopyForm(FlaskForm):
     remarques = StringField('Remarques')
     collection = QuerySelectField(query_factory=all_collections, allow_blank=True)
     location = QuerySelectField(query_factory=all_locations, allow_blank=True)
+    
+    class Meta:
+        csrf = False
 
 
 class AddBookForm(FlaskForm):
 #    title = StringField('Title', render_kw={'readonly': True})
-    title = StringField('Title')
+    title = StringField('Title', validators=[DataRequired()] )
     authors = FieldList(FormField(PersonForm, default={'role': 'A'}), min_entries=3)
     translators = FieldList(FormField(PersonForm, default={'role': 'T'}), min_entries=3 )
     redactors = FieldList(FormField(PersonForm, default={'role': 'R'}), min_entries=3)
