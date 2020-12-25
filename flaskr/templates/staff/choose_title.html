@@ -28,20 +28,20 @@
 <table class="table">
     <thead>
         <tr>
-            <td></td>
-            <td>Title</td>
-            <td>Author</td>
-            <td>Publisher</td>
-            <td>Place of publication</td>
-            <td>Year of publication</td>
-            <td>Incorrect</td>
+            <th></th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Place of publication</th>
+            <th>Year of publication</th>
+            <th>Incorrect</th>
         </tr>
     </thead>
     <tbody>
         {% for book in ctx.books%}
       <tr>
-        <td>{{ loop.index }}</td>        
-        <td>{{ book.title }}</td>
+          <td>{{ loop.index }}</td>  
+          <td><a href="{{ url_for('staff.add_copy', id=book.id)}}">{{ book.title }}</a></td>
         <td>{{ book.print_authors() }}</td>
         <td>{{ book.publisher.name }}</td>
         <td>{{ book.publisher.city }}</td>

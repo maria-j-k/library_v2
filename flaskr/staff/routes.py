@@ -6,7 +6,7 @@ from flask import flash, jsonify, redirect, render_template, request, session, u
 from flaskr import db
 from flaskr.models import Book, Copy, Creator, Person, Publisher, Serie
 from flaskr.staff import bp
-from flaskr.staff.forms import AddBookForm, TitleForm, PersonForm
+from flaskr.staff.forms import AddBookForm, CopyForm, TitleForm, PersonForm
 from scripts.utils import get_or_create
 
 
@@ -66,7 +66,13 @@ def add_book():
         book.subject = form.book.subject.data or None
         book.precision = form.book.precision.data or None
         book.nukat = form.book.nukat.data or None
-        copy = Copy(book=book, on_shelf=form.copy.on_shelf.data)
+        db.session.add(book)
+        copy = Copy(book=book)
+        copy.signature_mark = form.copy.signature_mark.data or None
+        copy.on_shelf = form.copy.on_shelf.data
+        copy.location = form.copy.location.data or None
+        copy.collecion = form.copy.collection.data or None
+        copy.remarques = form.copy.remarques.data or None
         db.session.add(copy)
         db.session.commit()
     else:
@@ -74,22 +80,21 @@ def add_book():
     return render_template('staff/step_form_base.html', form=form)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@bp.route('/staff/add_copy/<int:id>', methods=['GET', 'POST'])
+def add_copy(id):
+    form = CopyForm()
+    book = Book.query.get_or_404(id)
+    if form.validate_on_submit():
+        copy = Copy(book=book)
+        copy.signature_mark = form.signature_mark.data or None
+        copy.on_shelf = form.on_shelf.data
+        copy.location = form.location.data or None
+        copy.collection = form.collection.data or None
+        copy.remarques = form.remarques.data or None
+        db.session.add(copy)
+        db.session.commit()
+        return redirect(url_for('staff.search_title'))
+    else:
+        print(form.errors)
+    return render_template('staff/add_copy.html', book=book, form=form)
 
