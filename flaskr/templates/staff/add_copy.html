@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block autocomplete %}
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+
+    {% block scripts %}
+        {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='step_form.css')  }}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+ {% endblock %}
+{% block body %}
+<div class="container book-info">
+<table class="table">
+    <tbody>
+        <tr>
+            <th>Title</th>
+            <td>{{ book.title }}</td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td>{{ book.print_authors() }}</td>
+        </tr>
+        <tr>
+            <th>Publisher</th>
+            <td>{{ book.publisher.name }}</td>
+        </tr>
+        <tr>
+            <th>Place of publication</th>
+            <td>{{ book.publisher.city }}</td>
+        </tr>
+        <tr>
+            <th>Year of publication</th>
+            <td>{{ book.pub_year }}</td>
+        </tr>
+        <tr>
+            <th>Serie</th>
+            <td>{{ book.serie if book.serie else "" }}</td>
+        </tr>
+        <tr>
+            <th>Translation</th>
+            <td>{{ book.print_trans() }}</td>
+        </tr>
+        <tr>
+            <th>Redaction</th>
+            <td>{{ book.print_red() }}</td>
+        </tr>
+        <tr>
+            <th>Introduction</th>
+            <td>{{ book.print_intro() }}</td>
+        </tr>
+        <tr>
+            <th>Isbn</th>
+            <td>{{ book.isbn if book.isbn else "" }}</td>
+        </tr>
+        <tr>
+            <th>Origin language</th>
+            <td>{{ book.origin_language }}</td>
+        </tr>
+        <tr>
+            <th>First edition</th>
+            <td>{{ book.first_edition }}</td>
+        </tr>
+        <tr>
+            <th>Form</th>
+            <td>{{ book.literary_form if book.literary_form else "" }}</td>
+        </tr>
+        <tr>
+            <th>Genre</th>
+            <td>{{ book.genre }}</td>
+        </tr>
+        <tr>
+            <th>Subject</th>
+            <td>{{ book.subject }}</td>
+        </tr>
+        <tr>
+            <th>Precision</th>
+            <td>{{ book.precision }}</td>
+        </tr>
+        <tr>
+            <th>NUKAT</th>
+            <td>{{ book.nukat }}</td>
+        </tr>
+        <tr>
+            <th>N of copies</th>
+            <td>{{ book.copies.count() }}</td>
+        </tr>
+
+    </tbody>
+  </table>
+</div>
+    
+    
+ <div class="container">
+<form action="" method="POST" accept-charset="utf-8">
+  {{ form.hidden_tag() }}
+
+
+      <p>{{ form.signature_mark.label }} {{ form.signature_mark() }}</p>
+      <p> {{ form.on_shelf.label }} {{form.on_shelf() }}</p>
+      <p> {{ form.section.label }} {{ form.section() }}</p>
+      <p> {{ form.location.label }} {{ form.location() }}</p>
+      <p> {{ form.collection.label }} {{ form.collection() }}</p>
+      <p> {{ form.remarques.label }} {{ form.remarques() }}</p>
+ <p>{{ form.submit() }}</p>
+ </div> {# book-copy #}
+ 
+</form>
+    
+    
+    
+    
+    
+
+{% endblock %}

@@ -76,6 +76,17 @@ class CopyForm(FlaskForm):
     remarques = StringField('Remarques')
     collection = QuerySelectField(query_factory=all_collections, allow_blank=True)
     location = QuerySelectField(query_factory=all_locations, allow_blank=True)
+    submit = SubmitField('Submit')
+    
+
+
+class CopyForm2(FlaskForm):
+    signature_mark = StringField('Singature mark')
+    on_shelf = BooleanField('On shelf')
+    section = StringField('Section')
+    remarques = StringField('Remarques')
+    collection = QuerySelectField(query_factory=all_collections, allow_blank=True)
+    location = QuerySelectField(query_factory=all_locations, allow_blank=True)
     
     class Meta:
         csrf = False
@@ -90,7 +101,7 @@ class AddBookForm(FlaskForm):
     intro = FieldList(FormField(PersonForm, default={'role': 'I'}), min_entries=3)
     published = FormField(PublisherForm)
     book = FormField(BookForm)
-    copy = FormField(CopyForm)
+    copy = FormField(CopyForm2)
     submit = SubmitField('Submit')
 
 
