@@ -49,9 +49,9 @@ def add_book():
         db.session.add(book)
         creators = chain(form.authors.data, form.translators.data, form.redactors.data, form.intro.data)
         for creator in creators:
-            role = creator['role']
+            book_role = creator['book_role']
             if creator['id_']:
-                c = Creator(person_id=creator['id_'], book=book, role=role)
+                c = Creator(person_id=creator['id_'], book=book, book_role=book_role)
                 db.session.add(c)
             elif creator['name'] != '':
                 person = Person(name=creator['name'])

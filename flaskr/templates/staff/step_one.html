@@ -16,11 +16,11 @@
   {% for f in form.authors %}
     {% if loop.first %}
       <p class="active"> {{ f.form.name.label }}  {{ f.form.name(size=32, class_="creator") }}</p>
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
       {%  else %}
       <p class="invisible"> {{ f.form.name.label }}  {{ f.form.name(size=32, class_="creator") }}</p>
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
     {% endif %}
   {% endfor %}
@@ -42,11 +42,11 @@
     {% if loop.first %}
       <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
 
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
     {% else %}
       <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
       {%  endif %}
 
@@ -71,11 +71,11 @@
     {% if loop.first %}
       <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
 
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
     {% else %}
       <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
       {%  endif %}
 
@@ -101,11 +101,11 @@
     {% if loop.first %}
       <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
 
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
     {% else %}
       <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator") }}</p>
-      <p>{{ f.form.role }}</p>
+      <p>{{ f.form.book_role }}</p>
       <p>{{ f.form.id_ }}</p>
       {%  endif %}
 

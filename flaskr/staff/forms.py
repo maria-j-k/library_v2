@@ -15,7 +15,7 @@ class TitleForm(FlaskForm):
 
 class PersonForm(FlaskForm):
     name = StringField('Name')
-    role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
+    book_role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
     id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
 
     class Meta:
@@ -95,10 +95,10 @@ class CopyForm2(FlaskForm):
 class AddBookForm(FlaskForm):
 #    title = StringField('Title', render_kw={'readonly': True})
     title = StringField('Title', validators=[DataRequired()] )
-    authors = FieldList(FormField(PersonForm, default={'role': 'A'}), min_entries=3)
-    translators = FieldList(FormField(PersonForm, default={'role': 'T'}), min_entries=3 )
-    redactors = FieldList(FormField(PersonForm, default={'role': 'R'}), min_entries=3)
-    intro = FieldList(FormField(PersonForm, default={'role': 'I'}), min_entries=3)
+    authors = FieldList(FormField(PersonForm, default={'book_role': 'A'}), min_entries=3)
+    translators = FieldList(FormField(PersonForm, default={'book_role': 'T'}), min_entries=3 )
+    redactors = FieldList(FormField(PersonForm, default={'book_role': 'R'}), min_entries=3)
+    intro = FieldList(FormField(PersonForm, default={'book_role': 'I'}), min_entries=3)
     published = FormField(PublisherForm)
     book = FormField(BookForm)
     copy = FormField(CopyForm2)

@@ -170,28 +170,28 @@ class Book(SearchableMixin, db.Model):
 
     def print_authors(self):
         authors = [c.person.name for c in self.creator
-                if c.role._name_ == 'A']
+                if c.book_role._name_ == 'A']
         return ", ".join(authors)
 
     def print_trans(self):
         trans = [c.person.name for c in self.creator
-                if c.role._name_ == 'T']
+                if c.book_role._name_ == 'T']
         return ", ".join(trans)
 
     def print_red(self):
         red = [c.person.name for c in self.creator
-                if c.role._name_ == 'R']
+                if c.book_role._name_ == 'R']
         return ", ".join(red)
 
     def print_intro(self):
         intro = [c.person.name for c in self.creator
-                if c.role._name_ == 'I']
+                if c.book_role._name_ == 'I']
         return ", ".join(intro)
 
 
 class Creator(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    role = db.Column(db.Enum(BookRoles))
+    book_role = db.Column(db.Enum(BookRoles))
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
     person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
 
