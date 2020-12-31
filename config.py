@@ -14,3 +14,12 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'Jacek_kuron'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+
+    MAIL_SERVER='smtp.googlemail.com'
+    MAIL_PORT=587
+    MAIL_USE_TLS=1
+    MAIL_USERNAME=os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD')
+    MAIL_SUBJECT_PREFIX='Biblioteka WLH'
+    MAIL_SENDER='Biblioteka WLH <wlh.biblioteka@gmail.com'
+    

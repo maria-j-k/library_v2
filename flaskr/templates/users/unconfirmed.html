@@ -9,28 +9,12 @@
 <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
  {% endblock %}
  {% block body %}
+     
      {{ super() }}     
 <div class="mx-auto px-auto" style="width: 800px;">
-    <h1>Please log in: </h1>
+    <h1>Your account is not active</h1>
+    <h3>You need to confirm your email address</h3>
     <br>
-<form action="" method="POST" accept-charset="utf-8">
-    {{ form.hidden_tag() }}
-    <p>
-    {{ form.email.label }}
-    {{ form.email(size=32, class_="email") }}
-    {% for error in form.email.errors %}
-        <span style="color: red">{{ error }}</span>   
-    {% endfor %}
-    </p>
-    <p>
-    {{ form.password.label }}
-    {{ form.password(size=32) }}
-    {% for error in form.password.errors %}
-        <span style="color: red">{{ error }}</span>   
-    {% endfor %}
-    </p>
-    <p>{{ form.submit(class_="btn btn-info") }}</p>
-</form>
-
+    <p><a href="{{ url_for('users.resend_confirmation') }}"> Need another confirmation email?</a></p>
 </div>
 {% endblock %}

@@ -1,0 +1,9 @@
+Dear {{ user.username }},
+Welcome to WLH Library
+To activate your account you must follow the link:
+{{ url_for('users.confirm', token=token, _external=True) }}
+Sincerly, 
+The team of WLH Library
+
+
+This message is generated automatically. Please, do not reply. In case of any issues, contact Library staff in the WLH Library office.
