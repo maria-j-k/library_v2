@@ -1,12 +1,29 @@
 import enum
 
 from flask import current_app
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flaskr import db, login
 
+
+class Permission:
+    read = 1
+    make_reservations = 2
+    loan = 4
+    add_to_readings = 8
+    register_users = 16
+    delete_users = 32
+    make_loans = 64
+    manage_reservations = 128
+    create_objects = 256
+    edit_objects = 512
+    create_restricted_objects = 1024
+    edit_restricted_objects = 2048
+    make_volunteer = 4096
+    make_librarian = 8192
+    make_admin = 16384
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -21,9 +38,56 @@ class Role(db.Model):
         if self.permissions is None:
             self.permissions = 0
     
+    def add_permission(self, perm):
+        if not self.has_permission(perm):
+            self.permissions += perm
+
+    def remove_permission(self, perm):
+        if self.has_permission(perm):
+            self.permissions -= perm
+
+    def reset_permissions(self):
+        self.permissions = 0
+
+    def has_permission(self, perm):
+        return self.permissions & perm == perm
+
     def __repr__(self):
         return '<Role {}>'.format(self.name)
-
+    
+    @staticmethod
+    def insert_roles():
+        roles = {
+                'Visitor': [Permission.read,],
+                'Graduate': [Permission.read, Permission.make_reservations,],
+                'Student': [Permission.read, Permission.make_reservations, Permission.loan],
+                'Teacher': [Permission.read, Permission.make_reservations, 
+                    Permission.loan, Permission.add_to_readings],
+                'Volunteer': [Permission.read, Permission.make_reservations, 
+                    Permission.loan, Permission.create_objects, Permission.edit_objects],
+                'Librarian': [Permission.read, Permission.make_reservations, 
+                    Permission.loan, Permission.create_objects, Permission.edit_objects, 
+                    Permission.register_user, Permission.delete_user, 
+                    Permission.make_loans, Permission.manage_reservations, permission.make_volunteer],
+                'Admin': [Permission.read, Permission.make_reservations, 
+                    Permission.loan, Permission.create_objects, Permission.create_restricted_objects, 
+                    Permission.update_restricted_objects, Permission.edit_objects, 
+                    Permission.register_user, Permission.delete_user, 
+                    Permission.make_loans, Permission.manage_reservations, 
+                    Permission.make_volunteer, Permission.make_librarian, 
+                    Permission.make_admin, Permission.add_to_readings],
+                }
+        default_role = 'Visitor'
+        for role in roles:
+            r = Role.query.filter_by(name=role).first()
+            if r is None:
+                r = Role(name=role)
+                r.reset_permissions()
+                for perm in roles[role]:
+                    r.add_permission(perm)
+                r.default = (r.name == default_role)
+                db.session.add(r)
+            db.session.commit()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -83,12 +147,25 @@ class User(UserMixin, db.Model):
         db.session.add(user)
         return True
 
+    def can(self, perm):
+        return self.role is not None and self.role.has_permission(perm)
 
+    def is_admin(self):
+        return self.can(Permission.admin)
 
 
     def __repr__(self):
         return '<User {} {}>'.format(self.first_name, self.last_name)
 
+
+class AnonymousUser(AnonymousUserMixin):
+    def can(self, perm):
+        return False
+
+    def is_admin(self):
+        return Flase
+
+login.anonymous_user = AnonymousUser
 
 @login.user_loader
 def load_user(id):
