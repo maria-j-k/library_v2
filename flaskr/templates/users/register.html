@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+    {% block scripts %}
+        {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='step_form.css')  }}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+ {% endblock %}
+ {% block body %}
+     
+     {{ super() }}     
+<div class="mx-auto px-auto" style="width: 800px;">
+    <h1>Register a new user: </h1>
+    <br>
+<form action="" method="POST" accept-charset="utf-8">
+    {{ form.hidden_tag() }}
+    <p>
+    {{ form.first_name.label }}
+    {{ form.first_name(size=32) }}
+    {% for error in form.first_name.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    </p>
+    <p>
+    {{ form.last_name.label }}
+    {{ form.last_name(size=32) }}
+    {% for error in form.last_name.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    </p>
+    <p>
+    {{ form.email.label }}
+    {{ form.email(size=32, class_="email") }}
+    {% for error in form.email.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    </p>
+    <p>
+    {{ form.password.label }}
+    {{ form.password(size=32) }}
+    {% for error in form.password.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    </p>
+    <p>
+    {{ form.password2.label }}
+    {{ form.password2(size=32) }}
+    {% for error in form.password2.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(class_="btn btn-info") }}</p>
+</form>
+
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
-from csv import DictReader
 from itertools import chain
 
 from flask import flash, jsonify, redirect, render_template, request, session, url_for, g, current_app
+from flask_login import login_required
 
 from flaskr import db
 from flaskr.models import Book, Copy, Creator, Person, Publisher, Serie
@@ -11,6 +11,7 @@ from scripts.utils import get_or_create
 
 
 @bp.route('/staff/add_book_first', methods=['GET', 'POST'])
+@login_required
 def search_title():
     form = TitleForm()
     ctx = {}
@@ -22,9 +23,12 @@ def search_title():
     return render_template('staff/search_title.html', form=form, ctx=ctx)
 
 @bp.route('/staff/choose_title', methods=['GET', 'POST'])
+@login_required
 def choose_title():
     ctx = {}
-    title = session['title']
+    title = session.get('title')
+    if not title:
+        return redirect(url_for('staff.search_title'))
     books = Book.query.filter(Book.title.ilike("%{}%".format(title))).all()
     ctx['books'] = books
     ctx['title'] = title
@@ -34,8 +38,11 @@ def choose_title():
 
 
 @bp.route('/staff/add_book_second', methods=['GET', 'POST'])
+@login_required
 def add_book():
-    title = session['title']
+    title = session.get('title')
+    if not title:
+        return redirect(url_for('staff.search_title'))
     form = AddBookForm(title=title) 
     if form.validate_on_submit():
         title = form.title.data 
@@ -81,6 +88,7 @@ def add_book():
 
 
 @bp.route('/staff/add_copy/<int:id>', methods=['GET', 'POST'])
+@login_required
 def add_copy(id):
     form = CopyForm()
     book = Book.query.get_or_404(id)

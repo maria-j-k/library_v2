@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+
+    {% block scripts %}
+        {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='step_form.css')  }}" type="text/css" media="screen" title="no title" charset="utf-8">
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+ {% endblock %}
+ {% block body %}
+     
+     {{ super() }}     
+<div class="mx-auto px-auto" style="width: 800px;">
+    <h1>Your account is not active</h1>
+    <h3>You need to confirm your email address</h3>
+    <br>
+    <p><a href="{{ url_for('users.resend_confirmation') }}"> Need another confirmation email?</a></p>
+</div>
+{% endblock %}

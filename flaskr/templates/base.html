@@ -19,7 +19,17 @@
     {% endblock %}
     {% block navbar %} {% endblock %}
     <div class="container">
-    {% block body %} {% endblock %}
+      {% block body %}
+     <div class="container">
+       {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button type="button" class="close fake" data-dissmiss="alert">&times</button>
+          {{ message }}
+        </div> 
+       {% endfor %}
+     </div>
+     
+      {% endblock %}
     </div>
 
 
