@@ -71,7 +71,7 @@ class Person(SearchableMixin, db.Model):
     __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
-    born = db.Column(db.String(64), nullable=True)
+    born = db.Column(db.String(64), nullable=True) # wylatuje
     creator = db.relationship('Creator', backref='person', lazy=True)
     
     def __str__(self):
@@ -84,7 +84,7 @@ class Publisher(SearchableMixin, db.Model):
     __searchable__=['name', 'city']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
-    city = db.Column(db.String(64))
+    city = db.Column(db.String(64)) # do osobnego modelu m2m
     series = db.relationship('Serie', backref='publisher', lazy='dynamic')
     books = db.relationship('Book', backref='publisher', lazy='dynamic') 
     
@@ -155,6 +155,7 @@ class Book(SearchableMixin, db.Model):
     first_edition = db.Column(db.String(64), nullable=True) #potem zmienić na False
     genre = db.Column(db.String(64), nullable=True)
     literary_form = db.Column(db.Enum(FormChoices), nullable=True)
+
     #fiction = db.Column(db.Enum(FictionChoices), nullable=True)
     fiction = db.Column(db.Boolean(), nullable=True)
     subject = db.Column(db.String(64), nullable=True)
