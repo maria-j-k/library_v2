@@ -16,7 +16,8 @@ class TitleForm(FlaskForm):
 class PersonForm(FlaskForm):
     name = StringField('Name')
     role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
-    id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
+    id_ = HiddenField()
+#    id_ = IntegerField(widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
 
     class Meta:
         csrf = False

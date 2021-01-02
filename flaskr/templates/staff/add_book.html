@@ -1,19 +1,176 @@
 {% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
+{% import 'bootstrap/form.html' as wtf %}
 {% block content %}
      {{ super() }}     
- <div class="container">
-     <div class="row">
-         <div class="col-md-4">
-             {{ wtf.quick_form(form) }}
+          <div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            {{ form.csrf_token() }}
+             {{ wtf.render_field(form.title) }}
+          
+
+    <p>Authors   <button style="float: right;" type="button" class="btn btn-outline-success btn-sm fake">Add</button></p>
+      {% for f in form.authors %}
+          <div class="form-group">
+            {{ f.form.name(class_="form-control") }}
+          </div>
+          <div class="form-group">
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+          </div>
+        {% endfor %}
+          
+
+<p>Translation   <button  style="float: right;" type="button" class="btn btn-outline-success btn-sm fake">Add</button></p>
+      {% for f in form.translators %}
+          <div class="form-group">
+            {{ f.form.name(class_="form-control") }}
+          </div>
+          <div class="form-group">
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+          </div>
+        {% endfor %}
+          
+          
+    <p>Redaction   <button  style="float: right;" type="button" class="btn btn-outline-success btn-sm fake">Add</button></p>
+      {% for f in form.redactors %}
+          <div class="form-group">
+            {{ f.form.name(class_="form-control") }}
+          </div>
+          <div class="form-group">
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+          </div>
+        {% endfor %}
+          
+    <p>Introduction   <button  style="float: right;" type="button" class="btn btn-outline-success btn-sm fake">Add</button></p>
+      {% for f in form.intro %}
+          <div class="form-group">
+            {{ f.form.name(class_="form-control") }}
+          </div>
+          <div class="form-group">
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+          </div>
+        {% endfor %}
+        {{ wtf.render_field(form.submit) }}
          </div>
      </div>
-    
+          </div>
+          </form>
+          <p class="mb-0">
+              <button type="button" class="btn btn-light btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M8.93 6.588l-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+</svg>
+                <span style="display: none">Button</span>
+              </button>
+            </p>
+        </div>
+    </div>
 </div>
-    
-    
-    
-    
+          {#}
+
+
+
+
+
+
+
+     <div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <form class="from" action="" method="get" accept-charset="utf-8" role="form">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, hiddens="only") }}
+        {{ wtf.form_field(form.title) }}
+      <h4>{{ form.authors.label }}</h4>
+        {% for f in form.authors %}
+            {{ wtf.form_field(f.form.name) }}
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+        {% endfor %}
+      <h4>{{ form.translators.label }}</h4>
+        {% for f in form.translators %}
+            {{ wtf.form_field(f.form.name) }}
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+        {% endfor %}
+      <h4>{{ form.redactors.label }}</h4>
+        {% for f in form.redactors %}
+            {{ wtf.form_field(f.form.name) }}
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+          {% endfor %}
+      <h4>{{ form.intro.label }}</h4>
+        {% for f in form.intro %}
+            {{ wtf.form_field(f.form.name) }}
+              <p>{{ f.form.role }}</p>
+              <p>{{ f.form.id_ }}</p>
+        {% endfor %}
+        {{ wtf.form_field(form.submit) }}
+    </form>
+        </div>
+    </div>
+</div>
+{#}
+
+        
+
 
 {% endblock %}
+{#}
+        <fieldset>
+            <div class="form-group "><label class="control-label" for="authors-0-name">Name</label>
+            <input class="form-control" id="authors-0-name" name="authors-0-name" type="text" value="">        
+            </div>
+            <div class="form-group ">
+            <input class="form-control" id="authors-0-id_" name="authors-0-id_" type="hidden" value="">
+            </div>
+            <div class="form-group ">
+            <input class="form-control" id="authors-0-role" name="authors-0-role" type="hidden" value="A">
+            </div>
+        </fieldset>
 
+        <fieldset>
+            <div class="form-group "><label class="control-label" for="authors-0-name">Name</label>
+            <input class="form-control" id="authors-0-name" name="authors-0-name" type="text" value="">        
+            </div>
+            <div class="form-group ">
+            <input class="form-control" id="authors-0-id_" name="authors-0-id_" type="hidden" value="">
+            </div>
+        </fieldset>
+        
+        <fieldset>
+            <div class="form-group "><label class="control-label" for="authors-0-name">Name</label>
+            <input class="form-control" id="authors-0-name" name="authors-0-name" type="text" value="">        
+            </div>
+            <div class="form-group ">
+            <input class="form-control" id="authors-0-id_" name="authors-0-id_" type="hidden" value="">
+            </div>
+        </fieldset>
+
+<div class="form-group "><label class="control-label" for="authors">Authors</label>
+        
+ <ul class="form-control" id="authors">
+     <li><label for="authors-0">Authors-0</label> 
+         <table id="authors-0">
+             <tr>
+                 <th><label for="authors-0-name">Name</label></th>
+                 <td><input id="authors-0-name" name="authors-0-name" type="text" value=""></td>
+             </tr>
+             <tr>
+                 <th><label for="authors-0-id_">Id</label></th>
+                 <td><input id="authors-0-role" name="authors-0-role" type="hidden" value="A">
+                     <input id="authors-0-id_" name="authors-0-id_" type="hidden" value=""></td>
+             </tr>
+         </table>
+     </li>
+     <li><label for="authors-1">Authors-1</label> 
+ <table id="authors-1"><tr><th><label for="authors-1-name">Name</label></th><td><input id="authors-1-name" name="authors-1-name" type="text" value=""></td></tr><tr><th><label for="authors-1-id_">Id</label></th><td><input id="authors-1-role" name="authors-1-role" type="hidden" value="A"><input id="authors-1-id_" name="authors-1-id_" type="hidden" value=""></td></tr></table></li><li><label for="authors-2">Authors-2</label> <table id="authors-2"><tr><th><label for="authors-2-name">Name</label></th><td><input id="authors-2-name" name="authors-2-name" type="text" value=""></td></tr><tr><th><label for="authors-2-id_">Id</label></th><td><input id="authors-2-role" name="authors-2-role" type="hidden" value="A"><input id="authors-2-id_" name="authors-2-id_" type="hidden" value=""></td></tr></table></li></ul>
+        
+  </div>
+
+  {#}

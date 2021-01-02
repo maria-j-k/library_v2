@@ -22,4 +22,4 @@ class Config(object):
     MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD')
     MAIL_SUBJECT_PREFIX='Biblioteka WLH'
     MAIL_SENDER='Biblioteka WLH <wlh.biblioteka@gmail.com'
-    
+    BOOTSTRAP_BOOTSWATCH_THEME = 'sandstone'
