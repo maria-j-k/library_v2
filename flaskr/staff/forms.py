@@ -71,11 +71,11 @@ def all_locations():
 
 class CopyForm(FlaskForm):
     signature_mark = StringField('Singature mark')
-    on_shelf = BooleanField('On shelf')
-    section = StringField('Section')
-    remarques = StringField('Remarques')
     collection = QuerySelectField(query_factory=all_collections, allow_blank=True)
     location = QuerySelectField(query_factory=all_locations, allow_blank=True)
+    section = StringField('Section')
+    remarques = StringField('Remarques')
+    on_shelf = BooleanField('On shelf')
     submit = SubmitField('Submit')
     
 

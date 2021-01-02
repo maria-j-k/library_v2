@@ -22,6 +22,11 @@ def search_title():
         print(form.errors)
     return render_template('staff/search_title.html', form=form, ctx=ctx)
 
+@bp.route('/staff/try', methods=['GET', 'POST'])
+def try_form():
+    form = AddBookForm()
+    return render_template('staff/add_book.html', form=form)
+
 @bp.route('/staff/choose_title', methods=['GET', 'POST'])
 @login_required
 def choose_title():

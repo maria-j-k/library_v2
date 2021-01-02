@@ -1,19 +1,6 @@
 {% extends 'base.html' %}
-
-{% block autocomplete %}
-	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-{% endblock %}
-
-    {% block scripts %}
-        {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='step_form.css')  }}" type="text/css" media="screen" title="no title" charset="utf-8">
-<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
-<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
-<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
- {% endblock %}
-{% block body %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block content %}
      {{ super() }}     
 <div class="container book-info">
 <table class="table">
@@ -108,10 +95,21 @@
       <p> {{ form.collection.label }} {{ form.collection() }}</p>
       <p> {{ form.remarques.label }} {{ form.remarques() }}</p>
  <p>{{ form.submit() }}</p>
- </div> {# book-copy #}
- 
+ </div>
+
+
+
+
 </form>
     
+ <div class="container">
+     <div class="row">
+         <div class="col-md-4">
+             {{ wtf.quick_form(form) }}
+         </div>
+     </div>
+    
+</div>
     
     
     

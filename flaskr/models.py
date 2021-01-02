@@ -158,7 +158,7 @@ class Book(SearchableMixin, db.Model):
 
     #fiction = db.Column(db.Enum(FictionChoices), nullable=True)
     fiction = db.Column(db.Boolean(), nullable=True)
-    subject = db.Column(db.String(64), nullable=True)
+#    subject = db.Column(db.String(64), nullable=True)
     precision = db.Column(db.Text, nullable=True)
     nukat = db.Column(db.Text, nullable=True)
     publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'), nullable=True) #potem zmienić na False
