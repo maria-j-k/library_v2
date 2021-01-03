@@ -24,9 +24,10 @@ class PersonForm(FlaskForm):
 
 
 class PublisherForm(FlaskForm):
-    publisher_name = StringField('Name', validators=[DataRequired()]) # autocomplete z możliwością wpisania    
+    publisher_name = StringField('Publisher') # autocomplete z możliwością wpisania    
     id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
-    city = StringField('City')
+    city = StringField('Publication place') # autocomplete z możliwością wpisania 
+    c_id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     serie = StringField('Serie') # autocomplete z możliwością wpisania
     s_id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
 
@@ -37,10 +38,20 @@ class PublisherForm(FlaskForm):
 class BookForm(FlaskForm):
     isbn = StringField()
     title = StringField('Title')
-    origin_language = StringField('Origin language')
+    authors = FieldList(FormField(PersonForm, default={'role': 'A'}), min_entries=3)
+    translators = FieldList(FormField(PersonForm, default={'role': 'T'}), min_entries=3 )
+    redactors = FieldList(FormField(PersonForm, default={'role': 'R'}), min_entries=3)
+    intro = FieldList(FormField(PersonForm, default={'role': 'I'}), min_entries=3)
     pub_year = StringField('Publication year', validators=[DataRequired()])
+    city = StringField('Publication place') # autocomplete z możliwością wpisania 
+    city_id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
+    publisher_name = StringField('Publisher') # autocomplete z możliwością wpisania    
+    id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
+    serie = StringField('Serie') # autocomplete z możliwością wpisania
+    serie_id_ = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
+    origin_language = StringField('Origin language')
     first_edition = StringField('First edition')
-    periodic_num = StringField('Periodic number')
+#    periodic_num = StringField('Periodic number')
     fiction = SelectField('Fiction', choices=[
                     ('', '---'),
                     (1, 'fiction'),
@@ -54,9 +65,10 @@ class BookForm(FlaskForm):
                     ('PR', 'Prose'),
                     ('DR', 'Drama')
                 ])
-    subject = TextAreaField('Subject')
+#    subject = TextAreaField('Subject')
     precision = TextAreaField('Precision')
     nukat = TextAreaField('NUKAT themes')
+    submit = SubmitField('Submit')
     
     class Meta:
         csrf = False

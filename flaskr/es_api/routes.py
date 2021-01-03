@@ -40,7 +40,7 @@ def autocomplete_serie():
     series = ac_serie(q, publisher)
     return jsonify(matching_results=series)
 
-@bp.route('/db_pub_place')
+@bp.route('/db_pub_place') # po modelu City
 def find_pub_place():
     id = request.args.get('q')
     p = Publisher.query.get_or_404(id)

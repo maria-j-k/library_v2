@@ -76,8 +76,8 @@ function findCity(publisher) {
 //            console.log(`ui item label: ${ui.item.label}`)
 //            console.log(`ui item value: ${ui.item.value}`)
             publisher_id = ui.item.value
-??            console.log(`publisher: ${publisher_id}`)
-            findCity(publisher_id)
+//            console.log(`publisher: ${publisher_id}`)
+//            findCity(publisher_id)
         }
     });
 
@@ -113,9 +113,9 @@ function findCity(publisher) {
 
 let publisher_id = null
 let clear = document.querySelectorAll('.clear')
-let serieInp = document.querySelector("#published-serie")
+let serieInp = document.querySelector("#serie")
 serieInp.addEventListener('click', e => {
-    if (!document.querySelector("#published-publisher_name").value){
+    if (!document.querySelector("#publisher_name").value){
         alert("You must fill publisher field first.")
     }
 })
@@ -213,15 +213,20 @@ const newPerson = function(btn)  {
 
 
 //variables
-let addRole = document.querySelectorAll('.add-role');
+let addRole = document.querySelectorAll('.add-role button');
 let addPerson = document.querySelectorAll('.add-person');
 let authors = document.querySelectorAll('#authors .creator')
 //events
 
-addRole.forEach(role=> {
-    role.querySelector('button').addEventListener('click', e => {
-        role.nextElementSibling.classList.remove('invisible');
-        role.classList.add('invisible');
+addRole.forEach(btn=> {
+    btn.addEventListener('click', e => {
+        console.log(btn.id)
+//        let role = $('.'+btn.id)
+//        let role = document.querySelector('.'+btn.id)
+        let role = document.querySelector(`.${btn.id}`)
+        console.log(role)
+        role.classList.remove('invisible');
+        btn.classList.add('invisible');
     });
 });
 

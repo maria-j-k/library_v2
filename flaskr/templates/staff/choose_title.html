@@ -31,7 +31,7 @@
           <td><a href="{{ url_for('staff.add_copy', id=book.id)}}">{{ book.title }}</a></td>
         <td>{{ book.print_authors() }}</td>
         <td>{{ book.publisher.name }}</td>
-        <td>{{ book.publisher.city }}</td>
+        <td>{{ book.city.name }}</td>
         <td>{{ book.pub_year }}</td>
         <td><a href="" style="color: black;">X</a></td>
       </tr>

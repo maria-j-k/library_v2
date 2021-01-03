@@ -4,7 +4,7 @@ from flask import current_app
 def ac_person(query):
     if not current_app.elasticsearch:
         return [], 0
-    search_res = current_app.elasticsearch.search(index='person',
+    search_res = current_app.elasticsearch.search(index='persons',
             body={
                 'query': {
                     'multi_match': {
@@ -42,7 +42,7 @@ def ac_serie(query, publisher=None):
       }
     }
 
-    search_res = current_app.elasticsearch.search(index = 'serie', body = body)
+    search_res = current_app.elasticsearch.search(index = 'series', body = body)
     return [{'value': hit['_id'], 'label': hit['_source']['name']}
             for hit in search_res['hits']['hits']]
 
@@ -57,7 +57,7 @@ def ac_publisher(query):
                 }, 
             'size': 10}
 
-    search_res = current_app.elasticsearch.search(index = 'publisher', body = body)
+    search_res = current_app.elasticsearch.search(index = 'publishers', body = body)
     return [{'value': hit['_id'], 'label': hit['_source']['name']}
             for hit in search_res['hits']['hits']]
 

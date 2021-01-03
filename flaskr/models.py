@@ -106,8 +106,10 @@ class City(db.Model):
     __tablename__= 'cities'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
-    books = db.relationship('Book', backref='books', lazy='dynamic') 
+    books = db.relationship('Book', backref='city', lazy='dynamic') 
 
+    def __repr__(self):
+        return self.name
 
 #class PublicationPlace(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
