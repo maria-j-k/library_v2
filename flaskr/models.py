@@ -68,6 +68,7 @@ class BookRoles(enum.Enum):
 
 
 class Person(SearchableMixin, db.Model):
+    __tablename__='persons'
     __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
@@ -81,10 +82,10 @@ class Person(SearchableMixin, db.Model):
 
 
 class Publisher(SearchableMixin, db.Model):
-    __searchable__=['name', 'city']
+    __tablename__='publishers'
+    __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
-    city = db.Column(db.String(64)) # do osobnego modelu m2m
     series = db.relationship('Serie', backref='publisher', lazy='dynamic')
     books = db.relationship('Book', backref='publisher', lazy='dynamic') 
     
@@ -101,12 +102,27 @@ class Publisher(SearchableMixin, db.Model):
         return data
 
 
+class City(db.Model):
+    __tablename__= 'cities'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), index=True)
+    books = db.relationship('Book', backref='books', lazy='dynamic') 
+
+
+#class PublicationPlace(db.Model):
+#    id = db.Column(db.Integer, primary_key=True)
+#    role = db.Column(db.Enum(BookRoles))
+#    city_id = db.Column(db.Integer, db.ForeignKey('city.id'))
+#    publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'))
+#    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+
 
 class Serie(SearchableMixin, db.Model):
+    __tablename__='series'
     __searchable__=['name', 'publisher_id']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
-    publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'))
+    publisher_id = db.Column(db.Integer, db.ForeignKey('publishers.id'))
     books = db.relationship('Book', backref='serie', lazy='dynamic')
     
     def __str__(self):
@@ -114,6 +130,7 @@ class Serie(SearchableMixin, db.Model):
 
 
 class Collection(db.Model):
+    __tablename__='collections'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     copies = db.relationship('Copy', backref='collection', lazy=True)
@@ -123,6 +140,7 @@ class Collection(db.Model):
 
 
 class Location(db.Model):
+    __tablename__='locations'
     id = db.Column(db.Integer, primary_key=True)
     room = db.Column(db.String(64))# wymagane
     shelf = db.Column(db.String(3), nullable=True)# regex A4
@@ -145,6 +163,7 @@ class FictionChoices(enum.Enum):
 
 
 class Book(SearchableMixin, db.Model):
+    __tablename__='books'
     __searchable__=['title']
     id = db.Column(db.Integer, primary_key=True)
     ISBN_REGEX=r'^(97(8|9))?\d{9}(\d|X)$'
@@ -152,6 +171,7 @@ class Book(SearchableMixin, db.Model):
     title = db.Column(db.String(255), nullable=False)
     origin_language = db.Column(db.String(32), nullable=True)
     pub_year = db.Column(db.String(32), nullable=True) #potem zmienić na False
+#    pub_place = db.Column(db.String(64)) # do osobnego modelu m2m
     first_edition = db.Column(db.String(64), nullable=True) #potem zmienić na False
     genre = db.Column(db.String(64), nullable=True)
     literary_form = db.Column(db.Enum(FormChoices), nullable=True)
@@ -161,8 +181,9 @@ class Book(SearchableMixin, db.Model):
 #    subject = db.Column(db.String(64), nullable=True)
     precision = db.Column(db.Text, nullable=True)
     nukat = db.Column(db.Text, nullable=True)
-    publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'), nullable=True) #potem zmienić na False
-    serie_id = db.Column(db.Integer, db.ForeignKey('serie.id'), nullable=True)
+    publisher_id = db.Column(db.Integer, db.ForeignKey('publishers.id'), nullable=True)
+    city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=True) #potem zmienić na False
+    serie_id = db.Column(db.Integer, db.ForeignKey('series.id'), nullable=True)
     creator = db.relationship('Creator', backref='book', lazy=True)
     copies = db.relationship('Copy', backref='book', lazy='dynamic') 
 
@@ -191,20 +212,22 @@ class Book(SearchableMixin, db.Model):
 
 
 class Creator(db.Model):
+    __tablename__='creators'
     id = db.Column(db.Integer, primary_key=True)
     role = db.Column(db.Enum(BookRoles))
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
-    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    book_id = db.Column(db.Integer, db.ForeignKey('books.id'))
+    person_id = db.Column(db.Integer, db.ForeignKey('persons.id'))
 
 
 class Copy(db.Model):
+    __tablename__='copies'
     id = db.Column(db.Integer, primary_key=True)
+    signature_mark = db.Column(db.String(32), nullable=True)
     on_shelf = db.Column(db.Boolean(), nullable=False)
     section = db.Column(db.String(255), nullable=True)
     remarques = db.Column(db.String(255), nullable=True)
-    signature_mark = db.Column(db.String(32), nullable=True)
-    collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=True)
-    location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'), nullable=True)
+    location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
 
 
