@@ -26,11 +26,12 @@ $(function() {
 //            let thisInputId = $(this).attr('id')
 //            $("#" + thisInputId + "_val").val(ui.item.value);
             $('#' + idsId).val(parseInt(ui.item.value));
-//            console.log(`this: ${$(this).val()}`)
+            console.log(`this: ${$(this).val()}`)
+            $(this).prop("readonly", true);
 //            console.log($('#'+idsId))
-//            console.log($('#'+idsId).val())
-//            console.log(`ui item label: ${ui.item.label}`)
-//            console.log(`ui item value: ${ui.item.value}`)
+            console.log($('#'+idsId).val())
+            console.log(`ui item label: ${ui.item.label}`)
+            console.log(`ui item value: ${ui.item.value}`)
 //            console.log(nameId)
 //            console.log(idsId)
 ////            console.log(`thisInputId: ${thisInputId}`)
@@ -70,11 +71,8 @@ function findCity(publisher) {
         select: function(event, ui) {
             event.preventDefault();
             $(this).val(ui.item.label);
-            $('#published-id_').val(parseInt(ui.item.value));
-//            console.log(`this: ${$(this).val()}`)
-//            console.log($('#published-id_').val())
-//            console.log(`ui item label: ${ui.item.label}`)
-//            console.log(`ui item value: ${ui.item.value}`)
+            $(this).prop("readonly", true);
+            this.closest('div.row').firstElementChild.lastElementChild.value= parseInt(ui.item.value)
             publisher_id = ui.item.value
 //            console.log(`publisher: ${publisher_id}`)
 //            findCity(publisher_id)
@@ -102,7 +100,9 @@ function findCity(publisher) {
         select: function(event, ui) {
             event.preventDefault();
             $(this).val(ui.item.label);
-            $('#published-s_id_').val(parseInt(ui.item.value));
+            $(this).prop("readonly", true);
+        this.closest('div.row').firstElementChild.lastElementChild.value= parseInt(ui.item.value)
+//            $('#published-s_id_').val(parseInt(ui.item.value));
 //            console.log(`this: ${$(this).val()}`)
 //            console.log($('#published-s_id_').val())
 //            console.log(`ui item label: ${ui.item.label}`)
@@ -128,7 +128,8 @@ function findCity(publisher) {
         select: function(event, ui) {
             event.preventDefault();
             $(this).val(ui.item.label);
-            $('#city_id_').val(parseInt(ui.item.value));
+            $(this).prop("readonly", true);
+        this.closest('div.row').firstElementChild.lastElementChild.value= parseInt(ui.item.value)
         }
     });
 
@@ -138,9 +139,9 @@ function findCity(publisher) {
 
 
 
-
 let publisher_id = null
 let clear = document.querySelectorAll('.clear')
+let clearPerson = document.querySelectorAll('.clear--p')
 let serieInp = document.querySelector("#serie")
 serieInp.addEventListener('click', e => {
     if (!document.querySelector("#publisher_name").value){
@@ -149,18 +150,28 @@ serieInp.addEventListener('click', e => {
 })
 
 
+
 clear.forEach(btn => {
     btn.addEventListener('click', e => {
-    let outer = btn.closest('div');
-    let inputs = btn.closest('div').querySelectorAll('input')
-        inputs.forEach(inp => {
-            inp.value = "";
-            inp.readOnly = false;
-            publisher_id = null
-        })
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').value = "";
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').readOnly=false;
+        btn.closest('div.row').firstElementChild.lastElementChild.value = "";
     });
 });
 
+
+clearPerson.forEach(btn => {
+    btn.addEventListener('click', e => {
+        btn.closest('div.row').firstElementChild.lastElementChild.value = ""
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').value=""
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').readOnly=false;
+        btn.closest('div.row').classList.add('invisible')
+        btn.closest('div.row').classList.remove('active')
+        btn.closest('div.role').querySelector('.add-person').classList.remove('invisible')
+        let availablePerson = btn.closest('div.role').querySelectorAll('.invisible')
+        console.log(availablePerson)
+    })
+})
 /*
  *switching steps 
  **/
@@ -187,6 +198,7 @@ let fakeBtns = document.querySelectorAll('.fake');
 
 
 //events
+
 fakeBtns.forEach(btn => {
     btn.addEventListener('click', e => {
         e.preventDefault();

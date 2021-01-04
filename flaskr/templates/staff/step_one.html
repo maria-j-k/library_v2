@@ -28,17 +28,31 @@
      </div> 
    </div>
    {% for f in form.authors %}
-    <div class="row">
-      <div class="col-md-6">
         {% if loop.first %}
-          <p>{{ f.form.name(class_="creator active form-control") }}</p>
-        {%  else %}
-          <p> {{ f.form.name(class_="creator invisible form-control") }}</p>
-        {% endif %}
+    <div class="row active">
+      <div class="col-md-6">
+          <p>{{ f.form.name(class_="creator form-control") }}</p>
             {{ f.form.role }}
             {{ f.form.id_ }}
        </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
       </div>
+        {%  else %}
+    <div class="row invisible">
+      <div class="col-md-6">
+          <p> {{ f.form.name(class_="creator form-control") }}</p>
+            {{ f.form.role }}
+            {{ f.form.id_ }}
+       </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+      </div>
+        {% endif %}
     {% endfor %}
   
   {% for error in form.authors.errors %}
@@ -56,17 +70,31 @@
      </div> 
    </div>
   {% for f in form.translators %}
-  <div class="row">
-    <div class="col-md-6">
-      {% if loop.first %}
-        <p> {{ f.form.name(class_="creator active form-control") }}</p>
-      {% else %}
-        <p>{{ f.form.name(class_="creator invisible form-control") }}</p>
-      {%  endif %}
+    {% if loop.first %}
+     <div class="row active">
+       <div class="col-md-6">
+         <p> {{ f.form.name(class_="creator form-control") }}</p>
         {{ f.form.role }}
         {{ f.form.id_ }}
      </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
   </div>
+      {% else %}
+     <div class="row invisible">
+       <div class="col-md-6">
+        <p>{{ f.form.name(class_="creator form-control") }}</p>
+        {{ f.form.role }}
+        {{ f.form.id_ }}
+     </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+      {%  endif %}
   {% endfor %}
   
   {% for error in form.translators.errors %}
@@ -75,27 +103,45 @@
     {#}    <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>{#}
  </div>
 
+
+
+
+
 <div class="invisible role r">
   <div class="row">
      <div class="col-md-6">
-        <h6>{{ form.redactors.label }}</h6>
+      <h6>{{ form.redactors.label }}</h6>
      </div>
      <div class="col-md-3"> 
-        <button class="btn btn-light btn-sm fake add-person">Add</button>
+     <button class="btn btn-light btn-sm fake add-person">Add</button>
      </div> 
    </div>
   {% for f in form.redactors %}
-  <div class="row">
-     <div class="col-md-6">
     {% if loop.first %}
-      <p> {{ f.form.name(class_="creator active form-control") }}</p>
-    {% else %}
-      <p> {{ f.form.name(class_="creator invisible form-control") }}</p>
-      {%  endif %}
-      {{ f.form.role }}
-      {{ f.form.id_ }}
+     <div class="row active">
+       <div class="col-md-6">
+         <p> {{ f.form.name(class_="creator form-control") }}</p>
+        {{ f.form.role }}
+        {{ f.form.id_ }}
      </div>
-   </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+      {% else %}
+     <div class="row invisible">
+       <div class="col-md-6">
+        <p>{{ f.form.name(class_="creator form-control") }}</p>
+        {{ f.form.role }}
+        {{ f.form.id_ }}
+     </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+      {%  endif %}
   {% endfor %}
 
   {% for error in form.redactors.errors %}
@@ -104,29 +150,47 @@
     {#}    <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>{#}
  </div>
 
+ 
+
+
+
 
 
 <div class="invisible role i">
   <div class="row">
      <div class="col-md-6">
-        <h6>{{ form.intro.label }}</h6>
+      <h6>{{ form.intro.label }}</h6>
      </div>
      <div class="col-md-3"> 
-        <button class="btn btn-light btn-sm fake add-person">Add</button>
+     <button class="btn btn-light btn-sm fake add-person">Add</button>
      </div> 
    </div>
   {% for f in form.intro %}
-  <div class="row">
-     <div class="col-md-6">
     {% if loop.first %}
-      <p> {{ f.form.name(class_="creator active form-control") }}</p>
-    {% else %}
-      <p>{{ f.form.name(class_="creator invisible form-control") }}</p>
-      {%  endif %}
-      {{ f.form.role }}
-      {{ f.form.id_ }}
+     <div class="row active">
+       <div class="col-md-6">
+         <p> {{ f.form.name(class_="creator form-control") }}</p>
+        {{ f.form.role }}
+        {{ f.form.id_ }}
      </div>
-   </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+      {% else %}
+     <div class="row invisible">
+       <div class="col-md-6">
+        <p>{{ f.form.name(class_="creator form-control") }}</p>
+        {{ f.form.role }}
+        {{ f.form.id_ }}
+     </div>
+     <div class="col-md-3"> 
+       <button class="clear--p fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+      {%  endif %}
   {% endfor %}
 
   {% for error in form.intro.errors %}
@@ -158,11 +222,12 @@
        <button class="clear fake btn btn-danger btn-sm">Clear</button> 
        <button class="fake btn btn-warning btn-sm">Error</button> 
      </div> 
-   </div>
+  </div>
+
        {{ form.city.label }} 
   <div class="row">
      <div class="col-md-6">
-       <p> {{form.city(class_="form-control") }}<p>
+       <p> {{ form.city(class_="form-control") }}</p>
        {{ form.city_id_ }}
      </div>
      <div class="col-md-3"> 
