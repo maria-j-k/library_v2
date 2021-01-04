@@ -4,7 +4,6 @@
 *notes*
 *local_config.py
 .flaskenv
-scripts/
 old_scripts/
 old_migrations/
 flaskr/bulk_insert_utils.py
