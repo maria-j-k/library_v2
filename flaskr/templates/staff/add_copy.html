@@ -18,11 +18,11 @@
         </tr>
         <tr>
             <th>Place of publication</th>
-            <td>{{ book.publisher.city }}</td>
+            <td>{{ book.publisher.city or "" }}</td>
         </tr>
         <tr>
             <th>Year of publication</th>
-            <td>{{ book.pub_year }}</td>
+            <td>{{ book.pub_year or "" }}</td>
         </tr>
         <tr>
             <th>Serie</th>
@@ -42,35 +42,35 @@
         </tr>
         <tr>
             <th>Isbn</th>
-            <td>{{ book.isbn if book.isbn else "" }}</td>
+            <td>{{ book.isbn or "" }}</td>
         </tr>
         <tr>
             <th>Origin language</th>
-            <td>{{ book.origin_language }}</td>
+            <td>{{ book.origin_language or "" }}</td>
         </tr>
         <tr>
             <th>First edition</th>
-            <td>{{ book.first_edition }}</td>
+            <td>{{ book.first_edition or "" }}</td>
         </tr>
         <tr>
             <th>Form</th>
-            <td>{{ book.literary_form if book.literary_form else "" }}</td>
+            <td>{{ book.literary_form.value or "" }}</td>
         </tr>
         <tr>
             <th>Genre</th>
-            <td>{{ book.genre }}</td>
+            <td>{{ book.genre or "" }}</td>
         </tr>
         <tr>
             <th>Subject</th>
-            <td>{{ book.subject }}</td>
+            <td>{{ book.subject or "" }}</td>
         </tr>
         <tr>
             <th>Precision</th>
-            <td>{{ book.precision }}</td>
+            <td>{{ book.precision or "" }}</td>
         </tr>
         <tr>
             <th>NUKAT</th>
-            <td>{{ book.nukat }}</td>
+            <td>{{ book.nukat or "" }}</td>
         </tr>
         <tr>
             <th>N of copies</th>

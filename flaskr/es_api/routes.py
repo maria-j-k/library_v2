@@ -4,7 +4,7 @@ from flask import flash, jsonify, redirect, render_template, request, url_for, g
 
 from flaskr import db
 from flaskr.es_api import bp
-from flaskr.es_api.queries import ac_person, ac_publisher, ac_serie
+from flaskr.es_api.queries import ac_person, ac_publisher, ac_serie, ac_city
 from flaskr.models import Book, Person, Publisher, Serie
 
 
@@ -24,6 +24,13 @@ def autocomplete_person():
     persons = ac_person(q)
 #    persons = Person.search(q)
     return jsonify(matching_persons=persons)
+
+@bp.route('/autocomplete_city') 
+def autocomplete_city():
+    q = request.args.get('q')
+    cities = ac_city(q)
+#    publishers = Publisher.search(q)
+    return jsonify(matching_results=cities)
 
 
 @bp.route('/autocomplete_publisher') 

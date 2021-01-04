@@ -89,7 +89,6 @@ function findCity(publisher) {
                 q: request.term, publisher: publisher_id 
             }, function(data) {
                 response(data.matching_results); 
-                console.log(publisher_id)
                 console.log(data.matching_results)
             });
             }
@@ -110,6 +109,35 @@ function findCity(publisher) {
 //            console.log(`ui item value: ${ui.item.value}`)
         }
     });
+
+    $("#city").autocomplete({
+        source:function(request, response) {
+            $.getJSON($SCRIPT_ROOT + '/autocomplete_city',{
+                q: request.term, 
+            }, function(data) {
+                response(data.matching_results); 
+                console.log(data.matching_results)
+            });
+        },
+
+        minLength: 3,
+        focus: function(event, ui) {
+		event.preventDefault();
+        $(this).val(ui.item.label);
+				},
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $('#city_id_').val(parseInt(ui.item.value));
+        }
+    });
+
+
+
+
+
+
+
 
 let publisher_id = null
 let clear = document.querySelectorAll('.clear')
@@ -193,23 +221,37 @@ prevBtns.forEach(btn => {
  * */
 
 //functions
-const newPerson = function(btn)  {
-    let person = btn.closest('div').querySelector('.active')
-    let nextPerson = btn.closest('div').querySelectorAll('.invisible')
-    if (nextPerson.length == 1){
-    btn.classList.add('invisible')
+//const newPerson = function(btn)  {
+//    let person = btn.closest('div').querySelector('.active')
+//    let nextPerson = btn.closest('div').querySelectorAll('.invisible')
+//    if (nextPerson.length == 1){
+//    btn.classList.add('invisible')
+//    }
+//    if (person.querySelector('input').value){ 
+//        person.classList.remove('active')
+//        nextPerson[0].classList.add('active')
+//        nextPerson[0].classList.remove('invisible')
+//    }
+//    else {
+//        alert('Before adding a new person, please enter a value!')
+//    };
+//}
+
+const newPerson = function(btn) {
+    let role = btn.closest('div .role')
+    let availablePerson = role.querySelectorAll('.invisible')
+    let nextPerson = role.querySelector('.invisible')
+    let currentPerson = role.querySelector('.active')
+    nextPerson.classList.remove('invisible')
+    nextPerson.classList.add('active')
+    currentPerson.classList.remove('active')
+
+    console.log(currentPerson)
+    console.log(availablePerson)
+    if (availablePerson.length == 1){
+        btn.classList.add('invisible')
     }
-    if (person.querySelector('input').value){ 
-        person.classList.remove('active')
-        nextPerson[0].classList.add('active')
-        nextPerson[0].classList.remove('invisible')
-    }
-    else {
-        alert('Before adding a new person, please enter a value!')
-    };
 }
-
-
 
 
 //variables
@@ -220,11 +262,7 @@ let authors = document.querySelectorAll('#authors .creator')
 
 addRole.forEach(btn=> {
     btn.addEventListener('click', e => {
-        console.log(btn.id)
-//        let role = $('.'+btn.id)
-//        let role = document.querySelector('.'+btn.id)
         let role = document.querySelector(`.${btn.id}`)
-        console.log(role)
         role.classList.remove('invisible');
         btn.classList.add('invisible');
     });
@@ -232,6 +270,7 @@ addRole.forEach(btn=> {
 
 addPerson.forEach(btn => {
     btn.addEventListener('click', e => {
+        console.log('new person')
         newPerson(btn)
     });
 });

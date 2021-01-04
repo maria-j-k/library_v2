@@ -94,6 +94,8 @@ def add_book():
 #        copy.remarques = form.copy.remarques.data or None
 #        db.session.add(copy)
         db.session.commit()
+        flash(f'Book {book.title} has been added to db.\nId: {book.id}.')
+        return redirect(url_for('staff.add_copy', id=book.id))
     else:
         print(form.errors)
     return render_template('staff/step_form_base.html', form=form)

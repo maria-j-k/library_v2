@@ -61,3 +61,17 @@ def ac_publisher(query):
     return [{'value': hit['_id'], 'label': hit['_source']['name']}
             for hit in search_res['hits']['hits']]
 
+def ac_city(query):
+    body = {
+            'query': {
+                'multi_match': {
+                    'query': query, 
+                    'type': 'bool_prefix', 
+                    'fields': ['name']
+                    }
+                }, 
+            'size': 10}
+
+    search_res = current_app.elasticsearch.search(index = 'cities', body = body)
+    return [{'value': hit['_id'], 'label': hit['_source']['name']}
+            for hit in search_res['hits']['hits']]

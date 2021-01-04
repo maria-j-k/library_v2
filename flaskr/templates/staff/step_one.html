@@ -2,96 +2,137 @@
 
 <form class="form form-horizontal" action="" method="POST" accept-charset="utf-8">
   {{ form.hidden_tag() }}
-  <div class="container" id="title">
-  <h5>{{ form.title.label }}</h5>
-      <p> {{ form.title(size=64, class="title form-control") }}</p>
+  
+<div class="container" id="title">
+  <div class="row">
+     <div class="col-md-6">
+        <h6>{{ form.title.label }}</h6>
+        <p> {{ form.title(class="title form-control") }}</p>
+      </div>
+   </div>
+  {% for error in form.title.errors %}
+      <span style="color: red">{{ error }}</span>   
+  {% endfor %}
 </div>
 
 
 <div class="container" id="creators">
    
-    <div  class="a">
-  <h5>{{ form.authors.label }}</h5>
-  {% for f in form.authors %}
-    {% if loop.first %}
-      <p class="active"> {{ f.form.name.label }}  {{ f.form.name(size=32, class_="creator form-control") }}</p>
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
-      {%  else %}
-      <p class="invisible"> {{ f.form.name.label }}  {{ f.form.name(size=32, class_="creator form-control") }}</p>
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
-    {% endif %}
-  {% endfor %}
+ <div  class="role a">
+   <div class="row">
+     <div class="col-md-3">
+       <h6>{{ form.authors.label }}</h6>
+     </div>
+     <div class="col-md-3"> 
+        <button class="btn btn-light btn-sm fake add-person">Add</button>
+     </div> 
+   </div>
+   {% for f in form.authors %}
+    <div class="row">
+      <div class="col-md-6">
+        {% if loop.first %}
+          <p>{{ f.form.name(class_="creator active form-control") }}</p>
+        {%  else %}
+          <p> {{ f.form.name(class_="creator invisible form-control") }}</p>
+        {% endif %}
+            {{ f.form.role }}
+            {{ f.form.id_ }}
+       </div>
+      </div>
+    {% endfor %}
+  
   {% for error in form.authors.errors %}
       <span style="color: red">{{ error }}</span>   
   {% endfor %}
-    <p> <button class="btn btn-light btn-sm fake add-person">Add author</button> </p>
- </div>
+   </div>
 
-<div class="invisible t">
-      <h5>{{ form.translators.label }}</h5>
+<div class="invisible role t">
+  <div class="row">
+     <div class="col-md-6">
+      <h6>{{ form.translators.label }}</h6>
+     </div>
+     <div class="col-md-3"> 
+     <button class="btn btn-light btn-sm fake add-person">Add</button>
+     </div> 
+   </div>
   {% for f in form.translators %}
-    {% if loop.first %}
-      <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator form-control") }}</p>
-
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
-    {% else %}
-      <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator form-control") }}</p>
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
+  <div class="row">
+    <div class="col-md-6">
+      {% if loop.first %}
+        <p> {{ f.form.name(class_="creator active form-control") }}</p>
+      {% else %}
+        <p>{{ f.form.name(class_="creator invisible form-control") }}</p>
       {%  endif %}
-
+        {{ f.form.role }}
+        {{ f.form.id_ }}
+     </div>
+  </div>
   {% endfor %}
+  
   {% for error in form.translators.errors %}
       <span style="color: red">{{ error }}</span>   
     {% endfor %}
-    <p> <button class="btn btn-light btn-sm fake add-person">Add translator</button> </p>
+    {#}    <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>{#}
  </div>
 
-<div class="invisible r">
-      <h5>{{ form.redactors.label }}</h5>
+<div class="invisible role r">
+  <div class="row">
+     <div class="col-md-6">
+        <h6>{{ form.redactors.label }}</h6>
+     </div>
+     <div class="col-md-3"> 
+        <button class="btn btn-light btn-sm fake add-person">Add</button>
+     </div> 
+   </div>
   {% for f in form.redactors %}
+  <div class="row">
+     <div class="col-md-6">
     {% if loop.first %}
-      <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator form-control") }}</p>
-
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
+      <p> {{ f.form.name(class_="creator active form-control") }}</p>
     {% else %}
-      <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator form-control") }}</p>
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
+      <p> {{ f.form.name(class_="creator invisible form-control") }}</p>
       {%  endif %}
-
+      {{ f.form.role }}
+      {{ f.form.id_ }}
+     </div>
+   </div>
   {% endfor %}
+
   {% for error in form.redactors.errors %}
       <span style="color: red">{{ error }}</span>   
     {% endfor %}
-    <p> <button class="btn btn-light btn-sm fake add-person">Add redactor</button> </p>
+    {#}    <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>{#}
  </div>
 
 
 
-<div class="invisible i">
-      <h5>{{ form.intro.label }}</h5>
+<div class="invisible role i">
+  <div class="row">
+     <div class="col-md-6">
+        <h6>{{ form.intro.label }}</h6>
+     </div>
+     <div class="col-md-3"> 
+        <button class="btn btn-light btn-sm fake add-person">Add</button>
+     </div> 
+   </div>
   {% for f in form.intro %}
+  <div class="row">
+     <div class="col-md-6">
     {% if loop.first %}
-      <p class="active">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator form-control") }}</p>
-
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
+      <p> {{ f.form.name(class_="creator active form-control") }}</p>
     {% else %}
-      <p class="invisible">{{ f.form.name.label }} {{ f.form.name(size=32, class_="creator form-control") }}</p>
-      <p>{{ f.form.role }}</p>
-      <p>{{ f.form.id_ }}</p>
+      <p>{{ f.form.name(class_="creator invisible form-control") }}</p>
       {%  endif %}
-
+      {{ f.form.role }}
+      {{ f.form.id_ }}
+     </div>
+   </div>
   {% endfor %}
+
   {% for error in form.intro.errors %}
       <span style="color: red">{{ error }}</span>   
     {% endfor %}
-    <p> <button class="btn btn-light btn-sm fake add-person">Add intro author</button> </p>
+    {#}    <p> <button class="btn btn-light btn-sm fake add-person">Add</button> </p>{#}
  </div>
 
  <div class="add-role">
@@ -105,20 +146,55 @@
 <br>
  </div> {# creators #}
  
- <div class="container" id="published">
+<div class="container" id="published">
    {#}    <h5>{{ form.published.label }}</h5>{#}
-      <p>{{ form.publisher_name.label }} {{ form.publisher_name(size=32, class_="publisher form-control") }}<button class="clear fake btn btn-danger btn-sm">Clear</button> <button class="fake btn btn-warning btn-sm">Error</button>  </p>
-      <p>{{ form.id_ }}</p>
-      <p> {{ form.city.label }} {{form.city(size=32, class_="form-control") }}</p>
-      <p>{{ form.city_id_ }}</p>
-      <p> {{ form.pub_year.label }} {{ form.pub_year(size=32, class_="form-control") }}</p>
-      <p> {{ form.serie.label }} {{ form.serie(size=32, class_="serie form-control") }} <button class="fake btn btn-warning btn-sm">Error</button> </p>
-      <p>{{ form.serie_id_ }}</p>
- </div> {# published #}
+       {{ form.publisher_name.label }} 
+  <div class="row">
+     <div class="col-md-6">
+       <p> {{ form.publisher_name(class_="publisher form-control") }}</p>
+       {{ form.id_ }}
+     </div>
+     <div class="col-md-3"> 
+       <button class="clear fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+   </div>
+       {{ form.city.label }} 
+  <div class="row">
+     <div class="col-md-6">
+       <p> {{form.city(class_="form-control") }}<p>
+       {{ form.city_id_ }}
+     </div>
+     <div class="col-md-3"> 
+       <button class="clear fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+       
+       {{ form.pub_year.label }} 
+  <div class="row">
+     <div class="col-md-6">
+       <p> {{ form.pub_year(class_="form-control") }}</p>
+     </div>
+  </div>
+
+       {{ form.serie.label }} 
+  <div class="row">
+    <div class="col-md-6">
+      <p> {{ form.serie(class_="serie form-control") }} </p>
+       {{ form.serie_id_ }}
+     </div>
+     <div class="col-md-3"> 
+       <button class="clear fake btn btn-danger btn-sm">Clear</button> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+   </div>
+</div> {# published #}
+<br>
  
  
  
-<button class="fake btn btn-info step--next">Next</button> 
+<p><button class="fake btn btn-info step--next">Next</button> </p>
  
  
  

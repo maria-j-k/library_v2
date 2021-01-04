@@ -14,7 +14,7 @@ class TitleForm(FlaskForm):
 
 
 class PersonForm(FlaskForm):
-    name = StringField('Name')
+    name = StringField('Name', render_kw={'placeholder': 'name'})
     role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
     id_ = HiddenField()
 #    id_ = IntegerField(widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])

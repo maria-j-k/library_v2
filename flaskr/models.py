@@ -102,8 +102,9 @@ class Publisher(SearchableMixin, db.Model):
         return data
 
 
-class City(db.Model):
+class City(SearchableMixin, db.Model):
     __tablename__= 'cities'
+    __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
     books = db.relationship('Book', backref='city', lazy='dynamic') 

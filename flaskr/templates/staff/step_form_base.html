@@ -23,19 +23,11 @@
  {% endblock %}
 {% block content %}
      {{ super() }}     
-<div id="step-1" class="step active">
-    <div class="row">
-        <div class="col-md-6">
+<div id="step-1" class="container step active">
 {% include "staff/step_one.html" %}
 </div>
-</div>
-</div>
 <div id="step-2" class="step invisible">
-    <div class="row">
-        <div class="col-md-6">
 {% include "staff/step_two.html" %}
-</div>
-</div>
 </div>
 <div id="step-3" class="step invisible">
 {% include "staff/step_three.html" %}
