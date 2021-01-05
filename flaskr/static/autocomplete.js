@@ -72,9 +72,10 @@ function findCity(publisher) {
             event.preventDefault();
             $(this).val(ui.item.label);
             $(this).prop("readonly", true);
-            this.closest('div.row').firstElementChild.lastElementChild.value= parseInt(ui.item.value)
+            let field = $(this).attr('id')
+            document.querySelector('#publisher_id_').value = parseInt(ui.item.value)
+//            document.querySelector('#'+field+'_id_').value = parseInt(ui.item.value)
             publisher_id = ui.item.value
-//            console.log(`publisher: ${publisher_id}`)
 //            findCity(publisher_id)
         }
     });
@@ -101,7 +102,7 @@ function findCity(publisher) {
             event.preventDefault();
             $(this).val(ui.item.label);
             $(this).prop("readonly", true);
-        this.closest('div.row').firstElementChild.lastElementChild.value= parseInt(ui.item.value)
+            document.querySelector('#serie_id_').value = parseInt(ui.item.value)
 //            $('#published-s_id_').val(parseInt(ui.item.value));
 //            console.log(`this: ${$(this).val()}`)
 //            console.log($('#published-s_id_').val())
@@ -129,7 +130,7 @@ function findCity(publisher) {
             event.preventDefault();
             $(this).val(ui.item.label);
             $(this).prop("readonly", true);
-        this.closest('div.row').firstElementChild.lastElementChild.value= parseInt(ui.item.value)
+            document.querySelector('#city_id_').value = parseInt(ui.item.value)
         }
     });
 
@@ -144,7 +145,8 @@ let clear = document.querySelectorAll('.clear')
 let clearPerson = document.querySelectorAll('.clear--p')
 let serieInp = document.querySelector("#serie")
 serieInp.addEventListener('click', e => {
-    if (!document.querySelector("#publisher_name").value){
+    console.log('serieInp event')
+    if (!document.querySelector("#publisher").value){
         alert("You must fill publisher field first.")
     }
 })

@@ -51,21 +51,29 @@ def add_book():
     form = BookForm(title=title) 
     if form.validate_on_submit():
         title = form.title.data 
-        pub_name = form.publisher_name.data
-        pub_place = form.city.data
-        publisher = form.publisher_name.data or None
-        serie = form.serie.data or None
-        
-        city, _ = get_or_create(db.session, City, name=pub_place)
-        book = Book(title=title, pub_year=form.pub_year.data, city=city)
+        if form.city_id.data:
+            city_id = form.city_id.data
+        elif form.city.data:
+            city, _ = get_or_create(db.session, City, name=form.city.data)
+            db.session.add(city)
+            city_id = city.id
+        book = Book(title=title, pub_year=form.pub_year.data, city_id=city_id)
         db.session.add(book)
-        if publisher:
-            publisher, _ = get_or_create(db.session, Publisher, name=pub_name)
-            book.publisher=publisher
+        if form.publisher_id.data:
+            publisher_id = form.publisher_id.data 
+        elif form.publisher.data:
+            publisher, _ = get_or_create(db.session, Publisher, name=form.publisher.data)
             db.session.add(publisher)
-        if serie:
-            serie, _ = get_or_create(db.session, Serie, name=serie, publisher=publisher)
+            publisher_id = publisher.id
+        book.publisher_id = publisher_id
+        if form.serie_id.data:
+            serie_id = form.serie_id.data 
+        elif form.serie.data:
+            serie, _ = get_or_create(db.session, Serie, 
+                    name=form.serie.data, publisher_id=publisher_id)
             db.session.add(serie)
+            serie_id = serie.id
+#
         creators = chain(form.authors.data, form.translators.data, form.redactors.data, form.intro.data)
         for creator in creators:
             role = creator['role']
@@ -75,6 +83,8 @@ def add_book():
             elif creator['name'] != '':
                 person = Person(name=creator['name'])
                 db.session.add(person)
+                c = Creator(person=person, book=book, role=role)
+                db.session.add(c)
         book.isbn = form.isbn.data or None
         book.origin_language = form.origin_language.data or None
         book.first_edition = form.first_edition.data or None
@@ -85,7 +95,7 @@ def add_book():
         book.nukat = form.nukat.data or None
 #        book.subject = form.subject.data or None
 #        book.periodic_num = form.book.periodic_num.data or None
-        db.session.add(book)
+#        db.session.add(book)
 #        copy = Copy(book=book)
 #        copy.signature_mark = form.copy.signature_mark.data or None
 #        copy.on_shelf = form.copy.on_shelf.data
