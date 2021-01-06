@@ -1,4 +1,5 @@
 import enum 
+from sqlalchemy.sql import func
 
 from flaskr import db
 # null true, required false
@@ -53,9 +54,38 @@ db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
 db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 
-#TODO
-#on delete - cascade czy protect
-#skrypty
+class FlagMixin(object):
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    last_modified = db.Column(db.DateTime(timezone=True), onupdate=func.now())
+    approuved = db.Column(db.Boolean(), default=False)
+    incorrect = db.Column(db.Boolean())
+
+    @classmethod
+    def get_foreign_keys(cls):
+        return [column.name for column in cls.__table__.columns if column.foreign_keys]
+
+    @classmethod
+    def printModel(cls, obj):
+        columns = [x.__str__().split('.')[1]
+                for x in cls.__table__.columns]
+        return columns
+
+    @classmethod
+    def to_dict(cls, obj):
+        return [{x.__str__().split('.')[1]: getattr(obj, x.__str__().split('.')[1])} 
+                for x in cls.__table__.columns]
+
+
+def get_class_by_tablename(tablename):
+  """Return class reference mapped to table.
+
+  :param tablename: String with name of table.
+  :return: Class reference or None.
+  """
+  for c in db.Model._decl_class_registry.values():
+    if hasattr(c, '__tablename__') and c.__tablename__ == tablename:
+      return c
+
 
 
 class BookRoles(enum.Enum):
@@ -67,7 +97,7 @@ class BookRoles(enum.Enum):
 
 
 
-class Person(SearchableMixin, db.Model):
+class Person(SearchableMixin, FlagMixin, db.Model):
     __tablename__='persons'
     __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
@@ -80,8 +110,12 @@ class Person(SearchableMixin, db.Model):
             return f'{self.name}, ur. {self.born}'
         return self.name
 
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
 
-class Publisher(SearchableMixin, db.Model):
+
+class Publisher(SearchableMixin, FlagMixin, db.Model):
     __tablename__='publishers'
     __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
@@ -90,7 +124,7 @@ class Publisher(SearchableMixin, db.Model):
     books = db.relationship('Book', backref='publisher', lazy='dynamic') 
     
     def __str__(self):
-        return f'{self.name}, {self.city}'
+        return self.name
 
     def to_dict(self):
         data = {
@@ -100,9 +134,12 @@ class Publisher(SearchableMixin, db.Model):
                 'series': [s.id for s in self.series.all()]
                 }
         return data
+    
+    @property
+    def is_incorrect(self):
+        return self.incorrect or self.serie.incorrect
 
-
-class City(SearchableMixin, db.Model):
+class City(SearchableMixin, FlagMixin, db.Model):
     __tablename__= 'cities'
     __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
@@ -112,6 +149,10 @@ class City(SearchableMixin, db.Model):
     def __repr__(self):
         return self.name
 
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
+
 #class PublicationPlace(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
 #    role = db.Column(db.Enum(BookRoles))
@@ -120,7 +161,7 @@ class City(SearchableMixin, db.Model):
 #    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
 
 
-class Serie(SearchableMixin, db.Model):
+class Serie(SearchableMixin, FlagMixin, db.Model):
     __tablename__='series'
     __searchable__=['name', 'publisher_id']
     id = db.Column(db.Integer, primary_key=True)
@@ -132,7 +173,12 @@ class Serie(SearchableMixin, db.Model):
         return self.name
 
 
-class Collection(db.Model):
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
+
+
+class Collection(FlagMixin, db.Model):
     __tablename__='collections'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
@@ -142,7 +188,12 @@ class Collection(db.Model):
         return self.name
 
 
-class Location(db.Model):
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
+
+
+class Location(FlagMixin, db.Model):
     __tablename__='locations'
     id = db.Column(db.Integer, primary_key=True)
     room = db.Column(db.String(64))# wymagane
@@ -151,6 +202,11 @@ class Location(db.Model):
 
     def __str__(self):
         return self.room
+
+
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
 
 
 class FormChoices(enum.Enum):
@@ -165,7 +221,7 @@ class FictionChoices(enum.Enum):
     NF = 'Non-fiction'
 
 
-class Book(SearchableMixin, db.Model):
+class Book(SearchableMixin, FlagMixin, db.Model):
     __tablename__='books'
     __searchable__=['title']
     id = db.Column(db.Integer, primary_key=True)
@@ -212,17 +268,28 @@ class Book(SearchableMixin, db.Model):
         intro = [c.person.name for c in self.creator
                 if c.role._name_ == 'I']
         return ", ".join(intro)
+    
+
+    @property
+    def is_incorrect(self):
+        return any(c.person.incorrect for c in self.creator)\
+                or self.city.incorrect or \
+                self.publisher.incorrect or self.incorrect
 
 
-class Creator(db.Model):
+class Creator(FlagMixin, db.Model):
     __tablename__='creators'
     id = db.Column(db.Integer, primary_key=True)
     role = db.Column(db.Enum(BookRoles))
     book_id = db.Column(db.Integer, db.ForeignKey('books.id'))
     person_id = db.Column(db.Integer, db.ForeignKey('persons.id'))
 
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
 
-class Copy(db.Model):
+
+class Copy(FlagMixin, db.Model):
     __tablename__='copies'
     id = db.Column(db.Integer, primary_key=True)
     signature_mark = db.Column(db.String(32), nullable=True)
@@ -233,4 +300,6 @@ class Copy(db.Model):
     location_id = db.Column(db.Integer, db.ForeignKey('locations.id'), nullable=True)
     book_id = db.Column(db.Integer, db.ForeignKey('books.id'), nullable=False)
 
-
+    @property
+    def is_incorrect(self):
+        return any((self.incorrect, self.book.is_incorrect, self.location.incorrect, self.collection.incorrect))

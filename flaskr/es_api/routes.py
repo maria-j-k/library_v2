@@ -5,7 +5,7 @@ from flask import flash, jsonify, redirect, render_template, request, url_for, g
 from flaskr import db
 from flaskr.es_api import bp
 from flaskr.es_api.queries import ac_person, ac_publisher, ac_serie, ac_city
-from flaskr.models import Book, Person, Publisher, Serie
+from flaskr.models import Book, Person, Publisher, Serie, get_class_by_tablename
 
 
 
@@ -58,3 +58,15 @@ def fts_title():
     q = request.args.get('q')
     fields = ['title']
     books = Book.es_search(q, fields)
+
+@bp.route('/toggle_incorrect')
+def toggle_incorrect():
+    q = request.args.get('q')
+    model = request.args.get('model')
+    tbl = get_class_by_tablename(model+'s')
+    obj = tbl.query.get(q)
+    print(obj)
+    print(q)
+    print(model)
+    return q
+    
