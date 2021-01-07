@@ -17,11 +17,16 @@
         <tr>
             <th></th>
             <th>Title</th>
+            <th></th>
             <th>Author</th>
+            <th></th>
             <th>Publisher</th>
+            <th></th>
             <th>Place of publication</th>
+            <th></th>
             <th>Year of publication</th>
-            <th>Incorrect</th>
+            <th></th>
+            <th>Approuve</th>
         </tr>
     </thead>
     <tbody>
@@ -29,10 +34,15 @@
       <tr>
           <td>{{ loop.index }}</td>  
           <td><a href="{{ url_for('staff.add_copy', id=book.id)}}">{{ book.title }}</a></td>
+          <td>x</td>
         <td>{{ book.print_authors() }}</td>
+          <td>x</td>
         <td>{{ book.publisher.name }}</td>
+          <td>x</td>
         <td>{{ book.city.name }}</td>
+          <td>x</td>
         <td>{{ book.pub_year }}</td>
+          <td>x</td>
         <td><a href="" style="color: black;">X</a></td>
       </tr>
     {% endfor %}
