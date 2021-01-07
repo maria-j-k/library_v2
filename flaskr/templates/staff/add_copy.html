@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_field %}
 {% block content %}
      {{ super() }}     
 <div class="container book-info">
@@ -18,11 +19,11 @@
         </tr>
         <tr>
             <th>Place of publication</th>
-            <td>{{ book.publisher.city }}</td>
+            <td>{{ book.city or "" }}</td>
         </tr>
         <tr>
             <th>Year of publication</th>
-            <td>{{ book.pub_year }}</td>
+            <td>{{ book.pub_year or "" }}</td>
         </tr>
         <tr>
             <th>Serie</th>
@@ -42,35 +43,35 @@
         </tr>
         <tr>
             <th>Isbn</th>
-            <td>{{ book.isbn if book.isbn else "" }}</td>
+            <td>{{ book.isbn or "" }}</td>
         </tr>
         <tr>
             <th>Origin language</th>
-            <td>{{ book.origin_language }}</td>
+            <td>{{ book.origin_language or "" }}</td>
         </tr>
         <tr>
             <th>First edition</th>
-            <td>{{ book.first_edition }}</td>
+            <td>{{ book.first_edition or "" }}</td>
         </tr>
         <tr>
             <th>Form</th>
-            <td>{{ book.literary_form if book.literary_form else "" }}</td>
+            <td>{{ book.literary_form.value or "" }}</td>
         </tr>
         <tr>
             <th>Genre</th>
-            <td>{{ book.genre }}</td>
+            <td>{{ book.genre or "" }}</td>
         </tr>
         <tr>
             <th>Subject</th>
-            <td>{{ book.subject }}</td>
+            <td>{{ book.subject or "" }}</td>
         </tr>
         <tr>
             <th>Precision</th>
-            <td>{{ book.precision }}</td>
+            <td>{{ book.precision or "" }}</td>
         </tr>
         <tr>
             <th>NUKAT</th>
-            <td>{{ book.nukat }}</td>
+            <td>{{ book.nukat or "" }}</td>
         </tr>
         <tr>
             <th>N of copies</th>
@@ -82,18 +83,65 @@
 </div>
     
     
- <div class="container">
+<div class="container">
+    <h4>New copy: </h4>
 <form action="" method="POST" accept-charset="utf-8">
   {{ form.hidden_tag() }}
 
 
-      <p>{{ form.signature_mark.label }} {{ form.signature_mark() }}</p>
-      <p> {{ form.on_shelf.label }} {{form.on_shelf() }}</p>
-      <p> {{ form.section.label }} {{ form.section() }}</p>
-      <p> {{ form.location.label }} {{ form.location() }}</p>
-      <p> {{ form.collection.label }} {{ form.collection() }}</p>
-      <p> {{ form.remarques.label }} {{ form.remarques() }}</p>
- <p>{{ form.submit() }}</p>
+  {{ form.signature_mark.label }} 
+  <div class="row">
+     <div class="col-md-6">
+  <p>{{ form.signature_mark(class_="form-control") }}</p>
+     </div>
+  </div>
+  
+  {{ form.section.label }} 
+  <div class="row">
+     <div class="col-md-6">
+  <p>{{ form.section(class_="form-control") }}</p>
+     </div>
+     <div class="col-md-3"> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+  
+  {{ form.location.label }} 
+  <div class="row">
+     <div class="col-md-6">
+  <p>{{ form.location(class_="form-control") }}</p>
+     </div>
+     <div class="col-md-3"> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+  
+  {{ form.collection.label }} 
+  <div class="row">
+     <div class="col-md-6">
+  <p>{{ form.collection(class_="form-control") }}</p>
+     </div>
+     <div class="col-md-3"> 
+       <button class="fake btn btn-warning btn-sm">Error</button> 
+     </div> 
+  </div>
+  
+  {{ form.remarques.label }} 
+  <div class="row">
+     <div class="col-md-6">
+  <p>{{ form.remarques(class_="form-control") }}</p>
+     </div>
+  </div>
+  <div class="row">
+      <div class="col-md-1">
+  {{ form.on_shelf.label }} 
+          </div>
+     <div class="col-md-2">
+  <p>{{ form.on_shelf(class_="form-check-input") }}</p>
+     </div>
+  </div>
+  
+ <p>{{ form.submit(class_="btn btn-primary btn-md") }}</p>
  </div>
 
 

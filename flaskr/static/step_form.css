@@ -4,13 +4,8 @@
 	background-repeat: no-repeat;
 }
 
-body {
-  background-color: #aab0b5;
-}
 
 .invisible {
     display: none;
 }
-input {
-    background-color: #9ba3a8;
-}
+

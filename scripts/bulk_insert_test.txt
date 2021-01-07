@@ -1,0 +1,30 @@
+Sunday, 03/01/2021, 20:07:00
+Rows in total: 8660
+
+Publishers created: 1223
+Publishers got from database: 7437
+
+Cities created: 8433
+
+Books created: 8099
+Books got from database: 561
+
+Series created: 252
+Series got from database: 1472
+
+Collections created: 34
+Collections got from database: 8521
+
+Locations created: 40
+Locations got from database: 8140
+
+Persons created: 5654
+Persons got from database: 7265
+
+Roles created: 12094
+Roles got from database: 825
+
+Copies created: 8660
+
+End of transcript
+*3

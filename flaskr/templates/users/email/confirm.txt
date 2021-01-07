@@ -1,4 +1,4 @@
-Dear {{ user.username }},
+Dear {{ user.first_name }} {{ user.last_name}},
 Welcome to WLH Library
 To activate your account you must follow the link:
 {{ url_for('users.confirm', token=token, _external=True) }}

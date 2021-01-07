@@ -26,11 +26,12 @@ $(function() {
 //            let thisInputId = $(this).attr('id')
 //            $("#" + thisInputId + "_val").val(ui.item.value);
             $('#' + idsId).val(parseInt(ui.item.value));
-//            console.log(`this: ${$(this).val()}`)
+            console.log(`this: ${$(this).val()}`)
+            $(this).prop("readonly", true);
 //            console.log($('#'+idsId))
-//            console.log($('#'+idsId).val())
-//            console.log(`ui item label: ${ui.item.label}`)
-//            console.log(`ui item value: ${ui.item.value}`)
+            console.log($('#'+idsId).val())
+            console.log(`ui item label: ${ui.item.label}`)
+            console.log(`ui item value: ${ui.item.value}`)
 //            console.log(nameId)
 //            console.log(idsId)
 ////            console.log(`thisInputId: ${thisInputId}`)
@@ -70,14 +71,12 @@ function findCity(publisher) {
         select: function(event, ui) {
             event.preventDefault();
             $(this).val(ui.item.label);
-            $('#published-id_').val(parseInt(ui.item.value));
-//            console.log(`this: ${$(this).val()}`)
-//            console.log($('#published-id_').val())
-//            console.log(`ui item label: ${ui.item.label}`)
-//            console.log(`ui item value: ${ui.item.value}`)
+            $(this).prop("readonly", true);
+            let field = $(this).attr('id')
+            document.querySelector('#publisher_id').value = parseInt(ui.item.value)
+//            document.querySelector('#'+field+'_id').value = parseInt(ui.item.value)
             publisher_id = ui.item.value
-??            console.log(`publisher: ${publisher_id}`)
-            findCity(publisher_id)
+//            findCity(publisher_id)
         }
     });
 
@@ -89,7 +88,6 @@ function findCity(publisher) {
                 q: request.term, publisher: publisher_id 
             }, function(data) {
                 response(data.matching_results); 
-                console.log(publisher_id)
                 console.log(data.matching_results)
             });
             }
@@ -103,7 +101,9 @@ function findCity(publisher) {
         select: function(event, ui) {
             event.preventDefault();
             $(this).val(ui.item.label);
-            $('#published-s_id_').val(parseInt(ui.item.value));
+            $(this).prop("readonly", true);
+            document.querySelector('#serie_id').value = parseInt(ui.item.value)
+//            $('#published-s_id_').val(parseInt(ui.item.value));
 //            console.log(`this: ${$(this).val()}`)
 //            console.log($('#published-s_id_').val())
 //            console.log(`ui item label: ${ui.item.label}`)
@@ -111,28 +111,69 @@ function findCity(publisher) {
         }
     });
 
+    $("#city").autocomplete({
+        source:function(request, response) {
+            $.getJSON($SCRIPT_ROOT + '/autocomplete_city',{
+                q: request.term, 
+            }, function(data) {
+                response(data.matching_results); 
+                console.log(data.matching_results)
+            });
+        },
+
+        minLength: 3,
+        focus: function(event, ui) {
+		event.preventDefault();
+        $(this).val(ui.item.label);
+				},
+        select: function(event, ui) {
+            event.preventDefault();
+            $(this).val(ui.item.label);
+            $(this).prop("readonly", true);
+            document.querySelector('#city_id').value = parseInt(ui.item.value)
+        }
+    });
+
+
+
+
+
+
+
 let publisher_id = null
 let clear = document.querySelectorAll('.clear')
-let serieInp = document.querySelector("#published-serie")
+let clearPerson = document.querySelectorAll('.clear--p')
+let serieInp = document.querySelector("#serie")
 serieInp.addEventListener('click', e => {
-    if (!document.querySelector("#published-publisher_name").value){
+    console.log('serieInp event')
+    if (!document.querySelector("#publisher").value){
         alert("You must fill publisher field first.")
     }
 })
 
 
+
 clear.forEach(btn => {
     btn.addEventListener('click', e => {
-    let outer = btn.closest('div');
-    let inputs = btn.closest('div').querySelectorAll('input')
-        inputs.forEach(inp => {
-            inp.value = "";
-            inp.readOnly = false;
-            publisher_id = null
-        })
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').value = "";
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').readOnly=false;
+        btn.closest('div.row').firstElementChild.lastElementChild.value = "";
     });
 });
 
+
+clearPerson.forEach(btn => {
+    btn.addEventListener('click', e => {
+        btn.closest('div.row').firstElementChild.lastElementChild.value = ""
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').value=""
+        btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').readOnly=false;
+        btn.closest('div.row').classList.add('invisible')
+        btn.closest('div.row').classList.remove('active')
+        btn.closest('div.role').querySelector('.add-person').classList.remove('invisible')
+        let availablePerson = btn.closest('div.role').querySelectorAll('.invisible')
+        console.log(availablePerson)
+    })
+})
 /*
  *switching steps 
  **/
@@ -159,6 +200,7 @@ let fakeBtns = document.querySelectorAll('.fake');
 
 
 //events
+
 fakeBtns.forEach(btn => {
     btn.addEventListener('click', e => {
         e.preventDefault();
@@ -193,40 +235,56 @@ prevBtns.forEach(btn => {
  * */
 
 //functions
-const newPerson = function(btn)  {
-    let person = btn.closest('div').querySelector('.active')
-    let nextPerson = btn.closest('div').querySelectorAll('.invisible')
-    if (nextPerson.length == 1){
-    btn.classList.add('invisible')
+//const newPerson = function(btn)  {
+//    let person = btn.closest('div').querySelector('.active')
+//    let nextPerson = btn.closest('div').querySelectorAll('.invisible')
+//    if (nextPerson.length == 1){
+//    btn.classList.add('invisible')
+//    }
+//    if (person.querySelector('input').value){ 
+//        person.classList.remove('active')
+//        nextPerson[0].classList.add('active')
+//        nextPerson[0].classList.remove('invisible')
+//    }
+//    else {
+//        alert('Before adding a new person, please enter a value!')
+//    };
+//}
+
+const newPerson = function(btn) {
+    let role = btn.closest('div .role')
+    let availablePerson = role.querySelectorAll('.invisible')
+    let nextPerson = role.querySelector('.invisible')
+    let currentPerson = role.querySelector('.active')
+    nextPerson.classList.remove('invisible')
+    nextPerson.classList.add('active')
+    currentPerson.classList.remove('active')
+
+    console.log(currentPerson)
+    console.log(availablePerson)
+    if (availablePerson.length == 1){
+        btn.classList.add('invisible')
     }
-    if (person.querySelector('input').value){ 
-        person.classList.remove('active')
-        nextPerson[0].classList.add('active')
-        nextPerson[0].classList.remove('invisible')
-    }
-    else {
-        alert('Before adding a new person, please enter a value!')
-    };
 }
 
 
-
-
 //variables
-let addRole = document.querySelectorAll('.add-role');
+let addRole = document.querySelectorAll('.add-role button');
 let addPerson = document.querySelectorAll('.add-person');
 let authors = document.querySelectorAll('#authors .creator')
 //events
 
-addRole.forEach(role=> {
-    role.querySelector('button').addEventListener('click', e => {
-        role.nextElementSibling.classList.remove('invisible');
-        role.classList.add('invisible');
+addRole.forEach(btn=> {
+    btn.addEventListener('click', e => {
+        let role = document.querySelector(`.${btn.id}`)
+        role.classList.remove('invisible');
+        btn.classList.add('invisible');
     });
 });
 
 addPerson.forEach(btn => {
     btn.addEventListener('click', e => {
+        console.log('new person')
         newPerson(btn)
     });
 });

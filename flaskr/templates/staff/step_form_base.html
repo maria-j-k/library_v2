@@ -1,4 +1,4 @@
-{% extends 'old_base.html' %}
+{% extends 'base.html' %}
 
 {% block autocomplete %}
 	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
@@ -21,9 +21,9 @@
 <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
      <script type="text/javascript" src="{{ url_for('static', filename='autocomplete.js') }}"></script>
  {% endblock %}
-{% block body %}
+{% block content %}
      {{ super() }}     
-<div id="step-1" class="step active">
+<div id="step-1" class="container step active">
 {% include "staff/step_one.html" %}
 </div>
 <div id="step-2" class="step invisible">

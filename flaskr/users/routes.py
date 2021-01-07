@@ -31,7 +31,7 @@ def logout():
     return redirect(url_for('users.login'))
 
 @bp.route('/register', methods=['GET', 'POST'])# dodać ograniczenia dostępu
-#@login_required
+@login_required
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
