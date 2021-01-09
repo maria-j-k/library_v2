@@ -39,19 +39,6 @@ $(function() {
     });
 
 
-function findCity(publisher) {
-    $.get($SCRIPT_ROOT + '/db_pub_place', {
-        q: publisher,
-    }).done(function(response) {
-       $('#published-city').val(response.city)
-        publisher.city = response.city
-    $("#published-city").prop("readonly", true);
-    $("#published-publisher_name").prop("readonly", true);
-    }).fail(function() {
-        console.log('nieudane')
-    });
-};
-
 
     $(".publisher").autocomplete({
         source:function(request, response) {
@@ -136,10 +123,32 @@ function findCity(publisher) {
 
 
 
+function markError(id_, model) {
+    $.get($SCRIPT_ROOT + '/toggle_incorrect', {
+        q: id_,
+        model: model
+    }).done(function(response) {
+        console.log('udane')
+    }).fail(function() {
+        console.log('nieudane')
+    });
+};
 
+//function findCity(publisher) {
+//    $.get($SCRIPT_ROOT + '/db_pub_place', {
+//        q: publisher,
+//    }).done(function(response) {
+//       $('#published-city').val(response.city)
+//        publisher.city = response.city
+//    $("#published-city").prop("readonly", true);
+//    $("#published-publisher_name").prop("readonly", true);
+//    }).fail(function() {
+//        console.log('nieudane')
+//    });
+//};
+//
 
-
-
+let incorrect = document.querySelectorAll('.incorrect')
 let publisher_id = null
 let clear = document.querySelectorAll('.clear')
 let clearPerson = document.querySelectorAll('.clear--p')
@@ -151,13 +160,37 @@ serieInp.addEventListener('click', e => {
     }
 })
 
-
+incorrect.forEach(btn => {
+    btn.addEventListener('click', e => {
+        /*
+         * toggle button class - outline not error, filled - error 
+         * btn-outline-warning
+         * btn-warning
+         * */
+        let inputName = btn.closest('div.row').querySelector('.ui-autocomplete-input').id
+        if (btn.closest("#creators")) {
+            let name = inputName.split('-')
+            let inputId = document.querySelector('#'+name[0]+'-'+name[1]+'-id_')
+            markError(inputId.value, 'person')
+        } 
+        if (inputName == 'city') {
+            let inputId = document.querySelector('#'+inputName+'_id')
+            markError(inputId.value, 'citie')
+        }
+        else {
+            let inputId = document.querySelector('#'+inputName+'_id')
+            markError(inputId.value, inputName)
+        };
+    })
+})
 
 clear.forEach(btn => {
     btn.addEventListener('click', e => {
         btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').value = "";
         btn.closest('div.row').firstElementChild.firstElementChild.querySelector('input').readOnly=false;
         btn.closest('div.row').firstElementChild.lastElementChild.value = "";
+    
+
     });
 });
 

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block scripts %}
+        {{ super() }}
+        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
+     <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
+ {% endblock %}
+{% block content %}
+    {% if scope == 'all' %}
+        <h3><a href="{{ url_for('repair.locations_list', filter='incorrect') }}">Show incorrect</a></h3>
+    {% elif scope == 'incorrect' %}
+        <h3><a href="{{ url_for('repair.locations_list', filter='all') }}">Show all</a></h3>
+    {% else %}
+        <h3><a href="{{ url_for('repair.locations_list', filter='incorrect') }}">Show incorrect</a></h3>
+        <h3><a href="{{ url_for('repair.locations_list', filter='all') }}">Show all</a></h3>
+    {% endif %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+    {{ form.hidden_tag() }}
+    <div class="container row mb-3">
+    <div class="coll-sm-3">
+        {{ form.name.label }}
+    </div>
+    <div class="col-sm-6">
+        {{ form.name(class_="form-control search-input") }}
+    </div>
+    <div class="coll-sm-2">
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.locations_list', filter="", name="") }}">Search</a></button>
+    </div>
+    {% for error in form.name.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+  </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Merge</th>
+            <th>Semblables</th>
+            <th>Name</th>
+            <th>Number of copies</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for location in locations %}
+        <tr>
+            <td>{{ location.id }}</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="location_id" type="checkbox" value="{{ location.id }}" id="flexCheckDefault">
+                </div>
+            </td>
+            <td><a href="{{ url_for('repair.locations_list', filter='', name=location.room) }}">X</a></td>
+            <td><a href="{{ url_for('repair.location_details', id=location.id) }}">{{ location.room }}</a></td>
+            <td> {% if location.copies %}
+                {{ location.copies.count() }}
+                {% endif %} 
+            </td>
+            <td>{{ location.incorrect }}</td>
+            <td>{{ location.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% if l %}
+{{ render_pagination(l) }}
+{% endif %}
+{% endblock %}    

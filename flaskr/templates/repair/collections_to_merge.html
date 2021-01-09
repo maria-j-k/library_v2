@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Exclude form merge</th>
+            <th>Choose correct</th>
+            <th>Name</th>
+            <th>Number of copies</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for collection in collections %}
+        <tr>
+            <td>{{ collection.id }}</td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="exclude" id="exclude" value={{collection.id}}>
+                </div>
+            </td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="collection" id="collection" value={{collection.id}}>
+                </div>
+            </td>
+            <td>{{ collection.name }}</td>
+            <td> {% if collection.copies %}
+                {{ collection.copies.count() }}
+                {% endif %} 
+            </td>
+            <td>{{ collection.incorrect }}</td>
+            <td>{{ collection.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% endblock %}    

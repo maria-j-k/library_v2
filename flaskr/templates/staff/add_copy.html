@@ -2,76 +2,131 @@
 {% from 'bootstrap/form.html' import render_field %}
 {% block content %}
      {{ super() }}     
-<div class="container book-info">
+<div class="container copy-info">
 <table class="table">
     <tbody>
         <tr>
             <th>Title</th>
             <td>{{ book.title }}</td>
+            <td>
+                {% if book.incorrect %}
+                    <a style="color:red" href="">x</a>
+            {% else %}
+                    <a style="color:green" href="">x</a>
+            {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Author</th>
-            <td>{{ book.print_authors() }}</td>
+            <td>{% for p in book.creator %}
+                {% if p.role.name=='A' %}
+                    {{ p.person.name }}
+                {% endif %}
+            {% endfor %}</td>
+            <td>{% for p in book.creator %}
+                {% if p.role.name=='A' %}
+                    {% if p.person.incorrect %}
+                    <a style="color:red" href="">x</a>
+                    {% else %}
+                    <a style="color:green" href="">x</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}</td>
         </tr>
         <tr>
             <th>Publisher</th>
             <td>{{ book.publisher.name }}</td>
+            <td>
+            {% if book.publisher.incorrect %}
+                    <a style="color:red" href="">x</a>
+            {% else %}
+                    <a style="color:green" href="">x</a>
+            {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Place of publication</th>
             <td>{{ book.city or "" }}</td>
+            <td>
+            {% if book.city.incorrect %}
+                    <a style="color:red" href="">x</a>
+            {% else %}
+                    <a style="color:green" href="">x</a>
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Year of publication</th>
             <td>{{ book.pub_year or "" }}</td>
+            {% if book.incorrect %}
+                    <a style="color:red" href="">x</a>
+            {% else %}
+                    <a style="color:green" href="">x</a>
+            {% endif %}
         </tr>
         <tr>
             <th>Serie</th>
             <td>{{ book.serie if book.serie else "" }}</td>
+            {% if book.serie.incorrect %}
+                    <a style="color:red" href="">x</a>
+            {% else %}
+                    <a style="color:green" href="">x</a>
+            {% endif %}
         </tr>
         <tr>
             <th>Translation</th>
             <td>{{ book.print_trans() }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Redaction</th>
             <td>{{ book.print_red() }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Introduction</th>
             <td>{{ book.print_intro() }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Isbn</th>
             <td>{{ book.isbn or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Origin language</th>
             <td>{{ book.origin_language or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>First edition</th>
             <td>{{ book.first_edition or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Form</th>
             <td>{{ book.literary_form.value or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Genre</th>
             <td>{{ book.genre or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Subject</th>
             <td>{{ book.subject or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>Precision</th>
             <td>{{ book.precision or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>NUKAT</th>
             <td>{{ book.nukat or "" }}</td>
+            <td>x</td>
         </tr>
         <tr>
             <th>N of copies</th>
