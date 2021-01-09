@@ -20,3 +20,25 @@ class SerieForm(FlaskForm):
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
+
+
+class CityForm(FlaskForm):
+    name = StringField('Name')
+    incorrect = BooleanField('Incorrect')
+    approuved = BooleanField('Approuved')
+    submit = SubmitField('Sumbit')
+
+
+class CollectionForm(FlaskForm):
+    name = StringField('Name')
+    incorrect = BooleanField('Incorrect')
+    approuved = BooleanField('Approuved')
+    submit = SubmitField('Sumbit')
+
+
+class LocationForm(FlaskForm):
+    room = StringField('Name')
+    shelf = StringField('Shelf')
+    incorrect = BooleanField('Incorrect')
+    approuved = BooleanField('Approuved')
+    submit = SubmitField('Sumbit')

@@ -20,7 +20,7 @@ def series_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
-        series = Serie.fuzzy_search(name)
+        series = Serie.fuzzy_search('name', name)
         s = Serie.query.filter(Serie.id.in_([item['id'] for item in series])
                 ).order_by('publisher_id').paginate(page, 20, False)
         

@@ -18,8 +18,8 @@ class SearchableMixin(object):
         return res
 
     @classmethod
-    def fuzzy_search(cls, expression):
-        res = es_fuzzy_search(cls.__tablename__, expression)
+    def fuzzy_search(cls, field, expression):
+        res = es_fuzzy_search(cls.__tablename__, field, expression)
         return res
     
 
@@ -109,7 +109,7 @@ class Person(SearchableMixin, FlagMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     born = db.Column(db.String(64), nullable=True) # wylatuje
-    creator = db.relationship('Creator', backref='person', lazy=True)
+    creator = db.relationship('Creator', backref='person', lazy='dynamic')
     
     def __str__(self):
         if self.born:
@@ -184,11 +184,12 @@ class Serie(SearchableMixin, FlagMixin, db.Model):
         return self.incorrect 
 
 
-class Collection(FlagMixin, db.Model):
+class Collection(SearchableMixin, FlagMixin, db.Model):
     __tablename__='collections'
+    __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
-    copies = db.relationship('Copy', backref='collection', lazy=True)
+    copies = db.relationship('Copy', backref='collection', lazy='dynamic')
     
     def __str__(self):
         return self.name
@@ -199,12 +200,13 @@ class Collection(FlagMixin, db.Model):
         return self.incorrect 
 
 
-class Location(FlagMixin, db.Model):
+class Location(SearchableMixin, FlagMixin, db.Model):
     __tablename__='locations'
+    __searchable__=['room']
     id = db.Column(db.Integer, primary_key=True)
     room = db.Column(db.String(64))# wymagane
     shelf = db.Column(db.String(3), nullable=True)# regex A4
-    copies = db.relationship('Copy', backref='location')
+    copies = db.relationship('Copy', backref='location', lazy='dynamic')
 
     def __str__(self):
         return self.room
@@ -249,7 +251,7 @@ class Book(SearchableMixin, FlagMixin, db.Model):
     publisher_id = db.Column(db.Integer, db.ForeignKey('publishers.id'), nullable=True)
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=True) #potem zmienić na False
     serie_id = db.Column(db.Integer, db.ForeignKey('series.id'), nullable=True)
-    creator = db.relationship('Creator', backref='book', lazy=True)
+    creator = db.relationship('Creator', backref='book', lazy='dynamic')
     copies = db.relationship('Copy', backref='book', lazy='dynamic') 
 
     def __str__(self):

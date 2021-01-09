@@ -24,7 +24,7 @@ def publishers_list():
 #        pubs = Publisher.query.filter(Publisher.id.in_(
 #            [item['id'] for item in publishers])).paginate(page, 20, False)
     if name:
-        publishers = Publisher.fuzzy_search(name)
+        publishers = Publisher.fuzzy_search('name', name)
         pubs = Publisher.query.filter(Publisher.id.in_(
             [item['id'] for item in publishers])).paginate(page, 20, False)
         

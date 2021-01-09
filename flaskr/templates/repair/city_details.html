@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <td>{{ city.name }}</td>
+            <td><a href="{{ url_for('repair.city_edit', id=city.id)}}">Edit</a></td>
+        </tr>
+        <tr>
+        <tr>
+            <th>N of books:</th>
+            <td>{{ city.books.count() }}</td>
+            <td> {% if city.books.count() %} <a href="" target="_blank">See books</a>{% endif %}
+            
+            </td>
+        </tr>
+        <tr>
+            <th>Incorrect?</th>
+            <td> {% if city.incorrect %}
+                Incorrect
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if city.approuved %}
+                    Approuved
+                {% else %}
+                    Not approuved
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+    </table>
+
+    <p><a href="{{ url_for('repair.cities_list', name=city.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.cities_list') }}">Back to list</a></p>
+{% endblock %}    

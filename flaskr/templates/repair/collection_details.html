@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <td>{{ collection.name }}</td>
+            <td><a href="{{ url_for('repair.collection_edit', id=collection.id)}}">Edit</a></td>
+        </tr>
+        <tr>
+        <tr>
+            <th>N of copies:</th>
+            <td>{{ collection.copies.count() }}</td>
+            <td> {% if collection.copies.count() %} <a href="" target="_blank">See copies</a>{% endif %}
+            
+            </td>
+        </tr>
+        <tr>
+            <th>Incorrect</th>
+            <td> {% if collection.incorrect %}
+                Incorrect
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if collection.approuved %}
+                    Approuved
+                {% else %}
+                    Not approuved
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+    </table>
+
+    <p><a href="{{ url_for('repair.collections_list', name=collection.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.collections_list') }}">Back to list</a></p>
+{% endblock %}    

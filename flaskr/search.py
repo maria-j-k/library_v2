@@ -56,7 +56,7 @@ def autocomplete(index, query):
             for hit in search_res['hits']['hits']]
     
 
-def es_fuzzy_search(index, query):
+def es_fuzzy_search(index, field, query):
     if not current_app.elasticsearch:
         return [], 0
     search_res = current_app.elasticsearch.search(
@@ -65,9 +65,9 @@ def es_fuzzy_search(index, query):
               "_source": False,
               "query": {
                 "match": {
-                  "name": {
+                  field: {
                     "query": query,
-                    "operator": "and", 
+                    "operator": "or", 
                     "fuzziness": "auto"
                   }
                 }

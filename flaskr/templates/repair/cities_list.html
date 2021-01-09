@@ -8,12 +8,12 @@
  {% endblock %}
 {% block content %}
     {% if scope == 'all' %}
-        <h3><a href="{{ url_for('repair.series_list', filter='incorrect') }}">Show incorrect</a></h3>
+        <h3><a href="{{ url_for('repair.cities_list', filter='incorrect') }}">Show incorrect</a></h3>
     {% elif scope == 'incorrect' %}
-        <h3><a href="{{ url_for('repair.series_list', filter='all') }}">Show all</a></h3>
+        <h3><a href="{{ url_for('repair.cities_list', filter='all') }}">Show all</a></h3>
     {% else %}
-        <h3><a href="{{ url_for('repair.series_list', filter='incorrect') }}">Show incorrect</a></h3>
-        <h3><a href="{{ url_for('repair.series_list', filter='all') }}">Show all</a></h3>
+        <h3><a href="{{ url_for('repair.cities_list', filter='incorrect') }}">Show incorrect</a></h3>
+        <h3><a href="{{ url_for('repair.cities_list', filter='all') }}">Show all</a></h3>
     {% endif %}
     {{ super() }} 
     <form action="" method="post" accept-charset="utf-8">
@@ -26,7 +26,7 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.series_list', filter="", name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.cities_list', filter="", name="") }}">Search</a></button>
     </div>
     {% for error in form.name.errors %}
         <span style="color: red">{{ error }}</span>   
@@ -39,37 +39,35 @@
             <th>Merge</th>
             <th>Semblables</th>
             <th>Name</th>
-            <th>Publisher</th>
             <th>Number of books</th>
             <th>Incorrect</th>
             <th>Approuved</th>
         </tr>
     </thead>
     <tbody>
-        {% for serie in series %}
+        {% for city in cities %}
         <tr>
-            <td>{{ serie.id }}</td>
+            <td>{{ city.id }}</td>
             <td>
                 <div class="form-check">
-                    <input class="form-check-input" name="serie_id" type="checkbox" value="{{ serie.id }}" id="flexCheckDefault">
+                    <input class="form-check-input" name="city_id" type="checkbox" value="{{ city.id }}" id="flexCheckDefault">
                 </div>
             </td>
-            <td><a href="{{ url_for('repair.series_list', filter='', name=serie.name) }}">X</a></td>
-            <td><a href="{{ url_for('repair.serie_details', id=serie.id) }}">{{ serie.name }}</a></td>
-            <td><a href="{{ url_for('repair.publisher_details', id=serie.publisher_id) }}">{{ serie.publisher.name }}</a></td>
-            <td> {% if serie.books %}
-                {{ serie.books.count() }}
+            <td><a href="{{ url_for('repair.cities_list', filter='', name=city.name) }}">X</a></td>
+            <td><a href="{{ url_for('repair.city_details', id=city.id) }}">{{ city.name }}</a></td>
+            <td> {% if city.books %}
+                {{ city.books.count() }}
                 {% endif %} 
             </td>
-            <td>{{ serie.incorrect }}</td>
-            <td>{{ serie.approuved }}</td>
+            <td>{{ city.incorrect }}</td>
+            <td>{{ city.approuved }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 <button type="submit" class="btn btn-info">Submit</button>
 </form>
-{% if s %}
-{{ render_pagination(s) }}
+{% if c %}
+{{ render_pagination(c) }}
 {% endif %}
 {% endblock %}    
