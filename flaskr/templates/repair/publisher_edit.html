@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+<form action="" method="post" accept-charset="utf-8">
+    {{ render_form(form) }}
+
+</form>
+<p><a href="" target="_blank">See books</a></p>
+{% if publisher.series.count() %}
+<p><a href="{{ url_for('repair.publisher_series', id=publisher.id)}}" target="_blank">See series</a></p>{% endif %}
+    <p><a href="{{ url_for('repair.publishers_list', name=publisher.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.publishers_list') }}">Back to list</a></p>
+{% endblock %}    

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <td>{{ publisher.name }}</td>
+            <td><a href="{{ url_for('repair.publisher_edit', id=publisher.id)}}">Edit</a></td>
+        </tr>
+        <tr>
+            <th>N of series:</th>
+            <td>{{ publisher.series.count() }}</td>
+            <td>{% if publisher.series.count() %}
+    <a href="{{ url_for('repair.publisher_series', id=publisher.id)}}" target="_blank">See series</a>{% endif %}</td>
+        </tr>
+        <tr>
+            <th>N of books:</th>
+            <td>{{ publisher.books.count() }}</td>
+            <td> {% if publisher.books.count() %} <a href="" target="_blank">See books</a>{% endif %}
+            
+            </td>
+        </tr>
+        <tr>
+            <th>Incorrect?</th>
+            <td> {% if publisher.incorrect %}
+                Incorrect
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if publisher.approuved %}
+                    Approuved
+                {% else %}
+                    Not approuved
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+    </table>
+
+    <p><a href="{{ url_for('repair.publishers_list', name=publisher.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.publishers_list') }}">Back to list</a></p>
+{% endblock %}    

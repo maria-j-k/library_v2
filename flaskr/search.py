@@ -56,21 +56,32 @@ def autocomplete(index, query):
             for hit in search_res['hits']['hits']]
     
 
-def autocomplete_title(index, query):
+def es_fuzzy_search(index, query):
     if not current_app.elasticsearch:
         return [], 0
     search_res = current_app.elasticsearch.search(
             index=index,
-            body={'query': 
-                {'multi_match': 
-                    {'query': query, 
-                    'type': 'bool_prefix', 
-                    'fields': ['*']}
-                    }, 'size': 100})
+            body={
+              "_source": False,
+              "query": {
+                "match": {
+                  "name": {
+                    "query": query,
+                    "operator": "and", 
+                    "fuzziness": "auto"
+                  }
+                }
+              }
+            })
 
 #    search_res = [(hit['_id'],hit['_source']['name']) for hit in hits]
-    return  [{'value': hit['_id'], 'label': hit['_source']['title']} 
+    print(list(hit['_id'] for hit in search_res['hits']['hits']))
+    return  [{'id': hit['_id']} 
             for hit in search_res['hits']['hits']]
+
+
+
+
 
 
 

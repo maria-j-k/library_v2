@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Exclude form merge</th>
+            <th>Choose correct</th>
+            <th>Name</th>
+            <th>Publisher</th>
+            <th>Number of books</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for serie in series %}
+        <tr>
+            <td>{{ serie.id }}</td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="exclude" id="exclude" value={{ serie.id }}>
+                </div>
+            </td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="serie" id="serie" value={{ serie.id }}>
+                </div>
+            </td>
+            <td>{{ serie.name }}</td>
+            <td>{{ serie.publisher.name }}</td>
+            <td> {% if serie.books %}
+                {{ serie.books.count() }}
+                {% endif %} 
+            </td>
+            <td>{{ serie.incorrect }}</td>
+            <td>{{ serie.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% endblock %}    

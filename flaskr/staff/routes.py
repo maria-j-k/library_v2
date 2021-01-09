@@ -130,3 +130,8 @@ def add_copy(id):
         print(form.errors)
     return render_template('staff/add_copy.html', book=book, form=form)
 
+@bp.route('/staff/toggle_incorrect')
+@login_required
+def toggle_incorrect():
+    pass
+    

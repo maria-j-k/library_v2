@@ -3,7 +3,7 @@ from sqlalchemy.sql import func
 
 from flaskr import db
 # null true, required false
-from flaskr.search import autocomplete, add_to_index, remove_from_index
+from flaskr.search import autocomplete, add_to_index, remove_from_index, es_fuzzy_search
 from flaskr.es_search import fts
 
 class SearchableMixin(object):
@@ -16,6 +16,12 @@ class SearchableMixin(object):
     def es_search(cls, expression, fields):
         res = fts(cls.__tablename__, expression, fields)
         return res
+
+    @classmethod
+    def fuzzy_search(cls, expression):
+        res = es_fuzzy_search(cls.__tablename__, expression)
+        return res
+    
 
 #    @classmethod
 #    def search_title(cls, expression):

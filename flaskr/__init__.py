@@ -36,6 +36,9 @@ def create_app(config_name):
     from flaskr.staff import bp as staff_bp
     app.register_blueprint(staff_bp)
 
+    from flaskr.repair import bp as repair_bp
+    app.register_blueprint(repair_bp, url_prefix='/repair')
+
     from flaskr.users import bp as users_bp
     app.register_blueprint(users_bp)
 
