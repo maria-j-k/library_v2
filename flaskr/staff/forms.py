@@ -17,19 +17,6 @@ class PersonForm(FlaskForm):
     name = StringField('Name', render_kw={'placeholder': 'name'})
     role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
     id_ = HiddenField()
-#    id_ = IntegerField(widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
-
-    class Meta:
-        csrf = False
-
-
-class PublisherForm(FlaskForm):
-    publisher = StringField('Publisher') # autocomplete z możliwością wpisania    
-    publisher_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
-    city = StringField('Publication place') # autocomplete z możliwością wpisania 
-    city_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
-    serie = StringField('Serie') # autocomplete z możliwością wpisania
-    serie_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
 
     class Meta:
         csrf = False
@@ -51,7 +38,6 @@ class BookForm(FlaskForm):
     serie_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     origin_language = StringField('Origin language')
     first_edition = StringField('First edition')
-#    periodic_num = StringField('Periodic number')
     fiction = SelectField('Fiction', choices=[
                     ('', '---'),
                     (1, 'fiction'),
@@ -91,31 +77,3 @@ class CopyForm(FlaskForm):
     on_shelf = BooleanField('On shelf')
     submit = SubmitField('Submit')
     
-
-
-class CopyForm2(FlaskForm):
-    signature_mark = StringField('Singature mark')
-    on_shelf = BooleanField('On shelf')
-    section = StringField('Section')
-    remarques = StringField('Remarques')
-    collection = QuerySelectField(query_factory=all_collections, allow_blank=True)
-    location = QuerySelectField(query_factory=all_locations, allow_blank=True)
-    
-    class Meta:
-        csrf = False
-
-
-class AddBookForm(FlaskForm):
-#    title = StringField('Title', render_kw={'readonly': True})
-    title = StringField('Title', validators=[DataRequired()] )
-    authors = FieldList(FormField(PersonForm, default={'role': 'A'}), min_entries=3)
-    translators = FieldList(FormField(PersonForm, default={'role': 'T'}), min_entries=3 )
-    redactors = FieldList(FormField(PersonForm, default={'role': 'R'}), min_entries=3)
-    intro = FieldList(FormField(PersonForm, default={'role': 'I'}), min_entries=3)
-    published = FormField(PublisherForm)
-    book = FormField(BookForm)
-    copy = FormField(CopyForm2)
-    submit = SubmitField('Submit')
-
-
-

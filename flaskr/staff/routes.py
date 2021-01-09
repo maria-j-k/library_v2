@@ -6,7 +6,7 @@ from flask_login import login_required
 from flaskr import db
 from flaskr.models import Book, City, Copy, Creator, Person, Publisher, Serie
 from flaskr.staff import bp
-from flaskr.staff.forms import AddBookForm, BookForm, CopyForm, TitleForm, PersonForm
+from flaskr.staff.forms import BookForm, CopyForm, TitleForm
 from scripts.utils import get_or_create
 
 
@@ -22,10 +22,10 @@ def search_title():
         print(form.errors)
     return render_template('staff/search_title.html', form=form, ctx=ctx)
 
-@bp.route('/staff/try', methods=['GET', 'POST'])
-def try_form():
-    form = AddBookForm()
-    return render_template('staff/add_book.html', form=form)
+#@bp.route('/staff/try', methods=['GET', 'POST'])
+#def try_form():
+#    form = AddBookForm()
+#    return render_template('staff/add_book.html', form=form)
 
 @bp.route('/staff/choose_title', methods=['GET', 'POST'])
 @login_required

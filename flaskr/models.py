@@ -2,21 +2,20 @@ import enum
 from sqlalchemy.sql import func
 
 from flaskr import db
-# null true, required false
-from flaskr.search import autocomplete, add_to_index, remove_from_index, es_fuzzy_search
-from flaskr.es_search import fts
+from flaskr.search import add_to_index, remove_from_index, es_fuzzy_search
+#from flaskr.es_search import fts
 
 class SearchableMixin(object):
-    @classmethod
-    def search(cls, expression):
-        res = autocomplete(cls.__tablename__, expression)
-        return res
-    
-    @classmethod
-    def es_search(cls, expression, fields):
-        res = fts(cls.__tablename__, expression, fields)
-        return res
-
+#    @classmethod
+#    def search(cls, expression):
+#        res = autocomplete(cls.__tablename__, expression)
+#        return res
+#    
+#    @classmethod
+#    def es_search(cls, expression, fields):
+#        res = fts(cls.__tablename__, expression, fields)
+#        return res
+#
     @classmethod
     def fuzzy_search(cls, field, expression):
         res = es_fuzzy_search(cls.__tablename__, field, expression)

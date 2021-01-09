@@ -27,3 +27,10 @@ def make_shell_context():
             'Serie': Serie,
             'User': User,
             }
+
+#def deploy():
+#   upgrade()
+#   insert_roles()
+#   create_indices()
+#   dla każego modelu reindex()
+#
