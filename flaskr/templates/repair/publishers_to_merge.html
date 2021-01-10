@@ -10,7 +10,7 @@
             <th>Exclude form merge</th>
             <th>Choose correct</th>
             <th>Name</th>
-            <th>Number of books</th>
+            <th>Number of books </th>
             <th>Incorrect</th>
             <th>Approuved</th>
         </tr>
@@ -21,18 +21,19 @@
             <td>{{ publisher.id }}</td>
             <td>
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="exclude" id="exclude" value={{publisher.id}}>
+                  <input class="form-check-input" type="checkbox" name="exclude" id="exclude" value={{ publisher.id }}>
                 </div>
             </td>
             <td>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="publisher" id="publisher" value={{publisher.id}}>
+                  <input class="form-check-input" type="radio" name="publisher" id="publisher" value={{ publisher.id }}>
                 </div>
             </td>
             <td>{{ publisher.name }}</td>
-            <td> {% if publisher.books %}
+            <td>
+                {% if publisher.books.count() %}
                 {{ publisher.books.count() }}
-                {% endif %} 
+                {% endif %}
             </td>
             <td>{{ publisher.incorrect }}</td>
             <td>{{ publisher.approuved }}</td>

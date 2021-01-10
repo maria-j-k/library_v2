@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <td>{{ person.name }}</td>
+            <td><a href="{{ url_for('repair.person_edit', id=person.id)}}">Edit</a></td>
+        </tr>
+
+                {% if person.author().count() %}
+        <tr>
+            <th>N of books (author) :</th>
+            <td> {{ person.author().count() }}</td>
+            <td> <a href="{{ url_for('repair.books_list', val=person.id, domain='author') }}" target="_blank">See books</a></td>
+        </tr>
+                {% endif %}
+                {% if person.translator().count() %}
+        <tr>
+            <th>N of books (translator) :</th>
+            <td>{{ person.translator().count() }}</td>
+            <td> <a href="{{ url_for('repair.books_list', val=person.id, domain='translator') }}" target="_blank">See books</a></td>
+        </tr>
+                {% endif %}
+                {% if  person.redaction().count() %}
+        <tr>
+            <th>N of books (redaction) :</th>
+            <td>{{ person.redaction().count() }}</td>
+            <td> <a href="{{ url_for('repair.books_list', val=person.id, domain='red') }}" target="_blank">See books</a></td>
+        </tr>
+                {% endif %}
+                {% if person.introduction().count() %}
+        <tr>
+            <th>N of books (introduction) :</th>
+            <td>{{ person.introduction().count() }}</td>
+            <td> <a href="{{ url_for('repair.books_list', val=person.id, domain='intro')}}" target="_blank">See books</a></td>
+        </tr>
+                {% endif %}
+        <tr>
+            <th>Incorrect</th>
+            <td> {% if person.incorrect %}
+                Incorrect
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if person.approuved %}
+                    Approuved
+                {% else %}
+                    Not approuved
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+    </table>
+
+    <p><a href="{{ url_for('repair.books_list', val=person.id, domain='person')}}" target="_blank">See books</a></p>
+    <p><a href="{{ url_for('repair.persons_list', name=person.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.persons_list', filter="all") }}">Back to list</a></p>
+       <p><a href="{{ url_for('repair.person_edit',id=person.id)}}">Edit</a></p>
+{% endblock %}    

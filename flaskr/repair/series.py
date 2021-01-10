@@ -17,19 +17,27 @@ def series_list():
 
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
+    val = request.args.get('val', None, type=int)
+
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
         series = Serie.fuzzy_search('name', name)
-        s = Serie.query.filter(Serie.id.in_([item['id'] for item in series])
-                ).order_by('publisher_id').paginate(page, 20, False)
-        
-    elif scope == 'incorrect':
-        s = Serie.query.filter_by(incorrect=True).order_by('publisher_id',
-                    'name').paginate(page, 20, False)
-    elif scope == 'all':
-        s = Serie.query.order_by('publisher_id', 'name').paginate(
+        s = Serie.query.filter(Serie.id.in_([item['id'] for item in series]))
+    elif val:
+        s = Serie.query.filter_by(publisher_id=val)
+        print(val)
+        print(type(val))
+
+    else:
+        s = Serie.query
+    
+    if scope == 'all':
+        s = s.order_by('publisher_id', 'name').paginate(
                         page, 20, False)
+    elif scope == 'incorrect':
+        s = s.filter_by(incorrect=True).order_by('publisher_id',
+                    'name').paginate(page, 20, False)
     return render_template('repair/series_list.html', 
             series=s.items, s=s,
             form=form, scope=scope)

@@ -12,13 +12,15 @@
             <th>N of series:</th>
             <td>{{ publisher.series.count() }}</td>
             <td>{% if publisher.series.count() %}
-    <a href="{{ url_for('repair.publisher_series', id=publisher.id)}}" target="_blank">See series</a>{% endif %}</td>
+    <a href="{{url_for('repair.series_list',val=publisher.id)}}"target="_blank">See series</a>
+{% endif %}</td>
         </tr>
         <tr>
             <th>N of books:</th>
             <td>{{ publisher.books.count() }}</td>
-            <td> {% if publisher.books.count() %} <a href="" target="_blank">See books</a>{% endif %}
-            
+            <td>{% if publisher.books.count() %}
+    <a href="{{ url_for('repair.books_list',val=publisher.id, domain='pub')}}" target="_blank">See books</a>
+            {% endif %}
             </td>
         </tr>
         <tr>

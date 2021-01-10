@@ -42,3 +42,39 @@ class LocationForm(FlaskForm):
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
+
+
+class BookForm(FlaskForm):
+    title = StringField('Title')
+    isbn = StringField('ISBN')
+    authors = StringField('Authors')
+    publisher = StringField('Publisher')
+    serie = StringField('Serie')
+    city = StringField('Publication place')
+    pub_year = StringField('Publication year')
+    origin_language = StringField('Origin language')
+    fiction = SelectField('Fiction', choices=[
+                    ('', '---'),
+                    (1, 'fiction'),
+                    (0, 'non-fiction')
+        ], 
+        coerce=bool)
+    literary_form = SelectField('Literary form', choices=[
+                    ('', '---'),
+                    ('PO', 'Poetry'),
+                    ('PR', 'Prose'),
+                    ('DR', 'Drama')
+                ])
+    genre = StringField('Genre')
+    precision = TextAreaField('Precision')
+    nukat = TextAreaField('NUKAT themes')
+    incorrect = BooleanField('Incorrect')
+    approuved = BooleanField('Approuved')
+    submit = SubmitField('Sumbit')
+
+
+class PersonForm(FlaskForm):
+    name = StringField('Name')
+    incorrect = BooleanField('Incorrect')
+    approuved = BooleanField('Approuved')
+    submit = SubmitField('Sumbit')

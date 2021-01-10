@@ -26,10 +26,8 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.publishers_list', filter="", name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.publishers_list', name="") }}">Search</a></button>
         
-        {#     {{ form.submit(class_="btn btn-primary") }}#}
-        {# to zrobić ajaxem button fake i wyciąganie wartości inputa #}
     </div>
     {% for error in form.name.errors %}
         <span style="color: red">{{ error }}</span>   
@@ -42,6 +40,7 @@
             <th>Merge</th>
             <th>Semblables</th>
             <th>Name</th>
+            <th>Series</th>
             <th>Number of books</th>
             <th>Incorrect</th>
             <th>Approuved</th>
@@ -58,9 +57,16 @@
             </td>
             <td><a href="{{ url_for('repair.publishers_list', filter='', name=publisher.name) }}">X</a></td>
             <td><a href="{{ url_for('repair.publisher_details', id=publisher.id) }}">{{ publisher.name }}</a></td>
-            <td> {% if publisher.books %}
-                {{ publisher.books.count() }}
-                {% endif %} 
+            <td>
+                {% if publisher.series.count() %}
+                    <a href="{{url_for('repair.series_list',val=publisher.id)}}"target="_blank">{{ publisher.series.count()}}</a>
+            {% endif %}
+            </td>
+            <td>
+                {% if publisher.books.count() %}
+                    <a href="{{ url_for('repair.books_list',val=publisher.id,
+                        domain='pub')}}" target="_blank">{{ publisher.books.count()}}</a>
+            {% endif %}
             </td>
             <td>{{ publisher.incorrect }}</td>
             <td>{{ publisher.approuved }}</td>

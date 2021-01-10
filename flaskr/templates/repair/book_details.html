@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <td>{{ book.title }}</td>
+        </tr>
+        <tr>
+            <th>ISBN</th>
+            <td>{{ book.isbn }}</td>
+        </tr>
+        <tr>
+            <th>Authors</th>
+            <td>
+           {% for author in book.authors().all() %}
+               <a href="" target="_blank">{{ author.person.name }}</a>
+           {% endfor %} 
+            </td>
+        </tr>
+        <tr>
+            <th>Translators</th>
+            <td>
+           {% for translator in book.translators().all() %}
+               <a href="" target="_blank">{{ translator.person.name }}</a>
+           {% endfor %} 
+            </td>
+        </tr>
+        <tr>
+            <th>Redaction</th>
+            <td>
+           {% for red in book.redaction().all() %}
+               <a href="" target="_blank">{{ red.person.name }}</a>
+           {% endfor %} 
+            </td>
+        </tr>
+        <tr>
+            <th>Introduction</th>
+            <td>
+           {% for intro in book.introduction().all() %}
+               <a href="" target="_blank">{{ intro.person.name }}</a>
+           {% endfor %} 
+            </td>
+        </tr>
+        <tr>
+            <th>Publisher</th>
+            <td>
+                {% if book.publisher_id %}
+                    <a href="{{ url_for('repair.publisher_details', id=book.publisher_id) }}" target="_blank">{{ book.publisher.name }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Serie</th>
+            <td>
+                {% if book.serie_id %}
+                    <a href="{{ url_for('repair.serie_details', id=book.serie_id) }}" target="_blank">{{ book.serie.name }}</a>
+                {% endif%}
+            </td>
+        </tr>
+        <tr>
+            <th>Publication place</th>
+            <td>
+                {% if book.city_id %}
+                    <a href="{{ url_for('repair.city_details', id=book.city_id) }}" target="_blank">{{ book.city.name }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Publication year</th>
+            <td>{{ book.pub_year }}</td>
+        </tr>
+        <tr>
+            <th>Origin language</th>
+            <td>{{ book.origin_language }}</td>
+        </tr>
+        <tr>
+            <th>Literary form</th>
+            <td>{{ book.literary_form.value }}</td>
+        </tr>
+        <tr>
+            <th>Genre</th>
+            <td>{{ book.genre }}</td>
+        </tr>
+        <tr>
+            <th>Fiction</th>
+            <td>{{ book.fiction }}</td>
+        </tr>
+        <tr>
+            <th>Precision</th>
+            <td>{{ book.precision }}</td>
+        </tr>
+        <tr>
+            <th>NUKAT themes</th>
+            <td>{{ book.nukat }}</td>
+        </tr>
+        <tr>
+            <th>N of copies:</th>
+            <td>{{ book.copies.count() }}</td>
+        </tr>
+        <tr>
+            <th>Incorrect?</th>
+            <td> {% if book.incorrect %}
+                Incorrect
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if book.approuved %}
+                    Approuved
+                {% else %}
+                    Not approuved
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+    </table>
+
+    <p><a href="" target="_blank">See copies</a></p>
+    <p><a href="{{ url_for('repair.books_list', name=book.title) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.books_list', filter="all") }}">Back to list</a></p>
+    <p><a href="{{ url_for('repair.book_edit', id=book.id)}}">Edit</a></p>
+{% endblock %}    

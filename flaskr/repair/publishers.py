@@ -16,6 +16,7 @@ def publishers_list():
 
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
+    
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
 #    if form.validate_on_submit():
@@ -27,6 +28,7 @@ def publishers_list():
         publishers = Publisher.fuzzy_search('name', name)
         pubs = Publisher.query.filter(Publisher.id.in_(
             [item['id'] for item in publishers])).paginate(page, 20, False)
+
         
     elif scope == 'incorrect':
         pubs = Publisher.query.filter_by(incorrect=True).order_by(

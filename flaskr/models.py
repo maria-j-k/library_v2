@@ -118,6 +118,18 @@ class Person(SearchableMixin, FlagMixin, db.Model):
     @property
     def is_incorrect(self):
         return self.incorrect 
+    
+    def author(self):
+        return Creator.query.filter_by(role = 'A', person=self)
+
+    def translator(self):
+        return Creator.query.filter_by(role = 'T', person=self)
+
+    def redaction(self):
+        return Creator.query.filter_by(role = 'R', person=self)
+
+    def introduction(self):
+        return Creator.query.filter_by(role = 'I', person=self)
 
 
 class Publisher(SearchableMixin, FlagMixin, db.Model):
@@ -257,9 +269,10 @@ class Book(SearchableMixin, FlagMixin, db.Model):
         return self.title
 
     def print_authors(self):
-        authors = [c.person.name for c in self.creator
+        authors = [c.person for c in self.creator
                 if c.role._name_ == 'A']
-        return ", ".join(authors)
+        return authors
+#        return ", ".join(authors)
 
     def print_trans(self):
         trans = [c.person.name for c in self.creator
@@ -276,6 +289,19 @@ class Book(SearchableMixin, FlagMixin, db.Model):
                 if c.role._name_ == 'I']
         return ", ".join(intro)
     
+    def authors(self):
+        return Creator.query.filter_by(role = 'A', book=self)
+
+    def translators(self):
+        return Creator.query.filter_by(role = 'T', book=self)
+
+    def redaction(self):
+        return Creator.query.filter_by(role = 'R', book=self)
+
+    def introduction(self):
+        return Creator.query.filter_by(role = 'I', book=self)
+
+
 
     @property
     def is_incorrect(self):

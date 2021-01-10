@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Exclude form merge</th>
+            <th>Choose correct</th>
+            <th>Name</th>
+            <th>Number of books (author)</th>
+            <th>Number of books (translator)</th>
+            <th>Number of books (redaction)</th>
+            <th>Number of books (introduction)</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in persons %}
+        <tr>
+            <td>{{ person.id }}</td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="exclude" id="exclude" value={{ person.id }}>
+                </div>
+            </td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="person" id="person" value={{ person.id }}>
+                </div>
+            </td>
+            <td>{{ person.name }}</td>
+            <td>
+                {% if person.author().count() %}
+                {{ person.author().count() }}
+                {% endif %}
+            </td>
+            <td>
+                {% if person.translator().count() %}
+                {{ person.translator().count() }}
+                {% endif %}
+            </td>
+            <td>
+                {% if  person.redaction().count() %}
+                {{ person.redaction().count() }}
+                {% endif %}
+            </td>
+            <td>
+                {% if person.introduction().count() %}
+                {{ person.introduction().count() }}
+                {% endif %}
+            </td>
+            <td>{{ person.incorrect }}</td>
+            <td>{{ person.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% endblock %}    

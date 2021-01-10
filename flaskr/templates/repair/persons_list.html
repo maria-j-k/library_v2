@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block scripts %}
+        {{ super() }}
+        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
+     <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
+ {% endblock %}
+{% block content %}
+    {% if scope == 'all' %}
+        <h3><a href="{{ url_for('repair.persons_list', filter='incorrect') }}">Show incorrect</a></h3>
+    {% elif scope == 'incorrect' %}
+        <h3><a href="{{ url_for('repair.persons_list', filter='all') }}">Show all</a></h3>
+    {% else %}
+        <h3><a href="{{ url_for('repair.persons_list', filter='incorrect') }}">Show incorrect</a></h3>
+        <h3><a href="{{ url_for('repair.persons_list', filter='all') }}">Show all</a></h3>
+    {% endif %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+    {{ form.hidden_tag() }}
+    <div class="container row mb-3">
+    <div class="coll-sm-3">
+        {{ form.name.label }}
+    </div>
+    <div class="col-sm-6">
+        {{ form.name(class_="form-control search-input") }}
+    </div>
+    <div class="coll-sm-2">
+        <button class="btn btn-light fake search"><a id="search-link" href="{{url_for('repair.persons_list', filter="", name="") }}">Search</a></button>
+    </div>
+    {% for error in form.name.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+  </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Merge</th>
+            <th>Semblables</th>
+            <th>Name</th>
+            <th>Number of books (author)</th>
+            <th>Number of books (translator)</th>
+            <th>Number of books (redaction)</th>
+            <th>Number of books (introduction)</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for person in persons %}
+        <tr>
+            <td>{{ person.id }}</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="person_id"
+                    type="checkbox" value="{{ person.id }}" id="flexCheckDefault">
+                </div>
+            </td>
+            <td><a href="{{ url_for('repair.persons_list', filter='', name=person.name) }}">X</a></td>
+            <td><a href="{{ url_for('repair.person_details', id=person.id)}}">{{ person.name }}</a></td>
+            <td>
+                {% if person.author().count() %}
+                    <a href="{{ url_for('repair.books_list', val=person.id, domain='author')}}" target="_blank">{{ person.author().count() }}</a>
+                
+                {% endif %}
+            </td>
+            <td>
+                {% if person.translator().count() %}
+                    <a href="{{ url_for('repair.books_list', val=person.id, domain='translator')}}" target="_blank">{{ person.translator().count() }}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if  person.redaction().count() %}
+                    <a href="{{ url_for('repair.books_list', val=person.id, domain='red')}}" target="_blank">{{ person.redaction().count() }}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if person.introduction().count() %}
+                    <a href="{{ url_for('repair.books_list', val=person.id, domain='intro')}}" target="_blank">{{ person.introduction().count() }}</a>
+                {% endif %}
+            </td>
+            <td>{{ person.incorrect }}</td>
+            <td>{{ person.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% if p %}
+{{ render_pagination(p) }}
+{% endif %}
+{% endblock %}    
