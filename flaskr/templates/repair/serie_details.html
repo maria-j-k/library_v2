@@ -6,14 +6,17 @@
         <tr>
             <th>Name</th>
             <td>{{ serie.name }}</td>
+            <td><a href="{{ url_for('repair.serie_edit', id=serie.id)}}">Edit</a></td>
         </tr>
         <tr>
             <th>Publisher</th>
             <td><a href="{{ url_for('repair.publisher_details', id=serie.publisher_id) }}" target="_blank">{{ serie.publisher.name }}</a></td>
+            <td></td>
         </tr>
         <tr>
             <th>N of books:</th>
             <td>{{ serie.books.count() }}</td>
+            <td></td>
         </tr>
         <tr>
             <th>Incorrect?</th>
@@ -36,5 +39,4 @@
     <p><a href="" target="_blank">See books</a></p>
     <p><a href="{{ url_for('repair.series_list', name=serie.name) }}" target="_blank">Show similars</a></p>
     <p><a href="{{ url_for('repair.series_list', filter="all") }}">Back to list</a></p>
-    <p><a href="{{ url_for('repair.serie_edit', id=serie.publisher.id)}}">Edit</a></p>
 {% endblock %}    

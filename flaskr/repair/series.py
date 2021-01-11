@@ -54,13 +54,16 @@ def serie_edit(id):
     form = SerieForm(name=serie.name)
     if form.validate_on_submit():
         serie_name = form.name.data
-        s = Serie.query.filter_by(name=serie_name).first()
-        if s:
-            flash(f'''Serie {s.name} exists already in the database. \n
+        if serie_name != serie.name:
+            s = Serie.query.filter_by(name=serie_name).first()
+            if s:
+                flash(f'''Serie {s.name} exists already in the database. \n
                     You have to merge "{serie.name}" with "{s.name}".\n 
                     Hit "Show similars" to enable merge.''')
         else:
             serie.name = serie_name
+            serie.approuved = form.approuved.data
+            serie.incorrect = form.incorrect.data
             db.session.add(serie)
             db.session.commit()
             return redirect(url_for('repair.serie_details', 

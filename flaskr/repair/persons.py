@@ -34,22 +34,29 @@ def persons_list():
 
 @bp.route('/persons/<int:id>', methods=['GET'])
 def person_details(id):
+    session['ids'] = []
     person = Person.query.get(id)
     return render_template('repair/person_details.html', person=person)
 
 @bp.route('/persons/<int:id>/edit', methods=['GET', 'POST'])
 def person_edit(id):
+    session['ids'] = []
     person = Person.query.get(id)
-    form = PersonForm(name=person.name)
+    form = PersonForm(name=person.name, 
+            approuved=person.approuved, 
+            incorrect=person.incorrect)
     if form.validate_on_submit():
         person_name = form.name.data
-        p = Person.query.filter_by(name=person_name).first()
-        if p:
-            flash(f'''Person {p.name} exists already in the database. \n
+        if person.name != person_name:
+            p = Person.query.filter_by(name=person_name).first()
+            if p: 
+                flash(f'''Person {p.name} exists already in the database. \n
                     You have to merge "{person.name}" with "{p.name}".\n 
                     Hit "Show similars" to enable merge.''')
         else:
             person.name = person_name
+            person.approuved = form.approuved.data
+            person.incorrect = form.incorrect.data
             db.session.add(person)
             db.session.commit()
             return redirect(url_for('repair.person_details', id=person.id))
@@ -59,6 +66,7 @@ def person_edit(id):
 
 @bp.route('/persons/merge_h/', methods=['GET'])
 def persons_merge_helper():
+    session['ids'] = []
     ids = request.args.getlist('ids')
     session['ids'] = ids
     return redirect(url_for('repair.persons_merge'))
@@ -67,26 +75,28 @@ def persons_merge_helper():
 @bp.route('/persons/merge/', methods=['GET', 'POST'])
 def persons_merge():
     id_list = session.get('ids')
-    session['ids'] = []
-    print(type(id_list))
     persons = Person.query.filter(Person.id.in_(id_list)).order_by('name').all()
+    print(f'persons: {persons}')
     if request.method == 'POST':
-        to_exclude = request.form.get('exclude')
-        print(to_exclude)
-        print(type(to_exclude))
+        to_exclude = request.form.getlist('exclude')
         if to_exclude:
-            id_list.remove(to_exclude)
+            for item in to_exclude:
+                id_list.remove(item)
             persons = Person.query.filter(Person.id.in_(id_list)
                     ).order_by('name').all()
             return redirect(url_for('repair.persons_merge',persons=persons))
         main = Person.query.get(request.form.get('person'))
+        print(main.id)
         for person in persons:
+            print(f'zew loop {person is main}')
             if person is not main:
                 for creator in person.creator.all():
                     for c in main.creator.all():
                         if (creator.book_id, creator.role) == (c.book_id,
                                 c.role):
+                            print(creator.__tablename__, creator.id)
                             db.session.delete(creator)
+                            
                         else:
                             creator.person_id = main.id
                             db.session.add(creator)

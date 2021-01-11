@@ -44,13 +44,16 @@ def location_edit(id):
     form = LocationForm(room=location.room)
     if form.validate_on_submit():
         location_room = form.room.data
-        l = Location.query.filter_by(room=location_room).first()
-        if c:
-            flash(f'''Location {l.room} exists already in the database. \n
+        if location.room != location_room:
+            l = Location.query.filter_by(room=location_room).first()
+            if l:
+                flash(f'''Location {l.room} exists already in the database. \n
                     You have to merge "{location_room}" with "{l.room}".\n 
                     Hit "Show similars" to enable merge.''')
         else:
             location.room = location_room
+            location.approuved = form.approuved.data
+            location.incorrect = form.incorrect.data
             db.session.add(location)
             db.session.commit()
             return redirect(url_for('repair.location_details', id=location.id))

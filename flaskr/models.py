@@ -276,10 +276,10 @@ class Book(SearchableMixin, FlagMixin, db.Model):
         return self.title
 
     def print_authors(self):
-        authors = [c.person for c in self.creator
+        authors = [c.person.name for c in self.creator
                 if c.role._name_ == 'A']
-        return authors
-#        return ", ".join(authors)
+#        return authors
+        return ", ".join(authors)
 
     def print_trans(self):
         trans = [c.person.name for c in self.creator

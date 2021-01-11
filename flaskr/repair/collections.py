@@ -44,13 +44,16 @@ def collection_edit(id):
     form = CollectionForm(name=collection.name)
     if form.validate_on_submit():
         collection_name = form.name.data
-        c = Collection.query.filter_by(name=collection_name).first()
-        if c:
-            flash(f'''Collection {c.name} exists already in the database. \n
+        if collection_name != collection.name:
+            c = Collection.query.filter_by(name=collection_name).first()
+            if c:
+                flash(f'''Collection {c.name} exists already in the database. \n
                     You have to merge "{collection.name}" with "{c.name}".\n 
                     Hit "Show similars" to enable merge.''')
         else:
             collection.name = collection_name
+            collection.approuved = form.approuved.data
+            collection.incorrect = form.incorrect.data
             db.session.add(collection)
             db.session.commit()
             return redirect(url_for('repair.collection_details', id=collection.id))
