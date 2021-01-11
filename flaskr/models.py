@@ -52,7 +52,6 @@ class SearchableMixin(object):
     def reindex(cls):
         print('reindex')
         for obj in cls.query:
-            print(obj)
             add_to_index(cls.__tablename__, obj)
 
 db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
@@ -79,7 +78,15 @@ class FlagMixin(object):
     def to_dict(cls, obj):
         return [{x.__str__().split('.')[1]: getattr(obj, x.__str__().split('.')[1])} 
                 for x in cls.__table__.columns]
-
+    
+    def toggle_incorrect(obj):
+        if obj.incorrect:
+            obj.incorrect = False
+        else:
+            obj.incorrect = True
+        db.session.add(obj)
+        db.session.commit()
+        return obj
 
 def get_class_by_tablename(tablename):
   """Return class reference mapped to table.

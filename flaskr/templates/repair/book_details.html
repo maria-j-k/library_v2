@@ -11,38 +11,83 @@
             <th>ISBN</th>
             <td>{{ book.isbn }}</td>
         </tr>
+        {% if book.authors().count() %}
         <tr>
             <th>Authors</th>
             <td>
            {% for author in book.authors().all() %}
-               <a href="" target="_blank">{{ author.person.name }}</a>
+               <a href="{{url_for('repair.person_details', id=author.person.id) }}" target="_blank">{{ author.person.name }}</a>
            {% endfor %} 
             </td>
+            <td>
+                {% set a_ids=[] %}
+                {% for author  in book.authors().all()  %}
+                    {% do a_ids.append(author.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=a_ids) }}" target="_blank">Merge</a>
+            </td>
         </tr>
+        {% endif %}
+        {% if book.translators().count() %}
         <tr>
             <th>Translators</th>
             <td>
            {% for translator in book.translators().all() %}
-               <a href="" target="_blank">{{ translator.person.name }}</a>
+               <a href="{{ url_for('repair.person_details',
+                   id=translator.person.id) }}" target="_blank">{{ translator.person.name }}</a>
            {% endfor %} 
             </td>
+            <td>
+                {% set t_ids=[] %}
+                {% for translator  in book.translators().all()  %}
+                    {% do t_ids.append(translator.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=t_ids) }}" target="_blank">Merge</a>
+            </td>
         </tr>
+        {% endif %}
+        {% if book.redaction().count() %}
         <tr>
             <th>Redaction</th>
             <td>
            {% for red in book.redaction().all() %}
-               <a href="" target="_blank">{{ red.person.name }}</a>
+               <a href="{{ url_for('repair.person_details', id=red.person.id) }}" target="_blank">{{ red.person.name }}</a>
            {% endfor %} 
             </td>
+            <td>
+                {% set r_ids=[] %}
+                {% for red  in book.redaction().all()  %}
+                    {% do r_ids.append(red.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=r_ids) }}" target="_blank">Merge</a>
+            </td>
         </tr>
+        {% endif %}
+        {% if book.introduction().count() %}
         <tr>
             <th>Introduction</th>
             <td>
            {% for intro in book.introduction().all() %}
-               <a href="" target="_blank">{{ intro.person.name }}</a>
+               <a href="{{ url_for('repair.person_details', id=intro.person.id)}}" target="_blank">{{ intro.person.name }}</a>
            {% endfor %} 
             </td>
+            <td>
+                {% set i_ids=[] %}
+                {% for intro  in book.introduction().all()  %}
+                    {% do i_ids.append(intro.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=i_ids) }}" target="_blank">Merge</a>
+            </td>
         </tr>
+        {% endif %}
         <tr>
             <th>Publisher</th>
             <td>

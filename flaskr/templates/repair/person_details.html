@@ -39,10 +39,16 @@
                 {% endif %}
         <tr>
             <th>Incorrect</th>
-            <td> {% if person.incorrect %}
+            <td style="color: red;"> {% if person.incorrect %}
                 Incorrect
             {% endif %}</td>
-            <td> <a href="" >Change</a> </td>
+
+            <td> {% if not person.incorrect %}
+                <a href="{{ url_for('staff.toggle_incorrect', id_=person.id,
+                model='persons', next=request.path)}}">Change</a>
+            {% endif %} 
+            </td>
+            
         </tr>
         <tr>
             <th>Approuved</th>

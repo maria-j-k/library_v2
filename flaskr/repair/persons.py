@@ -56,27 +56,41 @@ def person_edit(id):
             
     return render_template('repair/person_edit.html', form=form, person=person)
 
+
+@bp.route('/persons/merge_h/', methods=['GET'])
+def persons_merge_helper():
+    ids = request.args.getlist('ids')
+    session['ids'] = ids
+    return redirect(url_for('repair.persons_merge'))
+
+
 @bp.route('/persons/merge/', methods=['GET', 'POST'])
 def persons_merge():
     id_list = session.get('ids')
-    print(id_list)
+    session['ids'] = []
+    print(type(id_list))
     persons = Person.query.filter(Person.id.in_(id_list)).order_by('name').all()
-    print(persons)
     if request.method == 'POST':
         to_exclude = request.form.get('exclude')
+        print(to_exclude)
+        print(type(to_exclude))
         if to_exclude:
             id_list.remove(to_exclude)
             persons = Person.query.filter(Person.id.in_(id_list)
                     ).order_by('name').all()
-            return redirect(url_for('repair.persons_merge',person=person))
+            return redirect(url_for('repair.persons_merge',persons=persons))
         main = Person.query.get(request.form.get('person'))
         for person in persons:
             if person is not main:
                 for creator in person.creator.all():
-                    print(creator.id)
-                    creator.person_id = main.id
-                    db.session.add(creator)
-                    db.session.commit()
+                    for c in main.creator.all():
+                        if (creator.book_id, creator.role) == (c.book_id,
+                                c.role):
+                            db.session.delete(creator)
+                        else:
+                            creator.person_id = main.id
+                            db.session.add(creator)
+                        db.session.commit()
                 db.session.delete(person)
         db.session.commit()
         return redirect(url_for('repair.person_details', id=main.id))

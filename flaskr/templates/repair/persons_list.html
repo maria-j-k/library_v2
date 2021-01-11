@@ -80,8 +80,18 @@
                     <a href="{{ url_for('repair.books_list', val=person.id, domain='intro')}}" target="_blank">{{ person.introduction().count() }}</a>
                 {% endif %}
             </td>
-            <td>{{ person.incorrect }}</td>
-            <td>{{ person.approuved }}</td>
+            {% if person.incorrect %}
+                <td style="color: red;">{{ person.incorrect }}</td>
+            {% else %}
+                <td>
+                    <a href="{{ url_for('staff.toggle_incorrect', id_=person.id, model='persons', next=request.path)}}">X</a>
+                </td>
+            {% endif %}
+            {% if person.approuved %}
+                <td style="color: green">{{ person.approuved }}</td>
+            {% else%}
+                <td></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

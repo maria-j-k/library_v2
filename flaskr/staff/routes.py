@@ -4,7 +4,7 @@ from flask import flash, jsonify, redirect, render_template, request, session, u
 from flask_login import login_required
 
 from flaskr import db
-from flaskr.models import Book, City, Copy, Creator, Person, Publisher, Serie
+from flaskr.models import (Book, City, Copy, Creator, Person, Publisher, Serie, get_class_by_tablename)
 from flaskr.staff import bp
 from flaskr.staff.forms import BookForm, CopyForm, TitleForm
 from scripts.utils import get_or_create
@@ -130,8 +130,21 @@ def add_copy(id):
         print(form.errors)
     return render_template('staff/add_copy.html', book=book, form=form)
 
-@bp.route('/staff/toggle_incorrect')
+@bp.route('/staff/toggle_incorrect', methods=['GET', 'POST'])
 @login_required
 def toggle_incorrect():
-    pass
-    
+    print(f'toggle {request.method}')
+    tbl = get_class_by_tablename(request.args.get('model'))
+    obj = tbl.query.get(request.args.get('id_'))
+    next_page = request.args.get('next')
+    obj.toggle_incorrect()
+    return redirect(next_page)
+
+
+
+#    @bp.route('/translate', methods=['POST'])
+#@login_required
+#def translate_text():
+#    return jsonify({'text': translate(request.form['text'],
+#                                      request.form['source_language'],
+#                                      request.form['dest_language'])})
