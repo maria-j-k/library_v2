@@ -26,7 +26,7 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.locations_list', filter="", name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.locations_list', name="") }}">Search</a></button>
     </div>
     {% for error in form.name.errors %}
         <span style="color: red">{{ error }}</span>   
@@ -53,7 +53,7 @@
                     <input class="form-check-input" name="location_id" type="checkbox" value="{{ location.id }}" id="flexCheckDefault">
                 </div>
             </td>
-            <td><a href="{{ url_for('repair.locations_list', filter='', name=location.room) }}">X</a></td>
+            <td><a href="{{ url_for('repair.locations_list', name=location.room) }}">X</a></td>
             <td><a href="{{ url_for('repair.location_details', id=location.id) }}">{{ location.room }}</a></td>
             <td> {% if location.copies %}
                 {{ location.copies.count() }}

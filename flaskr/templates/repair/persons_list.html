@@ -26,7 +26,7 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{url_for('repair.persons_list', filter="", name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{url_for('repair.persons_list', name="") }}">Search</a></button>
     </div>
     {% for error in form.name.errors %}
         <span style="color: red">{{ error }}</span>   
@@ -57,7 +57,7 @@
                     type="checkbox" value="{{ person.id }}" id="flexCheckDefault">
                 </div>
             </td>
-            <td><a href="{{ url_for('repair.persons_list', filter='', name=person.name) }}">X</a></td>
+            <td><a href="{{ url_for('repair.persons_list', name=person.name) }}">X</a></td>
             <td><a href="{{ url_for('repair.person_details', id=person.id)}}">{{ person.name }}</a></td>
             <td>
                 {% if person.author().count() %}
@@ -83,8 +83,11 @@
             {% if person.incorrect %}
                 <td style="color: red;">{{ person.incorrect }}</td>
             {% else %}
-                <td>
-                    <a href="{{ url_for('staff.toggle_incorrect', id_=person.id, model='persons', next=request.path)}}">X</a>
+                <td style="color: red;">
+                    {#  na próbę. Działa, ale nie zmienia wartości na stronie. JsonJinja albo zostawiam jak jest w staff.toggle_incorrect #}
+                    <button class="fake toggle-inc btn btn-sm btn-light">
+                        <a href="{{ url_for('es_api.toggle_incorrect', id_=person.id, m='persons', next=request.path)}}">X</a>
+                    </button>
                 </td>
             {% endif %}
             {% if person.approuved %}

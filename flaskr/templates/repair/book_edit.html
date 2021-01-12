@@ -1,13 +1,173 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
 {% block content %}
     {{ super() }} 
-<form action="" method="post" accept-charset="utf-8">
-    {{ render_form(form) }}
+    <form action="" method="post" accept-charset="utf-8">
+        
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <td>{{ form.title(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>ISBN</th>
+            <td>{{ form.isbn(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Authors</th>
+            <td>
+           {% for author in book.authors().all() %}
+               <a href="{{url_for('repair.person_details', id=author.person.id) }}" target="_blank">{{ author.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set a_ids=[] %}
+                {% for author  in book.authors().all()  %}
+                    {% do a_ids.append(author.person.id) %}
+                    
+                {% endfor %}
+                <a href="" target="_blank">Edit</a>
+            </td>
+        </tr>
+        <tr>
+            <th>Translators</th>
+            <td>
+           {% for translator in book.translators().all() %}
+               <a href="{{ url_for('repair.person_details',
+                   id=translator.person.id) }}" target="_blank">{{ translator.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set t_ids=[] %}
+                {% for translator  in book.translators().all()  %}
+                    {% do t_ids.append(translator.person.id) %}
+                    
+                {% endfor %}
+                <a href="" target="_blank">Edit</a>
+            </td>
+        </tr>
+        <tr>
+            <th>Redaction</th>
+            <td>
+           {% for red in book.redaction().all() %}
+               <a href="{{ url_for('repair.person_details', id=red.person.id) }}" target="_blank">{{ red.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set r_ids=[] %}
+                {% for red  in book.redaction().all()  %}
+                    {% do r_ids.append(red.person.id) %}
+                    
+                {% endfor %}
+                <a href="" target="_blank">Edit</a>
+            </td>
+        </tr>
+        <tr>
+            <th>Introduction</th>
+            <td>
+           {% for intro in book.introduction().all() %}
+               <a href="{{ url_for('repair.person_details', id=intro.person.id)}}" target="_blank">{{ intro.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set i_ids=[] %}
+                {% for intro  in book.introduction().all()  %}
+                    {% do i_ids.append(intro.person.id) %}
+                    
+                {% endfor %}
+                <a href="" target="_blank">Edit</a>
+            </td>
+        </tr>
+        <tr>
+            <th>Publisher</th>
+            {#}            <td>
+                {% if book.publisher_id %}
+                    <a href="{{ url_for('repair.publisher_details', id=book.publisher_id) }}" target="_blank">{{ book.publisher.name }}</a>
+                {% endif %}
+            </td>{#}
+            <td>{{ form.publisher(class_="form-control publisher", readonly=true) }}</td>
+            <td>
+            <button class="fake btn btn-light">Edit</button>
+            <button class="fake btn btn-light">Mark as incorrect</button>
+            </td>
+        </tr>
+        <tr>
+            <th>Serie</th>
+            <td>
+                {% if book.serie_id %}
+                    <a href="{{ url_for('repair.serie_details', id=book.serie_id) }}" target="_blank">{{ book.serie.name }}</a>
+                {% endif%}
+            </td>
+            <td>
+            <button class="fake btn btn-light">Edit</button>
+            <button class="fake btn btn-light">Mark as incorrect</button>
+            </td>
+        </tr>
+        <tr>
+            <th>Publication place</th>
+            <td>
+                {% if book.city_id %}
+                    <a href="{{ url_for('repair.city_details', id=book.city_id) }}" target="_blank">{{ book.city.name }}</a>
+                {% endif %}
+            </td>
+            <td>
+            <button class="fake btn btn-light">Edit</button>
+            <button class="fake btn btn-light">Mark as incorrect</button>
+            </td>
+        </tr>
+        <tr>
+            <th>Publication year</th>
+            <td>{{ form.pub_year(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Origin language</th>
+            <td>{{ form.origin_language(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Literary form</th>
+            <td>{{ form.literary_form(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Genre</th>
+            <td>{{ form.genre(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Fiction</th>
+            <td>{{ form.fiction(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Precision</th>
+            <td>{{ form.precision(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>NUKAT themes</th>
+            <td>{{ form.nukat(class_="form-control") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Incorrect</th>
+            <td>{{ form.incorrect(class_="form-check-input") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td>{{ form.approuved(class_="form-check-input") }}</td>
+            <td></td>
+        </tr>
+    </table>
+
+    {{ form.submit() }}
 
 </form>
 <p><a href="" target="_blank">See copies</a></p>
     <p><a href="{{ url_for('repair.books_list', name=book.title) }}" target="_blank">Show similars</a></p>
     <p><a href="{{ url_for('repair.books_list') }}">Back to list</a></p>
-{% endblock %}    
+{% endblock %}   
+ 

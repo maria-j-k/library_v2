@@ -54,7 +54,7 @@
                     <input class="form-check-input" name="serie_id" type="checkbox" value="{{ serie.id }}" id="flexCheckDefault">
                 </div>
             </td>
-            <td><a href="{{ url_for('repair.series_list', filter='', name=serie.name) }}">X</a></td>
+            <td><a href="{{ url_for('repair.series_list', name=serie.name) }}">X</a></td>
             <td><a href="{{ url_for('repair.serie_details', id=serie.id) }}">{{ serie.name }}</a></td>
             <td><a href="{{ url_for('repair.publisher_details', id=serie.publisher_id) }}">{{ serie.publisher.name }}</a></td>
             <td>

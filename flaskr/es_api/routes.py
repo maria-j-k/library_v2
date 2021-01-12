@@ -59,18 +59,26 @@ def fts_title():
     fields = ['title']
     books = Book.es_search(q, fields)
 
-@bp.route('/toggle_incorrect')
-def toggle_incorrect():
-    q = request.args.get('q')
-    model = request.args.get('model')
-    tbl = get_class_by_tablename(model+'s')
-    obj = tbl.query.get(q)
-    print(obj)
-    print(q)
-    print(model)
-    return q
+#@bp.route('/toggle_incorrect')
+#def toggle_incorrect():
+#    q = request.args.get('q')
+#    model = request.args.get('model')
+#    tbl = get_class_by_tablename(model+'s')
+#    obj = tbl.query.get(q)
+#    print(obj)
+#    print(q)
+#    print(model)
+#    return q
     
 
+@bp.route('/toggle_incorrect', methods=['GET', 'POST'])
+def toggle_incorrect():
+    print(f'toggle {request.method}')
+    tbl = get_class_by_tablename(request.args.get('m'))
+    obj = tbl.query.get(request.args.get('id_'))
+#    next_page = request.args.get('next')
+    obj.toggle_incorrect()
+    return jsonify({'id': obj.id, 'incorrect': obj.incorrect})
 
 
 

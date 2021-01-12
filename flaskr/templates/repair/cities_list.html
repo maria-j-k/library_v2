@@ -26,7 +26,7 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.cities_list', filter="", name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.cities_list', name="") }}">Search</a></button>
     </div>
     {% for error in form.name.errors %}
         <span style="color: red">{{ error }}</span>   
@@ -53,12 +53,19 @@
                     <input class="form-check-input" name="city_id" type="checkbox" value="{{ city.id }}" id="flexCheckDefault">
                 </div>
             </td>
-            <td><a href="{{ url_for('repair.cities_list', filter='', name=city.name) }}">X</a></td>
+            <td><a href="{{ url_for('repair.cities_list', name=city.name) }}">X</a></td>
             <td><a href="{{ url_for('repair.city_details', id=city.id) }}">{{ city.name }}</a></td>
             <td> {% if city.books %}
                 {{ city.books.count() }}
                 {% endif %} 
             </td>
+            {% if city.incorrect %}
+                <td style="color: red;">{{ city.incorrect }}</td>
+            {% else %}
+                <td>
+                    <a href="{{ url_for('staff.toggle_incorrect', id_=city.id, m='cities', next=request.path)}}">X</a>
+                </td>
+            {% endif %}
             <td>{{ city.incorrect }}</td>
             <td>{{ city.approuved }}</td>
         </tr>

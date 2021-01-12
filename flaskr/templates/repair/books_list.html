@@ -26,7 +26,7 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.books_list', filter="", name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.books_list', name="") }}">Search</a></button>
         
     </div>
     {% for error in form.name.errors %}
@@ -59,12 +59,12 @@
                     <input class="form-check-input" name="book_id" type="checkbox" value="{{ book.id }}" id="flexCheckDefault">
                 </div>
             </td>
-            <td><a href="{{ url_for('repair.books_list', filter='', name=book.title) }}">X</a></td>
+            <td><a href="{{ url_for('repair.books_list', name=book.title) }}">X</a></td>
             <td>{{ book.isbn }}</td>
             <td><a href="{{ url_for('repair.book_details', id=book.id) }}">{{ book.title }}</a></td>
             <td>
            {% for author in book.authors().all() %}
-               <a href="" target="_blank">{{ author.person.name }}</a>
+               <a href="{{ url_for('repair.person_details', id=author.person.id) }}" target="_blank">{{ author.person.name }}</a>
            {% endfor %} 
             </td>
             {#<td>{{ book.print_authors() }}</td>trzeba będzie autorów jako obiekty #}
@@ -78,7 +78,13 @@
                     <a href="{{ url_for('repair.city_details', id=book.city.id) }}" target="_blank">{{ book.city.name}}</a>
             {% endif %}</td>
             <td>{{ book.pub_year }}</td>
-            <td>{{ book.incorrect }}</td>
+            {% if book.incorrect %}
+                <td style="color: red;">{{ book.incorrect }}</td>
+            {% else %}
+                <td>
+                    <a href="{{ url_for('staff.toggle_incorrect', id_=book.id, m='books', next=request.path)}}">X</a>
+                </td>
+            {% endif %}
             <td>{{ book.approuved }}</td>
         </tr>
         {% endfor %}

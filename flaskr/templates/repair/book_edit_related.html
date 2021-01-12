@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block autocomplete %}
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+
+    {% block scripts %}
+	<style>
+		#autocomplete.ui-autocomplete-loading {
+			background-image: url(loading.gif);
+			background-position: right center;
+			background-repeat: no-repeat;
+        }
+	</style>
+        {{ super() }}
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='repair_edit.js') }}"></script>
+ {% endblock %}
+{% block content %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+        {{ form.hidden_tag() }}
+        <table class="table">
+        <tr>
+            <th>Publisher </th>
+            <td>{{ form.name(class_="form-control publisher") }}</td>
+            <td>
+            <button class="fake clear btn btn-light">Clear</button>
+            <button class="fake btn btn-light">Mark as incorrect</button>
+            </td>
+        </tr>
+        <tr>
+            <th>Incorrect</th>
+            <td>{{ form.incorrect(class_="form-check-input") }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td>{{ form.approuved(class_="form-check-input") }}</td>
+            <td></td>
+        </tr>
+    </table>
+
+<div class="invisible choice">
+    <h3>Do you want to change the publisher of this particular book (the name of publisher is good, but it's not the publisher who published the book), or merge two publisher instances (this is the right publisher but mispelled)?</h3>
+
+            <button class="fake btn btn-light">Merge</button>
+            <button id="change-one" class="fake btn btn-light">Change only this one</button>
+</div>
+
+<br>
+    {{ form.submit(class_="submit btn btn-primary btn-md") }}
+
+    </form>
+{% endblock %}    

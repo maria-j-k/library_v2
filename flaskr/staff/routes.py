@@ -134,7 +134,7 @@ def add_copy(id):
 @login_required
 def toggle_incorrect():
     print(f'toggle {request.method}')
-    tbl = get_class_by_tablename(request.args.get('model'))
+    tbl = get_class_by_tablename(request.args.get('m'))
     obj = tbl.query.get(request.args.get('id_'))
     next_page = request.args.get('next')
     obj.toggle_incorrect()

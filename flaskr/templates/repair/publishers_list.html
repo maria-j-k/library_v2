@@ -55,7 +55,7 @@
                     <input class="form-check-input" name="publisher_id" type="checkbox" value="{{ publisher.id }}" id="flexCheckDefault">
                 </div>
             </td>
-            <td><a href="{{ url_for('repair.publishers_list', filter='', name=publisher.name) }}">X</a></td>
+            <td><a href="{{ url_for('repair.publishers_list', name=publisher.name) }}">X</a></td>
             <td><a href="{{ url_for('repair.publisher_details', id=publisher.id) }}">{{ publisher.name }}</a></td>
             <td>
                 {% if publisher.series.count() %}

@@ -10,6 +10,7 @@ class SearchForm(FlaskForm):
 
 class PublisherForm(FlaskForm):
     name = StringField('Name')
+    name_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
@@ -71,6 +72,7 @@ class BookForm(FlaskForm):
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
+
 
 
 class PersonForm(FlaskForm):

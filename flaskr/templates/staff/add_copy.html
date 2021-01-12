@@ -58,20 +58,23 @@
         <tr>
             <th>Year of publication</th>
             <td>{{ book.pub_year or "" }}</td>
+            <td>
             {% if book.incorrect %}
                     <a style="color:red" href="">x</a>
             {% else %}
                     <a style="color:green" href="">x</a>
             {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Serie</th>
             <td>{{ book.serie if book.serie else "" }}</td>
-            {% if book.serie.incorrect %}
+            <td>{% if book.serie.incorrect %}
                     <a style="color:red" href="">x</a>
             {% else %}
                     <a style="color:green" href="">x</a>
             {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Translation</th>

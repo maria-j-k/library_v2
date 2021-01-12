@@ -2,10 +2,10 @@ from flask import flash, redirect, render_template, request, session, url_for, c
 from flask_login import login_required
 
 from flaskr import db
-from flaskr.models import Book, Creator, Person
+from flaskr.models import Book, Creator, Person, Publisher
 from flaskr.repair import bp
 from scripts.utils import get_or_create
-from .forms import BookForm, SearchForm
+from .forms import BookForm, PublisherForm, SearchForm
 from .publishers import publisher_details
 
 @bp.route('/books', methods=['GET', 'POST'])
@@ -16,6 +16,7 @@ def books_list():
         return redirect(url_for('repair.books_merge'))
 
     scope = request.args.get('filter', 'all', type=str)
+    print(f'scope: {scope}')
     name = request.args.get('name', None)
     val = request.args.get('val', None, type=int)
     domain = request.args.get('domain', None, type=str)
@@ -25,6 +26,7 @@ def books_list():
 
     b = Book.query
     if name:
+        print(name)
         books = Book.fuzzy_search('title', name)
         b = b.filter(Book.id.in_([item['id'] for item in books]))
     elif domain:
@@ -78,39 +80,66 @@ def book_edit(id):
             nukat = book.nukat,
             incorrect = book.incorrect,
             approuved = book.approuved)
-    if form.validate_on_submit():
-        book_title = form.title.data
-        isbn = form.isbn.data
-        pub_year = form.pub_year.data
-        fiction = form.fiction.data 
-        literary_form = form.literary_form.data
-        genre = form.genre.data
-        precision = form.precision.data
-        nukat = form.nukat.data
-        incorrect = form.incorrect.data
-        approuved = form.approuved.data
-        b = Book.query.filter_by(title=book_title).first()
-        if b:
-            flash(f'''Book {b.title} exists already in the database. \n
-                    You have to merge "{book.title}" with "{b.title}".\n 
-                    Hit "Show similars" to enable merge.''')
-        else:
-            book.title = book_title
-            book.isbn = form.isbn.data
-            book.pub_year = form.pub_year.data
-            book.fiction = form.fiction.data 
-            book.literary_form = form.literary_form.data
-            book.genre = form.genre.data
-            book.precision = form.precision.data
-            book.nukat = form.nukat.data
-            book.incorrect = form.incorrect.data
-            book.approuved = form.approuved.data
-            b = Book.query.filter_by(title=book_title).first()
-            db.session.add(book)
-#            db.session.commit()
-            return redirect(url_for('repair.book_details', id=book.id))
-            
+#    if form.validate_on_submit():
+#        book_title = form.title.data
+#        isbn = form.isbn.data
+#        pub_year = form.pub_year.data
+#        fiction = form.fiction.data 
+#        literary_form = form.literary_form.data
+#        genre = form.genre.data
+#        precision = form.precision.data
+#        nukat = form.nukat.data
+#        incorrect = form.incorrect.data
+#        approuved = form.approuved.data
+#        b = Book.query.filter_by(title=book_title).first()
+#        if b:
+#            flash(f'''Book {b.title} exists already in the database. \n
+#                    You have to merge "{book.title}" with "{b.title}".\n 
+#                    Hit "Show similars" to enable merge.''')
+#        else:
+#            book.title = book_title
+#            book.isbn = form.isbn.data
+#            book.pub_year = form.pub_year.data
+#            book.fiction = form.fiction.data 
+#            book.literary_form = form.literary_form.data
+#            book.genre = form.genre.data
+#            book.precision = form.precision.data
+#            book.nukat = form.nukat.data
+#            book.incorrect = form.incorrect.data
+#            book.approuved = form.approuved.data
+#            b = Book.query.filter_by(title=book_title).first()
+#            db.session.add(book)
+##            db.session.commit()
+#            return redirect(url_for('repair.book_details', id=book.id))
+#            
     return render_template('repair/book_edit.html', form=form, book=book)
+#
+@bp.route('/books/<int:id>/edit/publisher', methods=['GET', 'POST'])
+def book_edit_publisher(id):
+    book = Book.query.get(id)
+    form = PublisherForm(name = book.publisher
+            , name_id=book.publisher.id
+            )
+    print(f'get publisher.id: {book.publisher_id}')
+    if form.validate_on_submit():
+        print(form.name_id.data)
+        if form.name_id.data and form.name_id.data !=book.publisher_id:
+            new_pub = Publisher.query.get(form.name_id.data)
+            if new_pub is not None:
+                book.publisher_id = new_pub.id
+                db.session.add(book)
+                db.session.commit()
+            else:
+                flush('We didn\'t succeed to change publisher. Try again')
+        elif not form.name_id.data:
+            publisher = Publisher(name = form.name.data)
+            book.publisher = publisher
+            db.session.add(book)
+            db.session.commit()
+
+        return redirect(url_for('repair.book_edit', id=book.id))
+    return render_template('repair/book_edit_related.html', form=form)
+
 
 #@bp.route('/books/merge/', methods=['GET', 'POST'])
 #def books_merge():
