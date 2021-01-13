@@ -1,15 +1,34 @@
 $(function() {
 // autocomplete
 
-    $(".publisher").autocomplete({
+let splitUrl = window.location.pathname.split('/')
+let targ = splitUrl[splitUrl.length -1]
+let inputName = document.querySelector('#input-name')
+    inputName.innerText = targ.charAt(0).toUpperCase()+targ.slice(1)
+
+    $(".searchItem").autocomplete({
         source:function(request, response) {
+            let targetUrl = $SCRIPT_ROOT +'/autocomplete_'+targ
+            console.log(targ == "serie")
             document.querySelector('#name_id').value = null
-            $.getJSON($SCRIPT_ROOT + '/autocomplete_publisher',{
-                q: request.term, 
-            }, function(data) {
-                response(data.matching_results); 
-                console.log(data.matching_results)
-            });
+            if (targ == "serie"){
+                let publisherId = splitUrl[splitUrl.length -2]
+                $.getJSON(targetUrl ,{
+                    q: request.term, publisher: publisherId 
+                }, function(data) {
+                    response(data.matching_results); 
+                    console.log(data.matching_results)
+                });
+                
+                }
+            else {
+                $.getJSON(targetUrl ,{
+                    q: request.term, 
+                }, function(data) {
+                    response(data.matching_results); 
+                    console.log(data.matching_results)
+                });
+            }
         },
 
         minLength: 3,

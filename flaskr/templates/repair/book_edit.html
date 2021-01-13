@@ -88,32 +88,25 @@
             </td>{#}
             <td>{{ form.publisher(class_="form-control publisher", readonly=true) }}</td>
             <td>
-            <button class="fake btn btn-light">Edit</button>
-            <button class="fake btn btn-light">Mark as incorrect</button>
+            <button class="fake btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
             <th>Serie</th>
             <td>
-                {% if book.serie_id %}
-                    <a href="{{ url_for('repair.serie_details', id=book.serie_id) }}" target="_blank">{{ book.serie.name }}</a>
-                {% endif%}
+                {% if book.serie_id %} {{ book.serie.name }} {% endif%}
             </td>
             <td>
-            <button class="fake btn btn-light">Edit</button>
-            <button class="fake btn btn-light">Mark as incorrect</button>
+            <button class="fake btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
             <th>Publication place</th>
             <td>
-                {% if book.city_id %}
-                    <a href="{{ url_for('repair.city_details', id=book.city_id) }}" target="_blank">{{ book.city.name }}</a>
-                {% endif %}
+                {% if book.city_id %} {{ book.city.name }} {% endif %}
             </td>
             <td>
-            <button class="fake btn btn-light">Edit</button>
-            <button class="fake btn btn-light">Mark as incorrect</button>
+            <button class="fake btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>

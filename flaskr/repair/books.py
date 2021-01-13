@@ -2,10 +2,10 @@ from flask import flash, redirect, render_template, request, session, url_for, c
 from flask_login import login_required
 
 from flaskr import db
-from flaskr.models import Book, Creator, Person, Publisher
+from flaskr.models import Book, City, Creator, Person, Publisher, Serie
 from flaskr.repair import bp
 from scripts.utils import get_or_create
-from .forms import BookForm, PublisherForm, SearchForm
+from .forms import BookForm, CityForm, PublisherForm, SearchForm, SerieForm
 from .publishers import publisher_details
 
 @bp.route('/books', methods=['GET', 'POST'])
@@ -116,13 +116,11 @@ def book_edit(id):
 #
 @bp.route('/books/<int:id>/edit/publisher', methods=['GET', 'POST'])
 def book_edit_publisher(id):
-    book = Book.query.get(id)
+    book = Book.query.get_or_404(id)
     form = PublisherForm(name = book.publisher
             , name_id=book.publisher.id
             )
-    print(f'get publisher.id: {book.publisher_id}')
     if form.validate_on_submit():
-        print(form.name_id.data)
         if form.name_id.data and form.name_id.data !=book.publisher_id:
             new_pub = Publisher.query.get(form.name_id.data)
             if new_pub is not None:
@@ -141,6 +139,51 @@ def book_edit_publisher(id):
     return render_template('repair/book_edit_related.html', form=form)
 
 
+@bp.route('/books/<int:id>/edit/<int:pub_id>/serie', methods=['GET', 'POST'])
+def book_edit_serie(id, pub_id):
+    book = Book.query.get_or_404(id)
+    form = SerieForm(name = book.serie, name_id=book.serie_id)
+    if form.validate_on_submit():
+        print(form.name_id.data)
+        if form.name_id.data and form.name_id.data !=book.serie_id:
+            new_serie = Serie.query.get(form.name_id.data)
+            if new_serie is not None:
+                book.serie_id = new_serie.id
+                db.session.add(book)
+                db.session.commit()
+            else:
+                flush('We didn\'t succeed to change serie. Try again')
+        elif not form.name_id.data:
+            serie = Serie(name = form.name.data, publisher_id=pub_id)
+            book.serie = serie
+            db.session.add(book)
+            db.session.commit()
+
+        return redirect(url_for('repair.book_edit', id=book.id))
+    return render_template('repair/book_edit_related.html', form=form)
+
+
+@bp.route('/books/<int:id>/edit/city', methods=['GET', 'POST'])
+def book_edit_city(id):
+    book = Book.query.get_or_404(id)
+    form = CityForm(name = book.city, name_id=book.city_id)
+    if form.validate_on_submit():
+        if form.name_id.data and form.name_id.data !=book.city_id:
+            new_city = City.query.get(form.name_id.data)
+            if new_city is not None:
+                book.city_id = new_city.id
+                db.session.add(book)
+                db.session.commit()
+            else:
+                flush('We didn\'t succeed to change publication place. Try again')
+        elif not form.name_id.data:
+            city = City(name = form.name.data)
+            book.city = city
+            db.session.add(city)
+            db.session.commit()
+#
+        return redirect(url_for('repair.book_edit', id=book.id))
+    return render_template('repair/book_edit_related.html', form=form)
 #@bp.route('/books/merge/', methods=['GET', 'POST'])
 #def books_merge():
 #    id_list = session.get('ids')

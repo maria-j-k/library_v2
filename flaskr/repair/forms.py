@@ -18,6 +18,7 @@ class PublisherForm(FlaskForm):
 
 class SerieForm(FlaskForm):
     name = StringField('Name')
+    name_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
@@ -25,6 +26,7 @@ class SerieForm(FlaskForm):
 
 class CityForm(FlaskForm):
     name = StringField('Name')
+    name_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
