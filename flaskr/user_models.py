@@ -169,5 +169,4 @@ login.anonymous_user = AnonymousUser
 
 @login.user_loader
 def load_user(id):
-    print(id)
     return User.query.get(id)

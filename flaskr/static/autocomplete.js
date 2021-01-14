@@ -175,7 +175,7 @@ incorrect.forEach(btn => {
         } 
         if (inputName == 'city') {
             let inputId = document.querySelector('#'+inputName+'_id')
-            markError(inputId.value, 'citie')
+            markError(inputId.value, 'city')
         }
         else {
             let inputId = document.querySelector('#'+inputName+'_id')

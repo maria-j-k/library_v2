@@ -28,3 +28,24 @@ Copies created: 8660
 
 End of transcript
 *3
+Thursday, 14/01/2021, 17:04:14
+Rows in total: 8660
+Publishers created: 1223
+Cities created: 227
+Books created: 8099
+Series created: 252
+Collections created: 34
+Locations created: 40
+Copies created: 8660
+Cities got: 8433
+Persons created: 5654
+Roles created: 12094
+Collections got from database: 8521
+Publishers got from database: 7437
+Persons got from database: 7265
+Locations got from database: 8140
+Series got from database: 1472
+Books got from database: 561
+Roles got from database: 825
+End of transcript
+*3

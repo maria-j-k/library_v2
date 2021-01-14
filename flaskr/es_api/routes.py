@@ -79,6 +79,3 @@ def toggle_incorrect():
 #    next_page = request.args.get('next')
     obj.toggle_incorrect()
     return jsonify({'id': obj.id, 'incorrect': obj.incorrect})
-
-
-

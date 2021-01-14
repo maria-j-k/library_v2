@@ -84,7 +84,7 @@
             {% if person.incorrect %}
                 {{ person.incorrect }}
             {% else %}
-                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=person.id, m='persons', next=request.path)}}">X</a></button>
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=person.id, m='person', next=request.path)}}">X</a></button>
             {% endif %}
             </td>
 

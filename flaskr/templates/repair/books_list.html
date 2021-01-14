@@ -82,7 +82,7 @@
                 <td style="color: red;">{{ book.incorrect }}</td>
             {% else %}
                 <td>
-                    <a href="{{ url_for('staff.toggle_incorrect', id_=book.id, m='books', next=request.path)}}">X</a>
+                    <a href="{{ url_for('staff.toggle_incorrect', id_=book.id, m='book', next=request.path)}}">X</a>
                 </td>
             {% endif %}
             <td>{{ book.approuved }}</td>
