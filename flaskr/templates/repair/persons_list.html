@@ -80,16 +80,15 @@
                     <a href="{{ url_for('repair.books_list', val=person.id, domain='intro')}}" target="_blank">{{ person.introduction().count() }}</a>
                 {% endif %}
             </td>
+            <td style="color: red;">
             {% if person.incorrect %}
-                <td style="color: red;">{{ person.incorrect }}</td>
+                {{ person.incorrect }}
             {% else %}
-                <td style="color: red;">
-                    {#  na próbę. Działa, ale nie zmienia wartości na stronie. JsonJinja albo zostawiam jak jest w staff.toggle_incorrect #}
-                    <button class="fake toggle-inc btn btn-sm btn-light">
-                        <a href="{{ url_for('es_api.toggle_incorrect', id_=person.id, m='persons', next=request.path)}}">X</a>
-                    </button>
-                </td>
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=person.id, m='persons', next=request.path)}}">X</a></button>
             {% endif %}
+            </td>
+
+
             {% if person.approuved %}
                 <td style="color: green">{{ person.approuved }}</td>
             {% else%}

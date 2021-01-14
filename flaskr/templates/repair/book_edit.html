@@ -1,8 +1,28 @@
 {% extends 'base.html' %}
+{% block autocomplete %}
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+
+    {% block scripts %}
+	<style>
+		#autocomplete.ui-autocomplete-loading {
+			background-image: url(loading.gif);
+			background-position: right center;
+			background-repeat: no-repeat;
+        }
+	</style>
+        {{ super() }}
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='repair_detail.js') }}"></script>
+ {% endblock %}
 {% block content %}
     {{ super() }} 
     <form action="" method="post" accept-charset="utf-8">
-        
+        {{ form.hidden_tag() }}        
     <table class="table">
         <tr>
             <th>Title</th>
@@ -22,12 +42,7 @@
            {% endfor %} 
             </td>
             <td>
-                {% set a_ids=[] %}
-                {% for author  in book.authors().all()  %}
-                    {% do a_ids.append(author.person.id) %}
-                    
-                {% endfor %}
-                <a href="" target="_blank">Edit</a>
+                <button class="fake edit-p btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
@@ -39,12 +54,7 @@
            {% endfor %} 
             </td>
             <td>
-                {% set t_ids=[] %}
-                {% for translator  in book.translators().all()  %}
-                    {% do t_ids.append(translator.person.id) %}
-                    
-                {% endfor %}
-                <a href="" target="_blank">Edit</a>
+                <button class="fake edit-p btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
@@ -55,12 +65,7 @@
            {% endfor %} 
             </td>
             <td>
-                {% set r_ids=[] %}
-                {% for red  in book.redaction().all()  %}
-                    {% do r_ids.append(red.person.id) %}
-                    
-                {% endfor %}
-                <a href="" target="_blank">Edit</a>
+                <button class="fake edit-p btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
@@ -71,42 +76,28 @@
            {% endfor %} 
             </td>
             <td>
-                {% set i_ids=[] %}
-                {% for intro  in book.introduction().all()  %}
-                    {% do i_ids.append(intro.person.id) %}
-                    
-                {% endfor %}
-                <a href="" target="_blank">Edit</a>
+                <button class="fake edit-p btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
             <th>Publisher</th>
-            {#}            <td>
-                {% if book.publisher_id %}
-                    <a href="{{ url_for('repair.publisher_details', id=book.publisher_id) }}" target="_blank">{{ book.publisher.name }}</a>
-                {% endif %}
-            </td>{#}
             <td>{{ form.publisher(class_="form-control publisher", readonly=true) }}</td>
             <td>
-            <button class="fake btn btn-outline-warning">Edit</button>
+                <button class="fake edit btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
             <th>Serie</th>
+            <td>{{ form.serie(class_="form-control serie", readonly=true) }}</td>
             <td>
-                {% if book.serie_id %} {{ book.serie.name }} {% endif%}
-            </td>
-            <td>
-            <button class="fake btn btn-outline-warning">Edit</button>
+            <button class="fake edit btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
             <th>Publication place</th>
+            <td>{{ form.city(class_="form-control city", readonly=true) }}</td>
             <td>
-                {% if book.city_id %} {{ book.city.name }} {% endif %}
-            </td>
-            <td>
-            <button class="fake btn btn-outline-warning">Edit</button>
+            <button class="fake edit btn btn-outline-warning">Edit</button>
             </td>
         </tr>
         <tr>
@@ -156,7 +147,7 @@
         </tr>
     </table>
 
-    {{ form.submit() }}
+    {{ form.submit(class_="submit btn btn-primary btn-md") }}
 
 </form>
 <p><a href="" target="_blank">See copies</a></p>

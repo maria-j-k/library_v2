@@ -8,8 +8,8 @@ $(function() {
             $.getJSON($SCRIPT_ROOT + '/autocomplete_person',{
                 q: request.term, 
             }, function(data) {
-                response(data.matching_persons); 
-                console.log(data.matching_persons)
+                response(data.matching_results); 
+                console.log(data.matching_results)
             });
         },
 

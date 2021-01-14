@@ -5,7 +5,7 @@ from flaskr import db
 from flaskr.models import Book, City, Creator, Person, Publisher, Serie
 from flaskr.repair import bp
 from scripts.utils import get_or_create
-from .forms import BookForm, CityForm, PublisherForm, SearchForm, SerieForm
+from .forms import (BookForm, CityForm, CreatorForm, PublisherForm, SearchForm, SerieForm)
 from .publishers import publisher_details
 
 @bp.route('/books', methods=['GET', 'POST'])
@@ -70,6 +70,7 @@ def book_edit(id):
             isbn = book.isbn or None,
             authors = book.print_authors() or None,
             publisher = book.publisher.name if book.publisher else None,
+            publisher_id = book.publisher_id if book.publisher else None,
             serie = book.serie.name if book.serie else None,
             city = book.city.name if book.city else None,
             pub_year = book.pub_year,
@@ -184,6 +185,153 @@ def book_edit_city(id):
 #
         return redirect(url_for('repair.book_edit', id=book.id))
     return render_template('repair/book_edit_related.html', form=form)
+
+
+@bp.route('/books/<int:id>/edit/<role>/persons', methods=['GET', 'POST'])
+def book_edit_creators(id, role):
+    book = Book.query.get_or_404(id)
+    if role == 'authors':
+#        person_list = [{'id': 'p.person.id','name': 'p.person.name'} for p in book.authors()]
+        person_list = [p.person for p in book.authors()]
+    elif role == 'translators':
+        person_list = [p.person for p in book.translators()]
+    elif role == 'redaction':
+        person_list = [p.person for p in book.redaction()]
+    elif role == 'introduction':
+        person_list = [p.person for p in book.introduction()]
+    else:
+        print('return 404')
+    form = CreatorForm()
+    default = role[0].upper()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            new_person_list =[]
+            for f in form.creators:
+                if f.form.name_id.data:
+                    person = Person.query.get_or_404(f.form.name_id.data)
+                    new_person_list.append(person)
+                elif f.form.name.data and not f.form.name_id.data:
+                    person = Person(name=f.form.name.data)
+                    new_person_list.append(person)
+            
+            for p in new_person_list:
+                if p not in person_list:
+                    c = Creator(person=p, book=book, role=default)
+                    db.session.add(c)
+            db.session.commit()
+            
+            
+            for p in person_list:
+                if p not in new_person_list:
+                    c = book.creator.filter_by(person_id = p.id).first()
+                    db.session.delete(c)
+                    if p.creator.count() < 1:
+                        db.session.delete(p)
+            db.session.commit()
+            
+            return redirect(url_for('repair.book_edit', id=book.id))
+        else: 
+            print(form.errors)
+            return render_template('repair/book_edit_creators.html', form=form, role=role)
+    
+    for i in range(3):
+        if i < len(person_list):
+            data = {'name': person_list[i].name, 
+                    'name_id': person_list[i].id,
+                    'approuved': person_list[i].approuved,
+                    'incorrect': person_list[i].incorrect,
+                    'role': default
+                    }
+            form.creators.append_entry(data)
+        else:
+            form.creators.append_entry({'role': default})
+    return render_template('repair/book_edit_creators.html', form=form, role=role)
+
+#@bp.route('/books/<int:id>/edit/<role>/persons', methods=['GET', 'POST'])
+#def book_edit_creators(id, role):
+#    book = Book.query.get_or_404(id)
+#    if role == 'authors':
+##        person_list = [{'id': 'p.person.id','name': 'p.person.name'} for p in book.authors()]
+#        person_list = [p.person for p in book.authors()]
+#    elif role == 'translators':
+#        person_list = [p.person for p in book.translators()]
+#    elif role == 'redaction':
+#        person_list = [p.person for p in book.redaction()]
+#    elif role == 'introduction':
+#        person_list = [p.person for p in book.introduction()]
+#    else:
+#        print('return 404')
+#    form = CreatorForm()
+#    default = role[0].upper()
+#    if request.method == 'POST':
+#        if form.validate_on_submit():
+#            new_person_list =[]
+#            for f in form.creators:
+#                if f.form.name_id.data:
+#                    person = Person.query.get_or_404(f.form.name_id.data)
+#                    new_person_list.append(person)
+#                elif f.form.name.data and not f.form.name_id.data:
+#                    person = Person(name=f.form.name.data)
+#                    new_person_list.append(person)
+#            print('person_list')
+#            print(person_list)
+#            print('new_person_list')
+#            print(new_person_list)
+#            for p in person_list:
+#                if p not in new_person_list:
+#                    c = Creator.query.filter_by(person_id = p.id).first()
+#                    db.session.delete(c)
+#                    print(f'deleted c {db.session.deleted}')
+#                    print(f'new: {db.session.new}')
+#                    print(f'dirty: {db.session.dirty}')
+#                    if p.creator.count() < 1:
+#                        db.session.delete(p)
+#                        print(f'deleted p {db.session.deleted}')
+#                        print(f'new: {db.session.new}')
+#                        print(f'dirty: {db.session.dirty}')
+#            db.session.commit()
+#            print(f'deleted after commit {db.session.deleted}')
+#            for p in new_person_list:
+#                if p not in person_list:
+#                    c = Creator(person=p, book=book, role=default)
+#                    db.session.add(c)
+#                    print(f'new: {db.session.new}')
+#                    print(f'dirty: {db.session.dirty}')
+#            db.session.commit()
+#            return redirect(url_for('repair.book_edit', id=book.id))
+#        else: 
+#            print(form.errors)
+#            return render_template('repair/book_edit_creators.html', form=form, role=role)
+#    
+#    for i in range(3):
+#        if i < len(person_list):
+#            data = {'name': person_list[i].name, 
+#                    'name_id': person_list[i].id,
+#                    'approuved': person_list[i].approuved,
+#                    'incorrect': person_list[i].incorrect,
+#                    'role': default
+#                    }
+#            form.creators.append_entry(data)
+#        else:
+#            form.creators.append_entry({'role': default})
+##        if form.name_id.data and form.name_id.data !=book.city_id:
+##            new_city = City.query.get(form.name_id.data)
+##            if new_city is not None:
+##                book.city_id = new_city.id
+##                db.session.add(book)
+##                db.session.commit()
+##            else:
+##                flush('We didn\'t succeed to change publication place. Try again')
+##        elif not form.name_id.data:
+##            city = City(name = form.name.data)
+##            book.city = city
+##            db.session.add(city)
+##            db.session.commit()
+###
+##        return redirect(url_for('repair.book_edit', id=book.id))
+#    return render_template('repair/book_edit_creators.html', form=form, role=role)
+
+
 #@bp.route('/books/merge/', methods=['GET', 'POST'])
 #def books_merge():
 #    id_list = session.get('ids')

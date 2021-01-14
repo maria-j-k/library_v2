@@ -52,8 +52,11 @@ class BookForm(FlaskForm):
     isbn = StringField('ISBN')
     authors = StringField('Authors')
     publisher = StringField('Publisher')
+    publisher_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     serie = StringField('Serie')
+    serie_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     city = StringField('Publication place')
+    city_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     pub_year = StringField('Publication year')
     origin_language = StringField('Origin language')
     fiction = SelectField('Fiction', choices=[
@@ -79,6 +82,18 @@ class BookForm(FlaskForm):
 
 class PersonForm(FlaskForm):
     name = StringField('Name')
+#    person_id = IntegerField(widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
+    name_id = HiddenField(validators=[Optional(strip_whitespace=True)])
+    role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
+
+    class Meta:
+        csrf = False
+
+
+class CreatorForm(FlaskForm):
+    creators = FieldList(FormField(PersonForm, default={'role': 'A'}), max_entries=3)
+    submit = SubmitField('Sumbit')
+    

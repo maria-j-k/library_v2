@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/form.html' import render_form %}
+{% block autocomplete %}
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+
+    {% block scripts %}
+	<style>
+		#autocomplete.ui-autocomplete-loading {
+			background-image: url(loading.gif);
+			background-position: right center;
+			background-repeat: no-repeat;
+        }
+	</style>
+        {{ super() }}
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='repair_edit.js') }}"></script>
+ {% endblock %}
+ {% block content %}
+    {{ super() }} 
+     <br> 
+ <div style="text-align:center">
+     
+     <h1>{{ role|title }}</h1>
+     <h3>If you have more than 3 persons, enter "Praca zbiorowa".</h3>
+     <br>
+     <h4>Here you can edit book creators - the association between person and book (If a book's author is not mentionned, or wrong person is associated with the book).
+     
+     If the problem is misspelling of person's name, edit the person instead.</h4>
+ </div>
+    <br> 
+    <br> 
+    <div class="container">
+    <form action="" method="post" accept-charset="utf-8">
+        {{ form.hidden_tag() }}
+                {% for f in form.creators %}
+            {{ f.name_id(class_="name_id") }}
+            {{ f.role(class_="role") }}
+        {% endfor %}
+        
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th style="text-align:center">Incorrect</th>
+                    <th style="text-align:center">Approuved</th>
+                    <th style="text-align:center">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in form.creators %}
+                    <tr>
+                        <td> {{ f.form.name(class_="form-control searchItem") }}</td>
+                        <td style="text-align:center">{{ f.form.incorrect(class_="form-check-input") }}</td>
+                        <td style="text-align:center"> {{ f.form.approuved(class_="form-check-input") }}</td>
+            <td style="text-align:center">
+                <button class="fake edit btn btn-outline-warning">Edit</button>
+            </td>
+                      </tr> 
+                {% endfor %}
+                </tbody>
+        </table>
+    {{ form.submit(class_="submit btn btn-primary btn-md") }}
+    </form>
+    </div>
+{% endblock %}
+
+{#}
+<td> 
+    <input 
+        class="form-control searchItem" 
+        id="authors-0-name" 
+        name="authors-0-name" 
+        type="text" 
+        value="
+        <input 
+        id="name" 
+        name="name" 
+        type="text" 
+        value="Łubieński Tomasz">">
+</td>
+{#}

@@ -8,6 +8,14 @@ from flaskr.users import bp
 from .forms import LoginForm, RegisterForm, PasswordChangeForm, RequestPasswordResetForm, ResetPasswordForm
 from flaskr.email import send_email
 
+@bp.before_app_request
+def before_request():
+    if current_user.is_authenticated \
+            and not current_user.confirmed \
+            and request.blueprint != 'users'\
+            and request.endpoint != 'static':
+        return redirect(url_for('users.unconfirmated'))
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -61,14 +69,6 @@ def confirm(token):
         flash('Confirmation link is outdated or non valid.')
     return redirect(url_for('users.login'))
 
-
-@bp.before_app_request
-def before_request():
-    if current_user.is_authenticated \
-            and not current_user.confirmed \
-            and request.blueprint != 'users'\
-            and request.endpoint != 'static':
-        return redirect(url_for('users.unconfirmated'))
 
 @bp.route('/unconfirmated')
 def unconfirmated():
