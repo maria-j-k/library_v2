@@ -90,14 +90,12 @@ def publisher_edit(id):
                 flash(f'''Publisher {p.name} exists already in the database. \n
                     You have to merge "{publisher.name}" with "{p.name}".\n 
                     Hit "Show similars" to enable merge.''')
-        else:
-            publisher.name = publisher_name
-            publisher.approuved = form.approuved.data
-            publisher.incorrect = form.incorrect.data
-            db.session.add(publisher)
-            db.session.commit()
-            return redirect(url_for('repair.publisher_details', 
-                id=publisher.id))
+        publisher.name = publisher_name
+        publisher.approuved = form.approuved.data
+        publisher.incorrect = form.incorrect.data
+        db.session.add(publisher)
+        db.session.commit()
+        return redirect(url_for('repair.publisher_details', id=publisher.id))
             
     return render_template('repair/publisher_edit.html', 
             form=form, publisher=publisher)

@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
+from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms import BooleanField, FieldList, FormField, HiddenField, IntegerField, TextAreaField, SelectField, StringField, SubmitField
 from wtforms.widgets import HiddenInput 
 from wtforms.validators import DataRequired, AnyOf, Optional
 
+from flaskr.models import Publisher
 
 class SearchForm(FlaskForm):
     name = StringField('Name')
@@ -16,9 +18,14 @@ class PublisherForm(FlaskForm):
     submit = SubmitField('Sumbit')
 
 
+def all_publishers():
+    return Publisher.query.all()
+
+
 class SerieForm(FlaskForm):
     name = StringField('Name')
-    name_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
+    name_id = HiddenField(validators=[Optional(strip_whitespace=True)])
+    publisher = QuerySelectField(query_factory=all_publishers, allow_blank=False)
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')

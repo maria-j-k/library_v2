@@ -57,24 +57,26 @@ def serie_details(id):
 def serie_edit(id):
     session['ids'] = []
     serie = Serie.query.get(id)
-    form = SerieForm(name=serie.name)
+    form = SerieForm(name=serie.name, 
+            publisher=serie.publisher,
+            approuved=serie.approuved,
+            incorrect=serie.incorrect)
     if form.validate_on_submit():
+        publisher = form.publisher.data
         serie_name = form.name.data
         if serie_name != serie.name:
-            s = Serie.query.filter_by(name=serie_name).first()
+            s = Serie.query.filter_by(name=serie_name, publisher=publisher).first()
             if s:
-                flash(f'''Serie {s.name} exists already in the database. \n
+                flash(f'''Serie {s.name} of {publisher.name} exists already in the database. \n
                     You have to merge "{serie.name}" with "{s.name}".\n 
                     Hit "Show similars" to enable merge.''')
-        else:
-            serie.name = serie_name
-            serie.approuved = form.approuved.data
-            serie.incorrect = form.incorrect.data
-            db.session.add(serie)
-            db.session.commit()
-            return redirect(url_for('repair.serie_details', 
-                id=serie.id))
-            
+        serie.name = serie_name
+        serie.publisher = publisher
+        serie.approuved = form.approuved.data
+        serie.incorrect = form.incorrect.data
+        db.session.add(serie)
+        db.session.commit()
+        return redirect(url_for('repair.serie_details', id=serie.id))
     return render_template('repair/serie_edit.html', form=form, serie=serie)
 
 @bp.route('/series/merge/', methods=['GET', 'POST'])
