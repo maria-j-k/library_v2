@@ -50,7 +50,10 @@ class LocationForm(FlaskForm):
 class BookForm(FlaskForm):
     title = StringField('Title')
     isbn = StringField('ISBN')
-    authors = StringField('Authors')
+#    authors = StringField('Authors')
+#    translation = StringField('Translation')
+#    redaction = StringField('Redaction')
+#    introduction = StringField('Introduction')
     publisher = StringField('Publisher')
     publisher_id = IntegerField('Id', widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     serie = StringField('Serie')

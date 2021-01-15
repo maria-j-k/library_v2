@@ -8,11 +8,7 @@ from .forms import LocationForm, SearchForm
 
 @bp.route('/locations', methods=['GET', 'POST'])
 def locations_list():
-    if request.method == 'POST':
-        id_list = request.form.getlist('location_id')
-        session['ids'] = id_list
-        return redirect(url_for('repair.locations_merge'))
-
+    session['ids'] = []
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
     form = SearchForm()
@@ -28,18 +24,33 @@ def locations_list():
                 'room').paginate(page, 20, False)
     elif scope == 'all':
         l = Location.query.order_by('room').paginate(page, 20, False)
+    if request.method == 'POST':
+        id_list = request.form.getlist('location_id')
+        if len(id_list) > 4:
+            flash("You can't merge more than 4 items at once.")
+            return render_template('repair/locations_list.html', 
+            locations = l.items, l=l,form=form, scope=scope)
+        elif len(id_list) < 2:
+            flash("You need at least 2 items to merge.")
+            return render_template('repair/locations_list.html', 
+            locations = l.items, l=l,form=form, scope=scope)
+        session['ids'] = id_list
+        return redirect(url_for('repair.locations_merge'))
+
     return render_template('repair/locations_list.html', 
             locations = l.items, l=l,
             form=form, scope=scope)
 
 @bp.route('/locations/<int:id>', methods=['GET'])
 def location_details(id):
+    session['ids'] = []
     location = Location.query.get(id)
     return render_template('repair/location_details.html', 
             location=location)
 
 @bp.route('/locations/<int:id>/edit', methods=['GET', 'POST'])
 def location_edit(id):
+    session['ids'] = []
     location = Location.query.get(id)
     form = LocationForm(room=location.room)
     if form.validate_on_submit():
@@ -67,13 +78,15 @@ def locations_merge():
     locations = Location.query.filter(Location.id.in_(id_list)
             ).order_by('room').all()
     if request.method == 'POST':
-        to_exclude = request.form.get('exclude')
+        to_exclude = request.form.getlist('exclude')
         if to_exclude:
-            id_list.remove(to_exclude)
-            locations = Location.query.filter(Location.id.in_(id_list)
-                    ).order_by('room').all()
-            return redirect(url_for('repair.locations_merge',
-                locations=locations))
+            for item in to_exclude:
+                session['ids'].remove(item)
+                session.modified = True
+                if len(session['ids']) < 2:
+                    flash('You need at least 2 items to merge.')
+                    return redirect(url_for('repair.locations_list'))
+            return redirect(url_for('repair.locations_merge'))
         main = Location.query.get(request.form.get('location'))
         for location in locations:
             if location is not main:
@@ -81,6 +94,7 @@ def locations_merge():
                 db.session.add(main)
                 db.session.delete(location)
         db.session.commit()
+        session['ids'] = []
         return redirect(url_for('repair.location_details', id=main.id))
         
     return render_template('repair/locations_to_merge.html',

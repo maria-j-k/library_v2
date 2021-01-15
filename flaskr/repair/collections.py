@@ -8,11 +8,7 @@ from .forms import CollectionForm, SearchForm
 
 @bp.route('/collections', methods=['GET', 'POST'])
 def collections_list():
-    if request.method == 'POST':
-        id_list = request.form.getlist('collection_id')
-        session['ids'] = id_list
-        return redirect(url_for('repair.collections_merge'))
-
+    session['ids'] = []
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
     form = SearchForm()
@@ -28,18 +24,31 @@ def collections_list():
                 'name').paginate(page, 20, False)
     elif scope == 'all':
         c = Collection.query.order_by('name').paginate(page, 20, False)
+    if request.method == 'POST':
+        id_list = request.form.getlist('collection_id')
+        if len(id_list) > 4:
+            flash("You can't merge more than 4 items at once.")
+            return render_template('repair/collections_list.html', 
+            collections=c.items, c=c, form=form, scope=scope)
+        elif len(id_list) < 2:
+            flash("You need at least 2 items to merge.")
+            return render_template('repair/collections_list.html', 
+            collections=c.items, c=c, form=form, scope=scope)
+        session['ids'] = id_list
+        return redirect(url_for('repair.collections_merge'))
     return render_template('repair/collections_list.html', 
-            collections=c.items, c=c,
-            form=form, scope=scope)
+            collections=c.items, c=c, form=form, scope=scope)
 
 @bp.route('/collections/<int:id>', methods=['GET'])
 def collection_details(id):
+    session['ids'] = []
     collection = Collection.query.get(id)
     return render_template('repair/collection_details.html', 
             collection=collection)
 
 @bp.route('/collections/<int:id>/edit', methods=['GET', 'POST'])
 def collection_edit(id):
+    session['ids'] = []
     collection = Collection.query.get(id)
     form = CollectionForm(name=collection.name)
     if form.validate_on_submit():
@@ -64,16 +73,19 @@ def collection_edit(id):
 @bp.route('/collections/merge/', methods=['GET', 'POST'])
 def collections_merge():
     id_list = session.get('ids')
+    print(id_list)
     collections = Collection.query.filter(Collection.id.in_(id_list)
             ).order_by('name').all()
     if request.method == 'POST':
-        to_exclude = request.form.get('exclude')
+        to_exclude = request.form.getlist('exclude')
         if to_exclude:
-            id_list.remove(to_exclude)
-            collections = Collection.query.filter(Collection.id.in_(id_list)
-                    ).order_by('name').all()
-            return redirect(url_for('repair.collections_merge',
-                collections=collections))
+            for item in to_exclude:
+                session['ids'].remove(item)
+                session.modified = True
+                if len(session['ids']) < 2:
+                    flash('You need at least 2 items to merge.')
+                    return redirect(url_for('repair.collections_list'))
+            return redirect(url_for('repair.collections_merge'))
         main = Collection.query.get(request.form.get('collection'))
         for collection in collections:
             if collection is not main:
@@ -81,6 +93,7 @@ def collections_merge():
                 db.session.add(main)
                 db.session.delete(collection)
         db.session.commit()
+        session['ids'] = []
         return redirect(url_for('repair.collection_details', id=main.id))
         
     return render_template('repair/collections_to_merge.html',

@@ -9,6 +9,8 @@ def set_location(location):
         return location.capitalize().strip()
 
 def parse_location(row):
+    if row['MIEJSCE'] == "":
+        return None
     return set_location(row['MIEJSCE'])
 
 
@@ -100,6 +102,8 @@ def parse_collection(row):
     Accepts row of csv.reader iterator
     Returns: string representing collection name
     """
+    if row['Z tajnych archiwów'] == "":
+        return None
     coll = set_collection(row['Z tajnych archiwów'])
     return coll
 
@@ -108,15 +112,21 @@ def parse_publisher(row):
     Accepts row of csv.reader iterator
     Returns: dictionnary containing publisher's name and location and serie if exists in the file.
     """
+    if row['Wydawnictwo'] == "":
+        return None
     name = row['Wydawnictwo'].strip()
     return name
 
 def parse_city(row):
+    if row['Miejsce wydania'] == "":
+        return None
     name = row['Miejsce wydania'].strip().title()
     return name
 
 
 def parse_serie(row):
+    if row['Nazwa serii'] == "":
+        return None
     serie = row['Nazwa serii'].strip()
     return serie
 
@@ -145,7 +155,7 @@ def parse_book(row):
             'origin_language': row['Język oryginału'].strip(),
             'first_edition': row['rok pierwszego wydania'].strip(),
             'fiction': set_fiction(row['F/NF']),
-            'genre': row['Gatunek '].strip(),
+#            'genre': row['Gatunek '].strip(),
             'literary_form': set_form(row['Rodzaj']),
 #            'subject': row['TEMAT'].strip(),
             'precision': row['Uszczegółowienie'].strip(),

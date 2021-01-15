@@ -18,7 +18,7 @@ from flaskr.models import Book, Person, Publisher, Serie, get_class_by_tablename
 #    return jsonify(matching_results=books)
 
 
-@bp.route('/autocomplete_persons') 
+@bp.route('/autocomplete_person') 
 def autocomplete_person():
     q = request.args.get('q')
     persons = ac_person(q)

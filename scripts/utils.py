@@ -85,7 +85,7 @@ def complete_book(book, **book_data):
     book.origin_language = book.origin_language or book_data['origin_language']
     book.first_edition = book.first_edition or book_data['first_edition']
     book.ficition = book.fiction or book_data['fiction']
-    book.genre = book.genre or book_data['genre']
+#    book.genre = book.genre or book_data['genre']
     book.literary_form = book.literary_form or book_data['literary_form']
 #    book.subject = book.subject or book_data['subject']
     book.precision = book.precision or book_data['precision']

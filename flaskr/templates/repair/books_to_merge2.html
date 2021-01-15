@@ -21,7 +21,11 @@
         <tr>
             <th>Title</th>
             {% for book in books %}
-                <td>{{ book.title }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="title" type="radio" value="{{ book.title }}" id="title">
+                    <label for="book">{{ book.title }} </label>
+                    </div>
                 </td>
             {% endfor %}
         </tr>
@@ -29,7 +33,11 @@
             <th>ISBN</th>
             {% for book in books %}
                 {% if book.isbn %}
-                <td>{{ book.isbn}}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="isbn" type="radio" value="{{ book.isbn }}" id="isbn">
+                    <label for="isbn">{{ book.isbn or ''}} </label>
+                    </div>
                 </td>
             {% else %}
                 <td></td>
@@ -40,7 +48,11 @@
             <th>Authors</th>
             {% for book in books %}
                 {% if book.authors().count() %}
-                <td>{{ book.print_authors() }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="authors" type="radio" value="{{ book.id }}" id="authors">
+                    <label for="authors">{{ book.print_authors() }} </label>
+                    </div>
                 </td>
                 {% else %}
                 <td></td>
@@ -51,7 +63,11 @@
             <th>Translators</th>
             {% for book in books %}
                 {% if book.translators().count() %}
-                <td>{{ book.print_trans() }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="translation" type="radio" value="{{ book.id }}" id="translation">
+                    <label for="translation">{{ book.print_trans() }} </label>
+                    </div>
                 </td>
                 {% else %}
                 <td></td>
@@ -62,7 +78,11 @@
             <th>Redaction</th>
             {% for book in books %}
                 {% if book.redaction().count() %}
-                <td>{{ book.print_red() }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="redaction" type="radio" value="{{ book.id }}" id="redaction">
+                    <label for="redaction">{{ book.print_red() }} </label>
+                    </div>
                 </td>
                 {% else %}
                 <td></td>
@@ -73,7 +93,11 @@
             <th>Introduction</th>
             {% for book in books %}
                 {% if book.introduction().count() %}
-                <td>{{ book.print_intro() }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="introduction" type="radio" value="{{ book.id }}" id="introduction">
+                    <label for="introduction">{{ book.print_intro() }} </label>
+                    </div>
                 </td>
                 {% else %}
                 <td></td>
@@ -84,7 +108,11 @@
             <th>Publisher</th>
             {% for book in books %}
                 {% if book.publisher_id %}
-                <td>{{ book.publisher.name }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="publisher" type="radio" value="{{ book.publisher_id }}" id="publisher">
+                    <label for="publisher">{{ book.publisher.name }} </label>
+                    </div>
                 </td>
             {% else %}
                 <td></td>
@@ -95,7 +123,11 @@
             <th>Serie</th>
             {% for book in books %}
                 {% if book.serie_id %}
-                <td>{{ book.serie.name }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="serie" type="radio" value="{{ book.serie_id }}" id="serie">
+                    <label for="serie">{{ book.serie.name }} </label>
+                    </div>
                 </td>
             {% else %}
                 <td></td>
@@ -106,7 +138,11 @@
             <th>Publication place</th>
             {% for book in books %}
                 {% if book.city_id %}
-                <td>{{ book.city.name }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="city" type="radio" value="{{ book.city_id }}" id="city">
+                    <label for="city">{{ book.city.name }} </label>
+                    </div>
                 </td>
             {% else %}
                 <td></td>
@@ -117,7 +153,11 @@
             <th>Publication year</th>
             {% for book in books %}
                 {% if book.pub_year %}
-                <td>{{ book.pub_year }}</div>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="pub_year" type="radio" value="{{ book.pub_ywar }}" id="pub_year">
+                    <label for="pub_year">{{ book.pub_year }} </label>
+                    </div>
                 </td>
             {% else %}
                 <td></td>
@@ -128,7 +168,12 @@
             <th>Origin language</th>
             {% for book in books %}
                 {% if book.origin_language %}
-                <td>{{ book.origin_language }}</td>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="origin_language" type="radio" value="{{ book.origin_language }}" id="origin_language">
+                    <label for="origin_language">{{ book.origin_language }} </label>
+                    </div>
+                </td>
             {% else %}
                 <td></td>
                 {% endif %}
@@ -138,7 +183,12 @@
             <th>Literary form</th>
             {% for book in books %}
                 {% if book.literary_form %}
-                <td>{{ book.literary_form.value }}</td>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="literary_form" type="radio" value="{{ book.literary_form }}" id="literary_form">
+                    <label for="literary_form">{{ book.literary_form.value }} </label>
+                    </div>
+                </td>
             {% else %}
                 <td></td>
                 {% endif %}
@@ -148,7 +198,12 @@
             <th>Genre</th>
             {% for book in books %}
                 {% if book.genre %}
-                <td>{{ book.genre }}</td>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="genre" type="radio" value="{{ book.genre }}" id="genre">
+                    <label for="genre">{{ book.genre }} </label>
+                    </div>
+                </td>
             {% else %}
                 <td></td>
                 {% endif %}
@@ -158,7 +213,12 @@
             <th>Fiction</th>
             {% for book in books %}
                 {% if book.fiction %}
-                <td>{{ book.fiction }}</td>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="fiction" type="radio" value="{{ book.fiction }}" id="fiction">
+                    <label for="fiction">{{ book.fiction }} </label>
+                    </div>
+                </td>
             {% else %}
                 <td></td>
                 {% endif %}
@@ -168,7 +228,12 @@
             <th>Precision</th>
             {% for book in books %}
                 {% if book.precision %}
-                <td>{{ book.precision }}</td>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="precision" type="radio" value="{{ book.precision }}" id="precision">
+                    <label for="precision">{{ book.precision }} </label>
+                    </div>
+                </td>
             {% else %}
                 <td></td>
                 {% endif %}
@@ -178,7 +243,12 @@
             <th>NUKAT themes</th>
             {% for book in books %}
                 {% if book.nukat %}
-                <td>{{ book.nukat }}</td>
+                <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="nukat" type="radio" value="{{ book.nukat }}" id="nukat">
+                    <label for="nukat">{{ book.nukat }} </label>
+                    </div>
+                </td>
             {% else %}
                 <td></td>
                 {% endif %}
@@ -208,17 +278,6 @@
             {% endif %}</td>
             {% endfor %}
         </tr>
-            <tr>
-                <th>Right record</th>
-                {% for book in books %}
-                <td>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" value="{{book.id }}" name="book" id="book">
-                    <label for="book">{{ book.id }} </label>
-                    </div>
-                </td>
-                {% endfor %}
-            </tr>
       </tbody>
     </table>
 <button type="submit" class="submit btn btn-primary">Submit</button>

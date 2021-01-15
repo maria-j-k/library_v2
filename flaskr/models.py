@@ -300,7 +300,10 @@ class Book(SearchableMixin, FlagMixin, db.Model):
     def introduction(self):
         return Creator.query.filter_by(role = 'I', book=self)
 
-
+    def same_author_title(self, other):
+        '''Returns if two book instances has the same title and the same authors'''
+        if isinstance(other, Book):
+            return (self.authors().all() == other.authors().all()) and (self.title == other.title)
 
     @property
     def is_incorrect(self):
@@ -319,6 +322,10 @@ class Creator(FlagMixin, db.Model):
     def is_incorrect(self):
         return self.incorrect 
 
+    def __eq__(self, other):
+        if isinstance(other, Creator):
+            return (self.role, self.person.id) == (other.role, other.person.id)
+    
 
 class Copy(FlagMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -10,11 +10,7 @@ from .publishers import publisher_details
 
 @bp.route('/series', methods=['GET', 'POST'])
 def series_list():
-    if request.method == 'POST':
-        id_list = request.form.getlist('serie_id')
-        session['ids'] = id_list
-        return redirect(url_for('repair.series_merge'))
-
+    session['ids'] = []
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
     val = request.args.get('val', None, type=int)
@@ -26,9 +22,6 @@ def series_list():
         s = Serie.query.filter(Serie.id.in_([item['id'] for item in series]))
     elif val:
         s = Serie.query.filter_by(publisher_id=val)
-        print(val)
-        print(type(val))
-
     else:
         s = Serie.query
     
@@ -38,18 +31,31 @@ def series_list():
     elif scope == 'incorrect':
         s = s.filter_by(incorrect=True).order_by('publisher_id',
                     'name').paginate(page, 20, False)
+    if request.method == 'POST':
+        id_list = request.form.getlist('serie_id')
+        if len(id_list) > 4:
+            flash("You can't merge more than 4 items at once.")
+            return render_template('repair/series_list.html', 
+            series=s.items, s=s, form=form, scope=scope)
+        elif len(id_list) < 2:
+            flash("You need at least 2 items to merge.")
+            return render_template('repair/series_list.html', 
+            series=s.items, s=s, form=form, scope=scope)
+        session['ids'] = id_list
+        return redirect(url_for('repair.series_merge'))
     return render_template('repair/series_list.html', 
-            series=s.items, s=s,
-            form=form, scope=scope)
+            series=s.items, s=s, form=form, scope=scope)
 
 @bp.route('/series/<int:id>', methods=['GET'])
 def serie_details(id):
+    session['ids'] = []
     serie = Serie.query.get(id)
     return render_template('repair/serie_details.html', 
             serie=serie)
 
 @bp.route('/series/<int:id>/edit', methods=['GET', 'POST'])
 def serie_edit(id):
+    session['ids'] = []
     serie = Serie.query.get(id)
     form = SerieForm(name=serie.name)
     if form.validate_on_submit():
@@ -77,17 +83,17 @@ def series_merge():
     series = Serie.query.filter(Serie.id.in_(id_list)).order_by(
             'publisher_id', 'name').all()
     if request.method == 'POST':
-        to_exclude = request.form.get('exclude')
+        to_exclude = request.form.getlist('exclude')
         if to_exclude:
-            id_list.remove(to_exclude)
-            series = Serie.query.filter(Serie.id.in_(id_list)
-                    ).order_by('publisher_id', 'name').all()
-            print(id_list)
-            return redirect(url_for('repair.series_merge', series=series))
+            for item in to_exclude:
+                session['ids'].remove(item)
+                session.modified = True
+                if len(session['ids']) < 2:
+                    flash('You need at least 2 items to merge.')
+                    return redirect(url_for('repair.series_list'))
+            return redirect(url_for('repair.series_merge'))
         main = Serie.query.get(request.form.get('serie'))
-        print(f'main {main.publisher_id}')
         for serie in series:
-            print(f'serie: {serie.publisher_id}')
             if serie.publisher_id != main.publisher_id:
                 flash('You can not merge the series of different publishers. You must merge publishers first.')
                 return redirect(url_for('repair.series_merge', series=series))
@@ -96,8 +102,8 @@ def series_merge():
                 main.books.extend(serie.books)
                 db.session.add(main)
                 db.session.delete(serie)
-                print(f'count: {main.books.count()}')
         db.session.commit()
+        session['ids'] = []
         return redirect(url_for('repair.serie_details', id=main.id))
         
     return render_template('repair/series_to_merge.html', series=series)

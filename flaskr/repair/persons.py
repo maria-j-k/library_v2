@@ -9,11 +9,7 @@ from .forms import SearchForm, PersonForm
 
 @bp.route('/persons', methods=['GET', 'POST'])
 def persons_list():
-    if request.method == 'POST':
-        id_list = request.form.getlist('person_id')
-        session['ids'] = id_list
-        return redirect(url_for('repair.persons_merge'))
-
+    session['ids'] = []
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
     form = SearchForm()
@@ -28,9 +24,20 @@ def persons_list():
                 'name').paginate(page, 20, False)
     elif scope == 'all':
         p = Person.query.order_by('name').paginate(page, 20, False)
+    if request.method == 'POST':
+        id_list = request.form.getlist('person_id')
+        if len(id_list) > 4:
+            flash("You can't merge more than 4 items at once.")
+            return render_template('repair/persons_list.html', 
+            persons=p.items, p=p, form=form, scope=scope)
+        elif len(id_list) < 2:
+            flash("You need at least 2 items to merge.")
+            return render_template('repair/persons_list.html', 
+            persons=p.items, p=p, form=form, scope=scope)
+        session['ids'] = id_list
+        return redirect(url_for('repair.persons_merge'))
     return render_template('repair/persons_list.html', 
-            persons=p.items, p=p,
-            form=form, scope=scope)
+            persons=p.items, p=p, form=form, scope=scope)
 
 @bp.route('/persons/<int:id>', methods=['GET'])
 def person_details(id):
@@ -81,10 +88,12 @@ def persons_merge():
         to_exclude = request.form.getlist('exclude')
         if to_exclude:
             for item in to_exclude:
-                id_list.remove(item)
-            persons = Person.query.filter(Person.id.in_(id_list)
-                    ).order_by('name').all()
-            return redirect(url_for('repair.persons_merge',persons=persons))
+                session['ids'].remove(item)
+                session.modified = True
+                if len(session['ids']) < 2:
+                    flash('You need at least 2 items to merge.')
+                    return redirect(url_for('repair.persons_list'))
+            return redirect(url_for('repair.persons_merge'))
         main = Person.query.get(request.form.get('person'))
         print(main.id)
         for person in persons:
