@@ -287,6 +287,9 @@ class Book(SearchableMixin, FlagMixin, db.Model):
         intro = [c.person.name for c in self.creator
                 if c.role._name_ == 'I']
         return ", ".join(intro)
+
+    def person_authors(self):
+        return [c.person for c in self.creator.filter_by(role='A')]
     
     def authors(self):
         return Creator.query.filter_by(role = 'A', book=self)

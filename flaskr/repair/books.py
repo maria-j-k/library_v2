@@ -31,8 +31,7 @@ def books_list():
         elif domain == 'serie':
             b = b.filter_by(serie_id=val)
         elif domain == 'person':
-            b = Book.query.join(Creator).join(Person).filter(
-                    Creator.person_id==val)
+            b = Book.query.join(Creator).join(Person).filter(Creator.person_id==val)
         elif domain == 'author':
             b = Book.query.join(Creator).join(Person).filter(
                     Creator.person_id==val, Creator.role=='A')

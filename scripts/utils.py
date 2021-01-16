@@ -46,9 +46,32 @@ def get_or_create(session, Model, defaults=None, **kwargs):
         db.session.commit()
         return instance, True
 
+def create_book(publisher, serie, pub_place, person_list, **book_data):
+    title = book_data.get('title')
+    pub_year = book_data.get('pub_year')
+    p_list = (p.id for p in person_list)
+    book = Book.query.filter_by(title=title, publisher=publisher, 
+            serie=serie, city=pub_place, pub_year=pub_year
+            ).join(Creator).join(Person).filter(
+                    Creator.person_id.in_(p_list)).first()
+    if book:
+        book_got()
+        return book, False
+    book = Book(title=title, publisher=publisher, serie=serie,
+            city=pub_place, pub_year=pub_year)
+    db.session.add(book)
+    for person in person_list:
+        creator = Creator(person=person, book=book, role='A')
+        db.session.add(creator)
+    db.session.commit()
+    book_created()
+    return book, True
+
 
 def create_serie(name, publisher):
-    obj, created = get_or_create(db.session, Serie, name=name, publisher_id=publisher.id)
+    if name == None:
+        return None, False
+    obj, created = get_or_create(db.session, Serie, name=name, publisher=publisher)
     serie_created() if created else serie_got()
     return obj, created
 
@@ -59,20 +82,19 @@ def create_person(person):
     return obj, created
 
 def create_pub(publisher_name):
-    pub_obj, created = get_or_create(db.session, Publisher, name=publisher_name)
+    if publisher_name == None:
+        pub_obj, created = get_or_create(db.session, Publisher, name='Brak')
+    else:
+        pub_obj, created = get_or_create(db.session, Publisher, name=publisher_name)
     publisher_created() if created else publisher_got()
     return pub_obj, created
 
 def create_city(city):
-    obj, created = get_or_create(db.session, City, name=city)
+    if city == None:
+        obj, created = get_or_create(db.session, City, name='Brak')
+    else:
+        obj, created = get_or_create(db.session, City, name=city)
     city_created() if created else city_got()
-    return obj, created
-
-def create_book(publisher, pub_place, **book_data):
-    title = book_data.get('title')
-    pub_year = book_data.get('pub_year')
-    obj, created = get_or_create(db.session, Book, title=title, pub_year=pub_year, city_id=pub_place.id, publisher_id=publisher.id)
-    book_created() if created else book_got()
     return obj, created
 
 def create_creator(person, role, book):

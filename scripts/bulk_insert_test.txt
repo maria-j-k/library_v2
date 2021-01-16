@@ -68,4 +68,76 @@ Series got from database: 1472
 Books got from database: 561
 Roles got from database: 825
 End of transcript
+*3Saturday, 16/01/2021, 15:54:15
+Rows in total: 8660
+Publishers created: 1223
+Cities created: 227
+Books created: 8099
+Series created: 252
+Collections created: 34
+Locations created: 40
+Copies created: 8660
+Cities got: 8433
+Persons created: 5654
+Roles created: 12094
+Collections got from database: 8521
+Publishers got from database: 7437
+Persons got from database: 7265
+Locations got from database: 8140
+Series got from database: 1472
+Books got from database: 561
+Roles got from database: 825
+End of transcript
+*3Saturday, 16/01/2021, 19:00:19
+Rows in total: 8660
+Publishers got from database: 8660
+Cities got: 8660
+Books got from database: 8660
+Series got from database: 1724
+Collections got from database: 8555
+Locations got from database: 8180
+Copies created: 8660
+Persons got from database: 12919
+Roles got from database: 12919
+End of transcript
+*3Saturday, 16/01/2021, 19:09:34
+Rows in total: 8660
+Publishers got from database: 7167
+Cities got: 8436
+Books got from database: 564
+Series got from database: 1473
+Collections got from database: 8524
+Locations got from database: 8143
+Copies created: 8660
+Persons got from database: 7266
+Roles got from database: 826
+Books created: 8096
+Collections created: 31
+Publishers created: 1219
+Series created: 247
+Persons created: 5653
+Roles created: 12093
+Locations created: 37
+Cities created: 224
+End of transcript
+*3Saturday, 16/01/2021, 20:06:25
+Rows in total: 8660
+Publishers got from database: 7440
+Cities got: 8436
+Series got from database: 1473
+Persons got from database: 7418
+Books got from database: 485
+Collections got from database: 8523
+Locations got from database: 8142
+Copies created: 8660
+Persons created: 5654
+Books created: 8175
+Collections created: 32
+Locations created: 38
+Publishers created: 1220
+Cities created: 224
+Series created: 251
+Roles created: 3788
+Roles got from database: 270
+End of transcript
 *3

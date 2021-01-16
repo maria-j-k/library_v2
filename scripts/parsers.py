@@ -110,7 +110,7 @@ def parse_collection(row):
 def parse_publisher(row):
     """
     Accepts row of csv.reader iterator
-    Returns: dictionnary containing publisher's name and location and serie if exists in the file.
+    Returns: publisher's.
     """
     if row['Wydawnictwo'] == "":
         return None

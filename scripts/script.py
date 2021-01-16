@@ -38,16 +38,20 @@ with open(books_path) as csv_file:
         location = parsers.parse_location(row)
         copy_data = parsers.parse_copy(row)
 
-        publisher, created = utils.create_pub(publisher)
-        pub_place, created = utils.create_city(city)
-        book, created = utils.create_book(publisher=publisher, pub_place=pub_place, **book_data)
-        if serie: 
-            serie_obj, created = utils.create_serie(name=serie, publisher=publisher)
-            serie_obj.books.append(book)
-            serie = serie_obj
+        publisher, _ = utils.create_pub(publisher)
+        pub_place, _ = utils.create_city(city)
+        serie, _ = utils.create_serie(serie, publisher)
+        authors_list = []
         if authors:
             for author in authors:
-                obj, _ = utils.create_creator(person=author, role='A', book=book)
+                person, _ = utils.create_person(person=author)
+                authors_list.append(person)
+        if len(authors_list) == 0:
+            person, _ = utils.create_person(person='Brak')
+            authors_list.append(person)
+        book, created = utils.create_book(publisher=publisher,
+                serie=serie, pub_place=pub_place, 
+                person_list=authors_list, **book_data)
         if translators:
             for person in translators:
                 obj, _ = utils.create_creator(person=person, role='T', book=book)
