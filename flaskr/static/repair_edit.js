@@ -30,34 +30,19 @@ let inputName = document.querySelector('#input-name') // label w formularzu
             }
         },
         search: function(event, ui) {
-            console.log('search')
             console.log(document.querySelector('#' + this.id + '_id').value)
-            document.querySelector('#' + this.id + '_id').value = null
+            document.querySelector('#' + this.id + '_id').value = null // przestawia wartość odpowiadającgo polu pola id na zero - resetuje zaczytane z bazy id obiektu
             console.log(document.querySelector('#' + this.id + '_id').value)
         },
         minLength: 3,
         focus: function(event, ui) {
 		    event.preventDefault();
-            console.log(ui.item.label);
-//            $(this).val(ui.item.label);
 				},
         select: function(event, ui) {
             event.preventDefault();
-            console.log('label')
-            console.log(ui.item.label)
-            console.log('value')
-            console.log(ui.item.value)
             $(this).val(ui.item.label);
-//            $(this).prop("readonly", true);
-            console.log('value before change')
-            console.log(document.querySelector('#' + this.id + '_id').value)
             document.querySelector('#' + this.id + '_id').value = ui.item.value
-            console.log('value after change')
-            console.log(document.querySelector('#' + this.id + '_id').value)
             let field = $(this).attr('id')
-            console.log('hej')
-            console.log(field)
-//            publisher_id = ui.item.value
             if (inputName){
                 document.querySelector('.choice').classList.remove('invisible');
                 document.querySelector('.submit').classList.add('invisible');
@@ -67,11 +52,17 @@ let inputName = document.querySelector('#input-name') // label w formularzu
 
 // other
 
-let clear = document.querySelectorAll('.clear')
 let fakeBtns = document.querySelectorAll('.fake');
-let toggleInc = document.querySelectorAll('.toggle-inc')
 let changeOne = document.querySelector('#change-one')
 let edit = document.querySelectorAll('.edit')
+let merge = document.querySelector('.merge')
+
+    if (merge){
+        merge.addEventListener('click', e => {
+            console.log(document.querySelector('#name_id').value)
+            console.log(document.querySelector('#name').value)
+        })
+    }
 
     edit.forEach(btn => {
         btn.addEventListener('click', e => {
@@ -100,30 +91,6 @@ let edit = document.querySelectorAll('.edit')
             })
         }
     );
-    clear.forEach(btn => {
-        btn.addEventListener('click', e => {
-            btn.closest('tr').querySelector('input').value = "";
-            btn.closest('tr').querySelector('input').readOnly=false;
-            document.querySelector('.choice').classList.add('invisible')
-            document.querySelector('.submit').classList.remove('invisible')
-//            btn.closest('tr').firstElementChild.lastElementChild.value = "";
-    });
-});
-//    toggleInc.forEach(btn => {
-//        btn.addEventListener('click', e => {
-//            let thisUrl = btn.querySelector('a').href
-//            $.ajax({
-//                type: "POST",
-//                url: thisUrl,
-//                success: function(data){
-//                    if (data.incorrect == true){
-//                    btn.closest('td').innerText = 'True';
-//                    btn.remove(); }
-//                } 
-//            });
-//       }); 
-//    });
-//
 
 })
 

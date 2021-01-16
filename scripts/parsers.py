@@ -172,7 +172,7 @@ def set_shelf(row):
 def parse_copy(row):
     copy_data = {
             'on_shelf': set_shelf(row['czy jest na półce?']),
-            'section': row['Dział'].strip(),
+            'section': row['DZIAŁ'].strip(),
             'remarques': row['Uwagi do książki'].strip(),
             }
     return copy_data

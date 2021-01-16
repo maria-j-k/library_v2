@@ -143,7 +143,9 @@ def book_edit_publisher(id):
 def book_edit_serie(id, pub_id):
     session['ids'] = []
     book = Book.query.get_or_404(id)
-    form = SerieForm(name = book.serie, name_id=book.serie_id)
+    form = SerieForm(name = book.serie, 
+            name_id=book.serie_id,
+            publisher=book.publisher)
     if form.validate_on_submit():
         print(form.name_id.data)
         if form.name_id.data and form.name_id.data !=book.serie_id:
@@ -161,6 +163,7 @@ def book_edit_serie(id, pub_id):
             db.session.commit()
 
         return redirect(url_for('repair.book_edit', id=book.id))
+    print(form.errors)
     return render_template('repair/book_edit_related.html', form=form)
 
 
@@ -214,7 +217,6 @@ def book_edit_creators(id, role):
                 elif f.form.name.data and not f.form.name_id.data:
                     person = Person(name=f.form.name.data)
                     new_person_list.append(person)
-            
             for p in new_person_list:
                 if p not in person_list:
                     c = Creator(person=p, book=book, role=default)

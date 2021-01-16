@@ -16,7 +16,10 @@
         <tr>
             <th>N of books:</th>
             <td>{{ serie.books.count() }}</td>
-            <td></td>
+            <td>{% if serie.books.count() %}
+    <a href="{{ url_for('repair.books_list',val=serie.id, domain='serie')}}" target="_blank">See books</a>
+            {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Incorrect?</th>

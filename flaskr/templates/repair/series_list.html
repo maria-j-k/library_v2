@@ -41,6 +41,7 @@
             <th>Name</th>
             <th>Publisher</th>
             <th>Number of books</th>
+            <th>Number of copies</th>
             <th>Incorrect</th>
             <th>Approuved</th>
         </tr>
@@ -62,6 +63,7 @@
                     <a href="{{ url_for('repair.books_list',val=serie.id, domain='serie')}}" target="_blank">{{ serie.books.count()}}</a>
             {% endif %}
             </td>
+            <td></td>
             <td>{{ serie.incorrect }}</td>
             <td>{{ serie.approuved }}</td>
         </tr>
