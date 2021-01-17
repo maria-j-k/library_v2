@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, request, session, url_for, c
 from flask_login import login_required
 
 from flaskr import db
-from flaskr.models import Book, City, Collection, Copy, Creator, Location, Person, Publisher, Serie
+from flaskr.models import Publisher, Serie
 from flaskr.repair import bp
 from scripts.utils import get_or_create
 from .forms import PublisherForm, SearchForm
@@ -41,33 +41,6 @@ def publishers_list():
     return render_template('repair/publishers_list.html', 
             publishers=pubs.items, pubs=pubs,
             form=form, scope=scope)
-
-
-@bp.route('/publishers/<int:id>/series', methods=['GET', 'POST'])
-def publisher_series(id):
-    session['ids'] = []
-    publisher = Publisher.query.get(id)
-    if request.method == 'POST':
-        id_list = request.form.getlist('serie_id')
-        session['ids'] = id_list
-        return redirect(url_for('repair.series_merge'))
-
-    scope = request.args.get('filter', 'all', type=str)
-    name = request.args.get('name', None)
-    form = SearchForm()
-    page = request.args.get('page', 1, type=int)
-    series = Serie.query.filter_by(publisher_id=publisher.id)   
-    if name:
-        publishers = Publisher.fuzzy_search(name)
-        pubs = Publisher.query.filter(Publisher.id.in_(
-            [item['id'] for item in publishers])).paginate(page, 20, False)
-    elif scope == 'incorrect':
-        s = series.filter_by(incorrect=True).order_by(
-                    'name').paginate(page, 20, False)
-    elif scope == 'all':
-        s = series.order_by('name').paginate(page, 20, False)
-    return render_template('repair/series_list.html', 
-            series=s.items, s=s, form=form, scope=scope)
 
 
 @bp.route('/publishers/<int:id>', methods=['GET'])

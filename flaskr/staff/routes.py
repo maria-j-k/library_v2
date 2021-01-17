@@ -120,7 +120,8 @@ def add_copy(id):
         copy = Copy(book=book)
         copy.signature_mark = form.signature_mark.data or None
         copy.on_shelf = form.on_shelf.data
-        copy.location = form.location.data or None
+        copy.room = form.room.data or None
+        copy.shelf = form.shelf.data or None
         copy.collection = form.collection.data or None
         copy.remarques = form.remarques.data or None
         db.session.add(copy)

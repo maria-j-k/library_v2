@@ -1,8 +1,6 @@
 from flaskr import db
-#from flaskr.models import (Book, City, Collection, Copy, Creator, Location,
-#        Person, Publisher, Serie)
 from flaskr.models import (Book, City, Collection, Copy, Creator,
-        Person, Publisher, Serie)
+        Person, Publisher, Room, Serie, Shelf)
 from .parsers import parse_collection
 
 
@@ -28,8 +26,10 @@ book_created = items_counter('Books created: ', counter)
 book_got = items_counter('Books got from database: ', counter)
 role_created = items_counter('Roles created: ', counter)
 role_got = items_counter('Roles got from database: ', counter)
-loc_created = items_counter('Locations created: ', counter)
-loc_got = items_counter('Locations got from database: ', counter)
+room_created = items_counter('Rooms created: ', counter)
+room_got = items_counter('Rooms got form database: ', counter)
+shelf_created = items_counter('Shelves created: ', counter)
+shelf_got = items_counter('Shelves got from database: ', counter)
 copy_created = items_counter('Copies created: ', counter)
 city_created = items_counter('Cities created: ', counter)
 city_got = items_counter('Cities got: ', counter)
@@ -121,15 +121,19 @@ def create_collection(coll):
     coll_created() if created else coll_got()
     return obj, created
 
-def create_location(location):
-    obj, created = get_or_create(db.session, Location, room=location)
-    loc_created() if created else loc_got()
+
+def create_room(room):
+    obj, created = get_or_create(db.session, Room, name=room)
+    room_created() if created else room_got()
     return obj, created
 
-def create_copy(book, location, collection, **copy_data):
-    obj = Copy(book_id=book.id, location_id=location.id, collection_id=collection.id, **copy_data)
-#    db.session.add(obj)
-#    db.session.commit()
+def create_shelf(room, shelf):
+    obj, created = get_or_create(db.session, Shelf, room=room, name=shelf)
+    shelf_created() if created else shelf_got()
+    return obj, created
+
+def create_copy(book, collection, shelf, **copy_data):
+    obj = Copy(book_id=book.id,  collection_id=collection.id, shelf=shelf, **copy_data)
     copy_created()
     return obj
 

@@ -207,23 +207,22 @@ class Collection(SearchableMixin, FlagMixin, db.Model):
         return self.incorrect 
 
 
-class Location(SearchableMixin, FlagMixin, db.Model):
-    __searchable__=['room']
-    id = db.Column(db.Integer, primary_key=True)
-    room = db.Column(db.String(64))# wymagane
-    shelf = db.Column(db.String(3), nullable=True)# DZIAŁ enum?
-    copies = db.relationship('Copy', backref='location', lazy='dynamic')
-    
-    def __str__(self):
-        return self.name
+#class Location(SearchableMixin, FlagMixin, db.Model):
+#    __searchable__=['room']
+#    id = db.Column(db.Integer, primary_key=True)
+#    room = db.Column(db.String(64))# wymagane
+#    shelf = db.Column(db.String(3), nullable=True)# DZIAŁ enum?
+#    copies = db.relationship('Copy', backref='location', lazy='dynamic')
+#    
+#    def __str__(self):
+#        return self.name
+#
+#    @property
+#    def is_incorrect(self):
+#        return self.incorrect 
+#
 
-    @property
-    def is_incorrect(self):
-        return self.incorrect 
-
-
-class Room(SearchableMixin, FlagMixin, db.Model):
-    __searchable__=['room']
+class Room(FlagMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))# wymagane
     shelves = db.relationship('Shelf', backref='room', lazy='dynamic')
@@ -240,7 +239,7 @@ class Shelf(FlagMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))# wymagane
     room_id = db.Column(db.Integer, db.ForeignKey('room.id'))
-#    copies = db.relationship('Copy', backref='shelf', lazy='dynamic')
+    copies = db.relationship('Copy', backref='shelf', lazy='dynamic')
 
     def __str__(self):
         return self.name
@@ -267,6 +266,8 @@ class Book(SearchableMixin, FlagMixin, db.Model):
     ISBN_REGEX=r'^(97(8|9))?\d{9}(\d|X)$'
     isbn = db.Column(db.String(13), nullable=True)
     title = db.Column(db.String(255), nullable=False)
+    origin_title = db.Column(db.String(255), nullable=True)
+    first_print = db.Column(db.Boolean(), default=False)
     origin_language = db.Column(db.String(32), nullable=True) # enum?
     pub_year = db.Column(db.String(32), nullable=True) 
 #    pub_place = db.Column(db.String(64)) # do osobnego modelu m2m
@@ -356,9 +357,12 @@ class Copy(FlagMixin, db.Model):
     signature_mark = db.Column(db.String(32), nullable=True)
     on_shelf = db.Column(db.Boolean(), nullable=False)
     section = db.Column(db.String(255), nullable=True)
+    ordering = db.Column(db.String(255), nullable=True)
     remarques = db.Column(db.String(255), nullable=True)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=True)
-    location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
+    #location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
+    # location wyrzucić ze skryptu
+    shelf_id = db.Column(db.Integer, db.ForeignKey('shelf.id'), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
     # układ - enum
 

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block scripts %}
+        {{ super() }}
+        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
+     <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
+ {% endblock %}
+{% block content %}
+    {% if scope == 'all' %}
+        <h3><a href="{{ url_for('repair.rooms_list', filter='incorrect') }}">Show incorrect</a></h3>
+    {% elif scope == 'incorrect' %}
+        <h3><a href="{{ url_for('repair.rooms_list', filter='all') }}">Show all</a></h3>
+    {% else %}
+        <h3><a href="{{ url_for('repair.rooms_list', filter='incorrect') }}">Show incorrect</a></h3>
+        <h3><a href="{{ url_for('repair.rooms_list', filter='all') }}">Show all</a></h3>
+    {% endif %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+    {{ form.hidden_tag() }}
+    <div class="container row mb-3">
+    <div class="coll-sm-3">
+        {{ form.name.label }}
+    </div>
+    <div class="col-sm-6">
+        {{ form.name(class_="form-control search-input") }}
+    </div>
+    <div class="coll-sm-2">
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.rooms_list', name="") }}">Search</a></button>
+        
+    </div>
+    {% for error in form.name.errors %}
+        <span style="color: red">{{ error }}</span>   
+    {% endfor %}
+  </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Merge</th>
+            <th>Semblables</th>
+            <th>Name</th>
+            <th>Shelves</th>
+            <th>Number of copies</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for room in rooms %}
+        <tr>
+            <td>{{ room.id }}</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="room_id" type="checkbox" value="{{ room.id }}" id="flexCheckDefault">
+                </div>
+            </td>
+            <td><a href="{{ url_for('repair.rooms_list', name=room.name) }}">X</a></td>
+            {#}
+            <td><a href="{{ url_for('repair.room_details', id=room.id) }}">{{ room.name }}</a></td>
+            {#}
+            <td>{{ room.name}}</td>
+            <td>
+                {% if room.shelves.count() %}
+                    <a href="{{url_for('repair.shelves_list',val=room.id)}}"target="_blank">{{ room.shelves.count()}}</a>
+            {% endif %}
+            </td>
+            <td>{#}
+                {% if publisher.books.count() %}
+                    <a href="{{ url_for('repair.books_list',val=publisher.id,
+                        domain='pub')}}" target="_blank">{{ publisher.books.count()}}</a>
+                {% endif %}{#}
+            </td>
+            <td style="color: red;">
+            {% if room.incorrect %}
+                {{ room.incorrect }}
+            {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=room.id, m='room') }}">X</a></button>
+            {% endif %}
+            </td>
+            <td>{{ room.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Merge</button>
+</form>
+{% if r %}
+{{ render_pagination(r) }}
+{% endif %}
+{% endblock %}    
