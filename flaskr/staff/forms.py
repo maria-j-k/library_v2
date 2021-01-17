@@ -4,7 +4,7 @@ from wtforms import BooleanField, FieldList, FormField, HiddenField, IntegerFiel
 from wtforms.widgets import HiddenInput 
 from wtforms.validators import DataRequired, AnyOf, Optional
 
-from flaskr.models import Collection, Location
+from flaskr.models import Collection, Room, Shelf
 
 
 
@@ -64,14 +64,18 @@ def all_collections():
     return Collection.query.all()
 
 
-def all_locations():
-    return Location.query.all()
+def all_rooms():
+    return Room.query.all()
+
+def all_shelves():
+    return Shelf.query.all()
 
 
 class CopyForm(FlaskForm):
     signature_mark = StringField('Singature mark')
     collection = QuerySelectField(query_factory=all_collections, allow_blank=True)
-    location = QuerySelectField(query_factory=all_locations, allow_blank=True)
+    room = QuerySelectField(query_factory=all_rooms, allow_blank=True)
+    shelf = QuerySelectField(query_factory=all_shelves, allow_blank=True)
     section = StringField('Section')
     remarques = StringField('Remarques')
     on_shelf = BooleanField('On shelf')

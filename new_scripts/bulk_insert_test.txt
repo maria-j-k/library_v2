@@ -140,46 +140,4 @@ Series created: 251
 Roles created: 3788
 Roles got from database: 270
 End of transcript
-*3Sunday, 17/01/2021, 14:12:26
-Rows in total: 8660
-Publishers got from database: 7438
-Cities got: 8435
-Series got from database: 1473
-Persons got from database: 7418
-Books got from database: 484
-Collections got from database: 8522
-Locations got from database: 8141
-Copies created: 8660
-Publishers created: 1222
-Cities created: 225
-Books created: 8176
-Collections created: 33
-Locations created: 39
-Persons created: 5654
-Series created: 251
-Roles created: 3788
-Roles got from database: 270
-End of transcript
-*3Sunday, 17/01/2021, 17:17:29
-Rows in total: 8660
-Publishers got from database: 7438
-Cities got: 8435
-Series got from database: 1473
-Rooms got form database: 8619
-Shelves got from database: 8533
-Persons got from database: 7418
-Books got from database: 484
-Collections got from database: 8522
-Copies created: 8660
-Publishers created: 1222
-Cities created: 225
-Rooms created: 41
-Shelves created: 127
-Books created: 8176
-Collections created: 33
-Persons created: 5654
-Series created: 251
-Roles created: 3788
-Roles got from database: 270
-End of transcript
 *3

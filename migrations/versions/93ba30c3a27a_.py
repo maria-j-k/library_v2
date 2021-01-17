@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f34781b0d12a
+Revision ID: 93ba30c3a27a
 Revises: 
-Create Date: 2021-01-16 20:02:19.580698
+Create Date: 2021-01-17 17:12:04.936802
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f34781b0d12a'
+revision = '93ba30c3a27a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,16 +35,6 @@ def upgrade():
     sa.Column('incorrect', sa.Boolean(), nullable=True),
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=32), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('location',
-    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
-    sa.Column('last_modified', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('approuved', sa.Boolean(), nullable=True),
-    sa.Column('incorrect', sa.Boolean(), nullable=True),
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('room', sa.String(length=64), nullable=True),
-    sa.Column('shelf', sa.String(length=3), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('person',
@@ -75,6 +65,15 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_roles_default'), 'roles', ['default'], unique=False)
+    op.create_table('room',
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column('last_modified', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('approuved', sa.Boolean(), nullable=True),
+    sa.Column('incorrect', sa.Boolean(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=64), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('serie',
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.Column('last_modified', sa.DateTime(timezone=True), nullable=True),
@@ -87,6 +86,17 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_serie_name'), 'serie', ['name'], unique=False)
+    op.create_table('shelf',
+    sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.Column('last_modified', sa.DateTime(timezone=True), nullable=True),
+    sa.Column('approuved', sa.Boolean(), nullable=True),
+    sa.Column('incorrect', sa.Boolean(), nullable=True),
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=64), nullable=True),
+    sa.Column('room_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['room_id'], ['room.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('confirmed', sa.Boolean(), nullable=True),
@@ -107,6 +117,8 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('isbn', sa.String(length=13), nullable=True),
     sa.Column('title', sa.String(length=255), nullable=False),
+    sa.Column('origin_title', sa.String(length=255), nullable=True),
+    sa.Column('first_print', sa.Boolean(), nullable=True),
     sa.Column('origin_language', sa.String(length=32), nullable=True),
     sa.Column('pub_year', sa.String(length=32), nullable=True),
     sa.Column('first_edition', sa.String(length=64), nullable=True),
@@ -132,13 +144,14 @@ def upgrade():
     sa.Column('signature_mark', sa.String(length=32), nullable=True),
     sa.Column('on_shelf', sa.Boolean(), nullable=False),
     sa.Column('section', sa.String(length=255), nullable=True),
+    sa.Column('ordering', sa.String(length=255), nullable=True),
     sa.Column('remarques', sa.String(length=255), nullable=True),
     sa.Column('collection_id', sa.Integer(), nullable=True),
-    sa.Column('location_id', sa.Integer(), nullable=True),
+    sa.Column('shelf_id', sa.Integer(), nullable=False),
     sa.Column('book_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['book_id'], ['book.id'], ),
     sa.ForeignKeyConstraint(['collection_id'], ['collection.id'], ),
-    sa.ForeignKeyConstraint(['location_id'], ['location.id'], ),
+    sa.ForeignKeyConstraint(['shelf_id'], ['shelf.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('creator',
@@ -163,14 +176,15 @@ def downgrade():
     op.drop_table('copy')
     op.drop_table('book')
     op.drop_table('users')
+    op.drop_table('shelf')
     op.drop_index(op.f('ix_serie_name'), table_name='serie')
     op.drop_table('serie')
+    op.drop_table('room')
     op.drop_index(op.f('ix_roles_default'), table_name='roles')
     op.drop_table('roles')
     op.drop_index(op.f('ix_publisher_name'), table_name='publisher')
     op.drop_table('publisher')
     op.drop_table('person')
-    op.drop_table('location')
     op.drop_table('collection')
     op.drop_index(op.f('ix_city_name'), table_name='city')
     op.drop_table('city')

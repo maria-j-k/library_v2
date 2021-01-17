@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 from flaskr import create_app, db
-from flaskr.models import Book, City, Collection, Copy, Creator, Location, Person, Publisher, Serie
+from flaskr.models import Book, City, Collection, Copy, Creator, Person, Publisher, Room,  Serie, Shelf
 from flaskr.user_models import User
 
 
@@ -21,10 +21,11 @@ def make_shell_context():
             'Collection': Collection, 
             'Copy': Copy, 
             'Creator': Creator, 
-            'Location': Location, 
             'Person': Person, 
             'Publisher': Publisher, 
+            'Room': Room,
             'Serie': Serie,
+            'Shelf': Shelf,
             'User': User,
             }
 
