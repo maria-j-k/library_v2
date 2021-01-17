@@ -1,16 +1,58 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+{#}
+{% block autocomplete %}
+	<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/start/jquery-ui.min.css" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+{% endblock %}
+
+    {% block scripts %}
+	<style>
+		#autocomplete.ui-autocomplete-loading {
+			background-image: url(loading.gif);
+			background-position: right center;
+			background-repeat: no-repeat;
+        }
+	</style>
+        {{ super() }}
+<link href="//code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+     <script type="text/javascript" src="{{ url_for('static', filename='repair_edit.js') }}"></script>
+ {% endblock %}
+{#}
 {% block content %}
     {{ super() }} 
+    <br>    
+    <div style="text-align:center">
+        <h2>Persons</h2>
     <h3>Attention</h3>
     <p>Here you can correct a typo in a person's name.</p>
     <p>If you change the name, all book assigned to this person will have the creator's
     name changed. </p>
     <p>If you want to change the author of a particular book (the association between a person and a book), you should edit the book instead.</p>
+</div>
+<br>
 <form action="" method="post" accept-charset="utf-8">
-    {{ render_form(form) }}
-
+    {{ form.hidden_tag() }}
+    <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td> {{ form.name(class_="form-control searchItem") }}</td>
+                </tr> 
+                <tr>
+                    <th>Incorrect</th>
+                    <td>{{ form.incorrect(class_="form-check-input") }}</td>
+                </tr> 
+                <tr>
+                    <th>Approuved</th>
+                    <td> {{ form.approuved(class_="form-check-input") }}</td>
+                </tr>
+            </tbody>
+        
+    </table>
+    {{ form.submit(class_="submit btn btn-primary btn-md") }}
 </form>
 <br>
 <p><a href="{{ url_for('repair.books_list', val=person.id, domain='person')}}" target="_blank">See books</a></p>

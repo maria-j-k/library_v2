@@ -50,7 +50,9 @@ def collection_details(id):
 def collection_edit(id):
     session['ids'] = []
     collection = Collection.query.get(id)
-    form = CollectionForm(name=collection.name)
+    form = CollectionForm(name=collection.name,
+            incorrect=collection.incorrect,
+            approuved=collection.approuved)
     if form.validate_on_submit():
         collection_name = form.name.data
         if collection_name != collection.name:
@@ -59,13 +61,13 @@ def collection_edit(id):
                 flash(f'''Collection {c.name} exists already in the database. \n
                     You have to merge "{collection.name}" with "{c.name}".\n 
                     Hit "Show similars" to enable merge.''')
-        else:
-            collection.name = collection_name
-            collection.approuved = form.approuved.data
-            collection.incorrect = form.incorrect.data
-            db.session.add(collection)
-            db.session.commit()
-            return redirect(url_for('repair.collection_details', id=collection.id))
+                return redirect(url_for('repair.collection_edit',id=collection.id)) 
+        collection.name = collection_name
+        collection.approuved = form.approuved.data
+        collection.incorrect = form.incorrect.data
+        db.session.add(collection)
+        db.session.commit()
+        return redirect(url_for('repair.collection_details', id=collection.id))
             
     return render_template('repair/collection_edit.html', 
             form=form, collection=collection)

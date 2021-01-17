@@ -9,8 +9,8 @@ let inputName = document.querySelector('#input-name') // label w formularzu
     }
     $(".searchItem").autocomplete({
         source:function(request, response) {
-            let targetUrl = $SCRIPT_ROOT +'/autocomplete_' + targ
             if (targ == "serie"){
+                let targetUrl = $SCRIPT_ROOT +'/autocomplete_' + targ
                 let publisherId = splitUrl[splitUrl.length -2]
                 $.getJSON(targetUrl ,{
                     q: request.term, publisher: publisherId 
@@ -18,9 +18,18 @@ let inputName = document.querySelector('#input-name') // label w formularzu
                     response(data.matching_results); 
                     console.log(data.matching_results)
                 });
-                
                 }
+            else if (targ == "edit"){
+                let targetUrl = $SCRIPT_ROOT +'/autocomplete_person'
+                $.getJSON(targetUrl ,{
+                    q: request.term, 
+                }, function(data) {
+                    response(data.matching_results); 
+                    console.log(data.matching_results)
+                });
+            }
             else {
+                let targetUrl = $SCRIPT_ROOT +'/autocomplete_' + targ
                 $.getJSON(targetUrl ,{
                     q: request.term, 
                 }, function(data) {

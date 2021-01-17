@@ -81,7 +81,9 @@ def publisher_details(id):
 def publisher_edit(id):
     session['ids'] = []
     publisher = Publisher.query.get(id)
-    form = PublisherForm(name=publisher.name)
+    form = PublisherForm(name=publisher.name, 
+            incorrect=publisher.incorrect,
+            approuved=publisher.approuved)
     if form.validate_on_submit():
         publisher_name = form.name.data
         if publisher_name != publisher.name:
@@ -90,6 +92,7 @@ def publisher_edit(id):
                 flash(f'''Publisher {p.name} exists already in the database. \n
                     You have to merge "{publisher.name}" with "{p.name}".\n 
                     Hit "Show similars" to enable merge.''')
+                return redirect(url_for('repair.publisher_edit', id=publisher.id))
         publisher.name = publisher_name
         publisher.approuved = form.approuved.data
         publisher.incorrect = form.incorrect.data

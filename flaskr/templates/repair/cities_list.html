@@ -59,14 +59,13 @@
                 {{ city.books.count() }}
                 {% endif %} 
             </td>
+            <td style="color: red;">
             {% if city.incorrect %}
-                <td style="color: red;">{{ city.incorrect }}</td>
+                {{ city.incorrect }}
             {% else %}
-                <td>
-                    <a href="{{ url_for('staff.toggle_incorrect', id_=city.id, m='city', next=request.path)}}">X</a>
-                </td>
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=city.id, m='city') }}">X</a></button>
             {% endif %}
-            <td>{{ city.incorrect }}</td>
+            </td>
             <td>{{ city.approuved }}</td>
         </tr>
         {% endfor %}

@@ -66,8 +66,6 @@
         </tr>
     </table>
 
-    <p><a href="{{ url_for('repair.books_list', val=person.id, domain='person')}}" target="_blank">See books</a></p>
     <p><a href="{{ url_for('repair.persons_list', name=person.name) }}" target="_blank">Show similars</a></p>
-    <p><a href="{{ url_for('repair.persons_list', filter="all") }}">Back to list</a></p>
-       <p><a href="{{ url_for('repair.person_edit',id=person.id)}}">Edit</a></p>
+    <p><a href="{{ url_for('repair.persons_list', filter="all") }}">Back to list all</a></p>
 {% endblock %}    

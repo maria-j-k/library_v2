@@ -70,6 +70,7 @@ def serie_edit(id):
                 flash(f'''Serie {s.name} of {publisher.name} exists already in the database. \n
                     You have to merge "{serie.name}" with "{s.name}".\n 
                     Hit "Show similars" to enable merge.''')
+                return redirect(url_for('repair.serie_edit', id=serie.id))
         serie.name = serie_name
         serie.publisher = publisher
         serie.approuved = form.approuved.data

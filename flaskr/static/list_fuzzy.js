@@ -14,12 +14,14 @@ let toggleInc = document.querySelectorAll('.toggle-inc')
             })
         }
     );
-    searchBtn.addEventListener('click', e => {
-        let newHref = searchLink.href + searchInp.value;
-        searchLink.setAttribute('href', newHref);
-        window.open(searchLink.href, "_self");
-        }
-    );
+    if (searchBtn){
+        searchBtn.addEventListener('click', e => {
+            let newHref = searchLink.href + searchInp.value;
+            searchLink.setAttribute('href', newHref);
+            window.open(searchLink.href, "_self");
+            }
+        );
+    }
     toggleInc.forEach(btn => {
         btn.addEventListener('click', e => {
             let thisUrl = btn.querySelector('a').href

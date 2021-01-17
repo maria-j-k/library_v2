@@ -138,6 +138,20 @@ class Person(SearchableMixin, FlagMixin, db.Model):
         return Creator.query.filter_by(role = 'I', person=self)
 
 
+class City(SearchableMixin, FlagMixin, db.Model):
+    __searchable__ = ['name']
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), index=True)
+    books = db.relationship('Book', backref='city', lazy='dynamic') 
+
+    def __repr__(self):
+        return self.name
+
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
+
+
 class Publisher(SearchableMixin, FlagMixin, db.Model):
     __searchable__=['name']
     id = db.Column(db.Integer, primary_key=True)
@@ -159,27 +173,7 @@ class Publisher(SearchableMixin, FlagMixin, db.Model):
     
     @property
     def is_incorrect(self):
-        return self.incorrect or self.serie.incorrect
-
-class City(SearchableMixin, FlagMixin, db.Model):
-    __searchable__ = ['name']
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), index=True)
-    books = db.relationship('Book', backref='city', lazy='dynamic') 
-
-    def __repr__(self):
-        return self.name
-
-    @property
-    def is_incorrect(self):
-        return self.incorrect 
-
-#class PublicationPlace(db.Model):
-#    id = db.Column(db.Integer, primary_key=True)
-#    role = db.Column(db.Enum(BookRoles))
-#    city_id = db.Column(db.Integer, db.ForeignKey('city.id'))
-#    publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'))
-#    book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+        return self.incorrect or any((x.incorrect for x in self.series))
 
 
 class Serie(SearchableMixin, FlagMixin, db.Model):
@@ -219,10 +213,37 @@ class Location(SearchableMixin, FlagMixin, db.Model):
     room = db.Column(db.String(64))# wymagane
     shelf = db.Column(db.String(3), nullable=True)# DZIAŁ enum?
     copies = db.relationship('Copy', backref='location', lazy='dynamic')
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def is_incorrect(self):
+        return self.incorrect 
+
+
+class Room(SearchableMixin, FlagMixin, db.Model):
+    __searchable__=['room']
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))# wymagane
+    shelves = db.relationship('Shelf', backref='room', lazy='dynamic')
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def is_incorrect(self):
+        return self.incorrect or any(x.incorrect for x in self.shelves)
+
+
+class Shelf(FlagMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))# wymagane
+    room_id = db.Column(db.Integer, db.ForeignKey('room.id'))
+#    copies = db.relationship('Copy', backref='shelf', lazy='dynamic')
 
     def __str__(self):
-        return self.room
-
+        return self.name
 
     @property
     def is_incorrect(self):

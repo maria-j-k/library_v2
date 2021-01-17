@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block scripts %}
+        {{ super() }}
+     <script type="text/javascript" src="{{ url_for('static', filename='toggle_inc.js') }}"></script>
+ {% endblock %}
 {% block content %}
     {{ super() }} 
     <table class="table">
@@ -12,16 +15,21 @@
         <tr>
             <th>N of books:</th>
             <td>{{ city.books.count() }}</td>
-            <td> {% if city.books.count() %} <a href="" target="_blank">See books</a>{% endif %}
+            <td> {% if city.books.count() %} <a href="{{ url_for('repair.books_list', val=city.id, domain='city')}}" target="_blank">See books</a>{% endif %}
             
             </td>
         </tr>
         <tr>
-            <th>Incorrect?</th>
-            <td> {% if city.incorrect %}
-                Incorrect
-            {% endif %}</td>
-            <td> <a href="" >Change</a> </td>
+            <th>Incorrect</th>
+                <td></td>
+                <td style="color: red;"> 
+                    {% if city.incorrect %}
+                        {{ city.incorrect }}
+                    {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{
+                        url_for('es_api.toggle_incorrect', id_=city.id, m='city') }}">Change</a></button>
+                    {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Approuved</th>

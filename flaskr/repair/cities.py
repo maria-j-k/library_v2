@@ -50,7 +50,9 @@ def city_details(id):
 def city_edit(id):
     session['ids'] = []
     city = City.query.get(id)
-    form = CityForm(name=city.name)
+    form = CityForm(name=city.name, 
+            incorrect=city.incorrect,
+            approuved=city.approuved)
     if form.validate_on_submit():
         city_name = form.name.data
         if city_name != city.name:
@@ -59,13 +61,13 @@ def city_edit(id):
                 flash(f'''City {c.name} exists already in the database. \n
                     You have to merge "{city.name}" with "{c.name}".\n 
                     Hit "Show similars" to enable merge.''')
-        else:
-            city.name = city_name
-            city.approuved = form.approuved.data
-            city.incorrect = form.incorrect.data
-            db.session.add(city)
-            db.session.commit()
-            return redirect(url_for('repair.city_details', id=city.id))
+                return redirect(url_for('repair.city_edit', id=city.id))
+        city.name = city_name
+        city.approuved = form.approuved.data
+        city.incorrect = form.incorrect.data
+        db.session.add(city)
+        db.session.commit()
+        return redirect(url_for('repair.city_details', id=city.id))
             
     return render_template('repair/city_edit.html', form=form, city=city)
 

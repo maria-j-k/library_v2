@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block scripts %}
+        {{ super() }}
+        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
+     <script type="text/javascript" src="{{ url_for('static', filename='toggle_inc.js') }}"></script>
+ {% endblock %}
 {% block content %}
     {{ super() }} 
     <table class="table">
@@ -22,6 +27,18 @@
             </td>
         </tr>
         <tr>
+            <th>Incorrect</th>
+                <td></td>
+                <td style="color: red;"> 
+                    {% if serie.incorrect %}
+                        {{ serie.incorrect }}
+                    {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{
+                        url_for('es_api.toggle_incorrect', id_=serie.id, m='serie') }}">Change</a></button>
+                    {% endif %}
+            </td>
+        </tr>
+        <tr>
             <th>Incorrect?</th>
             <td> {% if serie.incorrect %}
                 Incorrect
@@ -39,7 +56,6 @@
         </tr>
     </table>
 
-    <p><a href="" target="_blank">See books</a></p>
     <p><a href="{{ url_for('repair.series_list', name=serie.name) }}" target="_blank">Show similars</a></p>
     <p><a href="{{ url_for('repair.series_list', filter="all") }}">Back to list</a></p>
 {% endblock %}    

@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block scripts %}
+        {{ super() }}
+        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
+     <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
+ {% endblock %}
 {% block content %}
     {{ super() }} 
     <table class="table">
@@ -9,7 +14,7 @@
         </tr>
         <tr>
             <th>ISBN</th>
-            <td>{{ book.isbn }}</td>
+            <td>{{ book.isbn or ""}}</td>
         </tr>
         {% if book.authors().count() %}
         <tr>
@@ -126,11 +131,11 @@
         </tr>
         <tr>
             <th>Genre</th>
-            <td>{{ book.genre }}</td>
+            <td>{{ book.genre  or "" }}</td>
         </tr>
         <tr>
             <th>Fiction</th>
-            <td>{{ book.fiction }}</td>
+            <td>{{ book.fiction or "" }}</td>
         </tr>
         <tr>
             <th>Precision</th>
@@ -146,19 +151,21 @@
         </tr>
         <tr>
             <th>Incorrect?</th>
-            <td> {% if book.incorrect %}
-                Incorrect
-            {% endif %}</td>
-            <td> <a href="" >Change</a> </td>
+            <td style="color: red;">
+            {% if book.incorrect %}
+                {{ book.incorrect }}
+            {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=book.id, m='book') }}">Change</a></button>
+            {% endif %}
+            </td>
         </tr>
         <tr>
             <th>Approuved</th>
             <td> {% if book.approuved %}
                     Approuved
                 {% else %}
-                    Not approuved
+             <a href="" >Change</a> 
             {% endif %}</td>
-            <td> <a href="" >Change</a> </td>
         </tr>
     </table>
 

@@ -59,7 +59,13 @@
                 {{ location.copies.count() }}
                 {% endif %} 
             </td>
-            <td>{{ location.incorrect }}</td>
+            <td style="color: red;">
+            {% if location.incorrect %}
+                {{ location.incorrect }}
+            {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=location.id, m='location') }}">X</a></button>
+            {% endif %}
+            </td>
             <td>{{ location.approuved }}</td>
         </tr>
         {% endfor %}

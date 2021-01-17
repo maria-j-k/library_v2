@@ -53,20 +53,22 @@ def person_edit(id):
             approuved=person.approuved, 
             incorrect=person.incorrect)
     if form.validate_on_submit():
+        print('validate')
         person_name = form.name.data
         if person.name != person_name:
             p = Person.query.filter_by(name=person_name).first()
+            print(p)
             if p: 
                 flash(f'''Person {p.name} exists already in the database. \n
-                    You have to merge "{person.name}" with "{p.name}".\n 
+                    You have to merge "{person.name}" with "{p.name}" or edit a book.\n 
                     Hit "Show similars" to enable merge.''')
-        else:
-            person.name = person_name
-            person.approuved = form.approuved.data
-            person.incorrect = form.incorrect.data
-            db.session.add(person)
-            db.session.commit()
-            return redirect(url_for('repair.person_details', id=person.id))
+                return redirect(url_for('repair.person_edit', id=person.id))
+        person.name = person_name
+        person.approuved = form.approuved.data
+        person.incorrect = form.incorrect.data
+        db.session.add(person)
+        db.session.commit()
+        return redirect(url_for('repair.person_details', id=person.id))
             
     return render_template('repair/person_edit.html', form=form, person=person)
 

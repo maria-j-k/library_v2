@@ -64,7 +64,13 @@
             {% endif %}
             </td>
             <td></td>
-            <td>{{ serie.incorrect }}</td>
+            <td style="color: red;">
+            {% if serie.incorrect %}
+                {{ serie.incorrect }}
+            {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=serie.id, m='serie') }}">X</a></button>
+            {% endif %}
+            </td>
             <td>{{ serie.approuved }}</td>
         </tr>
         {% endfor %}

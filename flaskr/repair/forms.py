@@ -88,22 +88,27 @@ class BookForm(FlaskForm):
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
 
-
-
 class PersonForm(FlaskForm):
+    name = StringField('Name')
+    name_id = HiddenField(validators=[Optional(strip_whitespace=True)])
+    incorrect = BooleanField('Incorrect')
+    approuved = BooleanField('Approuved')
+    submit = SubmitField('Submit')
+
+class Person2Form(FlaskForm):
     name = StringField('Name')
 #    person_id = IntegerField(widget=HiddenInput(), validators=[Optional(strip_whitespace=True)])
     name_id = HiddenField(validators=[Optional(strip_whitespace=True)])
     role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
-    submit = SubmitField('Sumbit')
+    submit = SubmitField('Submit')
 
     class Meta:
         csrf = False
 
 
 class CreatorForm(FlaskForm):
-    creators = FieldList(FormField(PersonForm, default={'role': 'A'}), max_entries=3)
+    creators = FieldList(FormField(Person2Form, default={'role': 'A'}), max_entries=3)
     submit = SubmitField('Sumbit')
     

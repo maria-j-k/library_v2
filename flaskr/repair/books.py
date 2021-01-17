@@ -30,6 +30,8 @@ def books_list():
             b = b.filter_by(publisher_id=val)
         elif domain == 'serie':
             b = b.filter_by(serie_id=val)
+        elif domain == 'city':
+            b = b.filter_by(city_id=val)
         elif domain == 'person':
             b = Book.query.join(Creator).join(Person).filter(Creator.person_id==val)
         elif domain == 'author':
@@ -121,17 +123,22 @@ def book_edit_publisher(id):
     form = PublisherForm(name = book.publisher, name_id=book.publisher.id)
     if form.validate_on_submit():
         if form.name_id.data and form.name_id.data !=book.publisher_id:
+            publisher = book.publisher
             new_pub = Publisher.query.get(form.name_id.data)
             if new_pub is not None:
                 book.publisher_id = new_pub.id
                 db.session.add(book)
+                if publisher.books.count() == 0:
+                    db.session.delete(publisher)
                 db.session.commit()
             else:
                 flush('We didn\'t succeed to change publisher. Try again')
         elif not form.name_id.data:
-            publisher = Publisher(name = form.name.data)
-            book.publisher = publisher
+            new_publisher = Publisher(name = form.name.data)
+            book.publisher = new_publisher
             db.session.add(book)
+            if publisher.books.count() == 0:
+                db.session.delete(publisher)
             db.session.commit()
 
         return redirect(url_for('repair.book_edit', id=book.id))
@@ -140,6 +147,7 @@ def book_edit_publisher(id):
 
 @bp.route('/books/<int:id>/edit/<int:pub_id>/serie', methods=['GET', 'POST'])
 def book_edit_serie(id, pub_id):
+    print('jestem tu')
     session['ids'] = []
     book = Book.query.get_or_404(id)
     form = SerieForm(name = book.serie, 
@@ -149,16 +157,22 @@ def book_edit_serie(id, pub_id):
         print(form.name_id.data)
         if form.name_id.data and form.name_id.data !=book.serie_id:
             new_serie = Serie.query.get(form.name_id.data)
+            serie = book.serie
             if new_serie is not None:
                 book.serie_id = new_serie.id
                 db.session.add(book)
+                if serie.books.count() == 0:
+                    db.session.delete(serie)
                 db.session.commit()
             else:
                 flush('We didn\'t succeed to change serie. Try again')
         elif not form.name_id.data:
-            serie = Serie(name = form.name.data, publisher_id=pub_id)
-            book.serie = serie
+            new_serie = Serie(name = form.name.data, publisher_id=pub_id)
+            serie = book.serie
+            book.serie = new_serie
             db.session.add(book)
+            if serie.books.count() == 0:
+                db.session.delete(serie)
             db.session.commit()
 
         return redirect(url_for('repair.book_edit', id=book.id))

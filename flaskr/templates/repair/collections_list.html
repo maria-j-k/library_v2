@@ -59,7 +59,13 @@
                 {{ collection.copies.count() }}
                 {% endif %} 
             </td>
-            <td>{{ collection.incorrect }}</td>
+            <td style="color: red;">
+            {% if collection.incorrect %}
+                {{ collection.incorrect }}
+            {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=collection.id, m='collection') }}">X</a></button>
+            {% endif %}
+            </td>
             <td>{{ collection.approuved }}</td>
         </tr>
         {% endfor %}
