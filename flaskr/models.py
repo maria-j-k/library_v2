@@ -166,8 +166,8 @@ class Publisher(SearchableMixin, FlagMixin, db.Model):
         data = {
                 'id': self.id,
                 'name': self.name,
-                'city': self.city,
-                'series': [s.id for s in self.series.all()]
+                'series': [s.id for s in self.series],
+                'books': self.books.count()
                 }
         return data
     
