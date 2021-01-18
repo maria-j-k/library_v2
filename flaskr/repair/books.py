@@ -24,7 +24,8 @@ def books_list():
     b = Book.query
     if name:
         books = Book.fuzzy_search('title', name)
-        b = b.filter(Book.id.in_([item['id'] for item in books]))
+        return render_template('repair/book_es_list.html', form=form, books=books)
+#        b = b.filter(Book.id.in_([item['id'] for item in books]))
     elif domain:
         if domain == 'pub':
             b = b.filter_by(publisher_id=val)

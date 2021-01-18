@@ -1,23 +1,42 @@
 from flask import current_app
 
-def create_body(searchable_fields):
-    sayt = {"type": "search_as_you_type"}
+def create_body(sayt_field):
+    field = {"type": "text",
+            "analyzer": "ascii_analyzer",
+            "fields": {"keyword": {"type": "keyword"},
+              "sayt": {"type": "search_as_you_type"}
+            }}
+
     body = {
+          "settings": {
+            "analysis": {
+              "analyzer": {
+                "ascii_analyzer":{
+                  "type": "custom",
+                  "char_filter": ["html_strip"],
+                  "tokenizer": "standard",
+                  "filter": [
+                    "lowercase",
+                    "asciifolding"]
+                }
+              }
+            }
+          },
         "mappings":{
             "properties": {
                 "id": {"type": "integer"},
             }
         }
     }
-    for item in searchable_fields:
-        body['mappings']['properties'][item] = sayt
+    for item in sayt_field:
+        body['mappings']['properties'][item] = field
     return body
 
 
 def create_index(index, model):
     if not current_app.elasticsearch:
         return
-    body = create_body(model.__searchable__)
+    body = create_body(model.__sayt__)
     current_app.elasticsearch.indices.create(index=index, body=body)
 
 
@@ -28,8 +47,8 @@ def add_to_index(index, model):
     if not current_app.elasticsearch.indices.exists(index=index):
         create_index(index, model)
     body = {}
-    for field in model.__searchable__:
-        body[field] = getattr(model, field)
+    for key, val in model.to_dict().items():
+        body[key] = val
     current_app.elasticsearch.index(index=index, id=model.id, body=body)
 
 
@@ -45,7 +64,6 @@ def es_fuzzy_search(index, field, query):
     search_res = current_app.elasticsearch.search(
             index=index,
             body={
-              "_source": False,
               "query": {
                 "match": {
                   field: {
@@ -58,9 +76,12 @@ def es_fuzzy_search(index, field, query):
             })
 
 #    search_res = [(hit['_id'],hit['_source']['name']) for hit in hits]
-    print(list(hit['_id'] for hit in search_res['hits']['hits']))
-    return  [{'id': hit['_id']} 
-            for hit in search_res['hits']['hits']]
+#    print(list(hit for hit in search_res['hits']['hits']))
+#    x = list(hit for hit in search_res['hits']['hits']['_source'])
+    search_res = [hit['_source'] for hit in search_res['hits']['hits']]
+    return search_res
+#    return  [{'id': hit['_id']} 
+#            for hit in search_res['hits']['hits']]
 
 
 
