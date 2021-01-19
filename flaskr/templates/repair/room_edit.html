@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    {{ super() }} 
+    <br>    
+    <div style="text-align:center">
+        <h2>Publisher</h2>
+    <h3>Attention</h3>
+    <p>Here you can correct a typo in a room's name.</p>
+    <p>If you change the name, all copies and shelves assigned to this room will have the room's name changed. </p>
+    <p>If you want to change the placement of a particular copy, you should edit the copy instead.</p>
+</div>
+<br>
+<form action="" method="post" accept-charset="utf-8">
+    {{ form.hidden_tag() }}
+    <table class="table table-borderless">
+            <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td> {{ form.name(class_="form-control searchItem") }}</td>
+                </tr> 
+                <tr>
+                    <th>Incorrect</th>
+                    <td>{{ form.incorrect(class_="form-check-input") }}</td>
+                </tr> 
+                <tr>
+                    <th>Approuved</th>
+                    <td> {{ form.approuved(class_="form-check-input") }}</td>
+                </tr>
+            </tbody>
+        
+    </table>
+    {{ form.submit(class_="submit btn btn-primary btn-md") }}
+</form>
+<p><a href=""target="_blank">See copies</a></p>
+{% if room.shelves.count() %}
+<p><a href="{{ url_for('repair.shelves_list', val=room.id)}}" target="_blank">See shelves</a></p>{% endif %}
+    <p><a href="{{ url_for('repair.rooms_list', name=room.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.rooms_list') }}">Back to list all</a></p>
+{% endblock %}    

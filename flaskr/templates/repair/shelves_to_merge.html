@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+{% block content %}
+    {{ super() }} 
+    <form action="" method="post" accept-charset="utf-8">
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Exclude form merge</th>
+            <th>Choose correct</th>
+            <th>Name</th>
+            <th>Room</th>
+            <th>Number of copies</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for shelf in shelves %}
+        <tr>
+            <td>{{ shelf.id }}</td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="exclude" id="exclude" value={{ shelf.id }}>
+                </div>
+            </td>
+            <td>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="shelf" id="shelf" value={{ shelf.id }}>
+                </div>
+            </td>
+            <td><a href="{{ url_for('repair.shelf_edit', id=shelf.id) }}" target="_blank">{{ shelf.name }}</a>  </td>
+            <td>{{ shelf.room.name }}</td>
+            <td> {% if shelf.copies.count() %}
+                {{ shelf.copies.count() }}
+                {% endif %} 
+            </td>
+            <td>{{ shelf.incorrect }}</td>
+            <td>{{ shelf.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% endblock %}    

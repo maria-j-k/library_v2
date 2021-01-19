@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+    {% block scripts %}
+        {{ super() }}
+        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
+     <script type="text/javascript" src="{{ url_for('static', filename='toggle_inc.js') }}"></script>
+ {% endblock %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <td>{{ shelf.name }}</td>
+            <td><a href="{{ url_for('repair.shelf_edit', id=shelf.id)}}">Edit</a></td>
+        </tr>
+        <tr>
+            <th>Room</th>
+            <td><a href="{{ url_for('repair.room_details', id=shelf.room_id) }}" target="_blank">{{ shelf.room.name }}</a></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>N of copies:</th>
+            <td>{{ shelf.copies.count() }}</td>
+            <td>{% if shelf.copies.count() %}
+    <a href="" target="_blank">See copies</a>
+            {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Incorrect</th>
+                <td></td>
+                <td style="color: red;"> 
+                    {% if shelf.incorrect %}
+                        {{ shelf.incorrect }}
+                    {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{
+                        url_for('es_api.toggle_incorrect', id_=shelf.id, m='shelf') }}">Change</a></button>
+                    {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if shelf.approuved %}
+                    Approuved
+                {% else %}
+                    Not approuved
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+    </table>
+
+    <p><a href="{{ url_for('repair.shelves_list', name=shelf.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.shelves_list', filter="all") }}">Back to list all</a></p>
+{% endblock %}    

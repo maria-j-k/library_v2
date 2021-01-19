@@ -5,7 +5,7 @@ from flaskr import db
 from flaskr.models import Room, Shelf
 from flaskr.repair import bp
 from scripts.utils import get_or_create
-from .forms import SearchForm
+from .forms import SearchForm, RoomForm
 
 @bp.route('/rooms', methods=['GET', 'POST'])
 def rooms_list():
@@ -30,79 +30,75 @@ def rooms_list():
     elif scope == 'all':
         r = Room.query.order_by('name').paginate(
                         page, 20, False)
-#    if request.method == 'POST':
-#        id_list = request.form.getlist('room_id')
-#        if len(id_list) > 4:
-#            flash("You can't merge more than 4 items at once.")
-#            return render_template('repair/rooms_list.html', 
-#            rooms=r.items, r=r, form=form, scope=scope)
-#        elif len(id_list) < 2:
-#            flash("You need at least 2 items to merge.")
-#            return render_template('repair/rooms_list.html', 
-#            rooms=r.items, r=r, form=form, scope=scope)
-#        session['ids'] = id_list
-#        return redirect(url_for('repair.rooms_merge'))
+    if request.method == 'POST':
+        id_list = request.form.getlist('room_id')
+        if len(id_list) > 4:
+            flash("You can't merge more than 4 items at once.")
+            return render_template('repair/rooms_list.html', 
+            rooms=r.items, r=r, form=form, scope=scope)
+        elif len(id_list) < 2:
+            flash("You need at least 2 items to merge.")
+            return render_template('repair/rooms_list.html', 
+            rooms=r.items, r=r, form=form, scope=scope)
+        session['ids'] = id_list
+        return redirect(url_for('repair.rooms_merge'))
     return render_template('repair/rooms_list.html', 
             rooms=r.items, r=r, form=form, scope=scope)
 
 
-#@bp.route('/publishers/<int:id>', methods=['GET'])
-#def publisher_details(id):
-#    session['ids'] = []
-#    publisher = Publisher.query.get(id)
-#    return render_template('repair/publisher_details.html', 
-#            publisher=publisher)
-#
-#@bp.route('/publishers/<int:id>/edit', methods=['GET', 'POST'])
-#def publisher_edit(id):
-#    session['ids'] = []
-#    publisher = Publisher.query.get(id)
-#    form = PublisherForm(name=publisher.name, 
-#            incorrect=publisher.incorrect,
-#            approuved=publisher.approuved)
-#    if form.validate_on_submit():
-#        publisher_name = form.name.data
-#        if publisher_name != publisher.name:
-#            p = Publisher.query.filter_by(name=publisher_name).first()
-#            if p:
-#                flash(f'''Publisher {p.name} exists already in the database. \n
-#                    You have to merge "{publisher.name}" with "{p.name}".\n 
-#                    Hit "Show similars" to enable merge.''')
-#                return redirect(url_for('repair.publisher_edit', id=publisher.id))
-#        publisher.name = publisher_name
-#        publisher.approuved = form.approuved.data
-#        publisher.incorrect = form.incorrect.data
-#        db.session.add(publisher)
-#        db.session.commit()
-#        return redirect(url_for('repair.publisher_details', id=publisher.id))
-#            
-#    return render_template('repair/publisher_edit.html', 
-#            form=form, publisher=publisher)
-#
-#@bp.route('/publishers/merge/', methods=['GET', 'POST'])
-#def publishers_merge():
-#    '''dodać funkcję usuwania z listy rekordów do łączenia. w templatce już jest checkbox nazwa exclude'''
-#    id_list = session.get('ids')
-#    publishers = Publisher.query.filter(Publisher.id.in_(id_list)).order_by('name').all()
-#    if request.method == 'POST':
-#        to_exclude = request.form.getlist('exclude')
-#        if to_exclude:
-#            for item in to_exclude:
-#                session['ids'].remove(item)
-#                session.modified = True
-#                if len(session['ids']) < 2:
-#                    flash('You need at least 2 items to merge.')
-#                    return redirect(url_for('repair.publishers_list'))
-#            return redirect(url_for('repair.publishers_merge'))
-#        main = Publisher.query.get(request.form.get('publisher'))
-#        for publisher in publishers:
-#            if publisher is not main:
-#                main.books.extend(publisher.books)
-#                main.series.extend(publisher.series)
-#                db.session.add(main)
-#                db.session.delete(publisher)
-#        db.session.commit()
-#        session['ids'] = []
-#        return redirect(url_for('repair.publisher_details', id=main.id))
-#        
-#    return render_template('repair/publishers_to_merge.html', publishers=publishers)
+@bp.route('/rooms/<int:id>', methods=['GET'])
+def room_details(id):
+    session['ids'] = []
+    room = Room.query.get(id)
+    return render_template('repair/room_details.html', room=room)
+
+@bp.route('/rooms/<int:id>/edit', methods=['GET', 'POST'])
+def room_edit(id):
+    session['ids'] = []
+    room = Room.query.get(id)
+    form = RoomForm(name=room.name, 
+            incorrect=room.incorrect,
+            approuved=room.approuved)
+    if form.validate_on_submit():
+        room_name = form.name.data
+        if room_name != room.name:
+            r = Room.query.filter_by(name=room_name).first()
+            if r:
+                flash(f'''Room {r.name} exists already in the database. \n
+                    You have to merge "{room.name}" with "{r.name}".\n 
+                    Hit "Show similars" to enable merge.''')
+                return redirect(url_for('repair.room_edit', id=room.id))
+        room.name = room_name
+        room.approuved = form.approuved.data
+        room.incorrect = form.incorrect.data
+        db.session.add(room)
+        db.session.commit()
+        return redirect(url_for('repair.room_details', id=room.id))
+            
+    return render_template('repair/room_edit.html',form=form, room=room)
+
+@bp.route('/roomss/merge/', methods=['GET', 'POST'])
+def rooms_merge():
+    id_list = session.get('ids')
+    rooms = Room.query.filter(Room.id.in_(id_list)).all()
+    if request.method == 'POST':
+        to_exclude = request.form.getlist('exclude')
+        if to_exclude:
+            for item in to_exclude:
+                session['ids'].remove(item)
+                session.modified = True
+                if len(session['ids']) < 2:
+                    flash('You need at least 2 items to merge.')
+                    return redirect(url_for('repair.rooms_list'))
+            return redirect(url_for('repair.rooms_merge'))
+        main = Room.query.get(request.form.get('room'))
+        for room in rooms:
+            if room is not main:
+                main.shelves.extend(room.shelves)
+                db.session.add(main)
+                db.session.delete(room)
+        db.session.commit()
+        session['ids'] = []
+        return redirect(url_for('repair.room_details', id=main.id))
+        
+    return render_template('repair/rooms_to_merge.html', rooms=rooms)

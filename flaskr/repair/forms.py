@@ -4,7 +4,7 @@ from wtforms import BooleanField, FieldList, FormField, HiddenField, IntegerFiel
 from wtforms.widgets import HiddenInput 
 from wtforms.validators import DataRequired, AnyOf, Optional
 
-from flaskr.models import Publisher
+from flaskr.models import Publisher, Room
 
 class SearchForm(FlaskForm):
     name = StringField('Name')
@@ -46,9 +46,20 @@ class CollectionForm(FlaskForm):
     submit = SubmitField('Sumbit')
 
 
-class LocationForm(FlaskForm):
-    room = StringField('Name')
-    shelf = StringField('Shelf')
+class RoomForm(FlaskForm):
+    name = StringField('Name')
+    incorrect = BooleanField('Incorrect')
+    approuved = BooleanField('Approuved')
+    submit = SubmitField('Sumbit')
+
+
+def all_rooms():
+    return Room.query.all()
+
+
+class ShelfForm(FlaskForm):
+    name = StringField('Name')
+    room = QuerySelectField(query_factory=all_rooms, allow_blank=False)
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
@@ -88,12 +99,14 @@ class BookForm(FlaskForm):
     approuved = BooleanField('Approuved')
     submit = SubmitField('Sumbit')
 
+
 class PersonForm(FlaskForm):
     name = StringField('Name')
     name_id = HiddenField(validators=[Optional(strip_whitespace=True)])
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
     submit = SubmitField('Submit')
+
 
 class Person2Form(FlaskForm):
     name = StringField('Name')
@@ -102,7 +115,6 @@ class Person2Form(FlaskForm):
     role = HiddenField(validators=[AnyOf(values=['A', 'T', 'R', 'I'])])
     incorrect = BooleanField('Incorrect')
     approuved = BooleanField('Approuved')
-    submit = SubmitField('Submit')
 
     class Meta:
         csrf = False

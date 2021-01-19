@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+    {% block scripts %}
+        {{ super() }}
+        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
+     <script type="text/javascript" src="{{ url_for('static', filename='toggle_inc.js') }}"></script>
+ {% endblock %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <td>{{ room.name }}</td>
+            <td><a href="{{ url_for('repair.room_edit', id=room.id)}}">Edit</a></td>
+        </tr>
+        <tr>
+            <th>N of shelfs:</th>
+            <td>{{ room.shelves.count() }}</td>
+            <td>{% if room.shelves.count() %}
+    <a href="{{url_for('repair.shelves_list',val=room.id)}}"target="_blank">See shelves</a>
+{% endif %}</td>
+        </tr>
+        <tr>
+            <th>N of copies:</th>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <th>Incorrect</th>
+                <td></td>
+                <td style="color: red;"> 
+                    {% if room.incorrect %}
+                        {{ room.incorrect }}
+                    {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{
+                        url_for('es_api.toggle_incorrect', id_=room.id,
+                        m='room') }}">Change</a></button>
+                    {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if room.approuved %}
+                    Approuved
+                {% else %}
+                    Not approuved
+            {% endif %}</td>
+            <td> <a href="" >Change</a> </td>
+        </tr>
+    </table>
+
+    <p><a href="{{ url_for('repair.rooms_list', name=room.name) }}" target="_blank">Show similars</a></p>
+    <p><a href="{{ url_for('repair.rooms_list') }}">Back to list all</a></p>
+{% endblock %}    

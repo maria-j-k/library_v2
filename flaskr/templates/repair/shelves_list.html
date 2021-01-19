@@ -55,8 +55,8 @@
                 </div>
             </td>
             <td><a href="{{ url_for('repair.shelves_list', name=shelf.name) }}">X</a></td>
-            <td>{{ shelf.name }}</td>
-            <td>{{ shelf.room.name}}</td>
+            <td><a href="{{ url_for('repair.shelf_details', id=shelf.id) }}">{{ shelf.name }}</a></td>
+            <td><a href="{{ url_for('repair.room_details', id=shelf.room_id) }}">{{ shelf.room.name }}</a></td>
             {#}
             <td><a href="{{ url_for('repair.shelf_details', id=shelf.id) }}">{{ shelf.name }}</a></td>
             <td><a href="{{ url_for('repair.room_details', id=shelf.room_id) }}">{{ shelf.room.name }}</a></td>

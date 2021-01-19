@@ -56,10 +56,7 @@
                 </div>
             </td>
             <td><a href="{{ url_for('repair.rooms_list', name=room.name) }}">X</a></td>
-            {#}
             <td><a href="{{ url_for('repair.room_details', id=room.id) }}">{{ room.name }}</a></td>
-            {#}
-            <td>{{ room.name}}</td>
             <td>
                 {% if room.shelves.count() %}
                     <a href="{{url_for('repair.shelves_list',val=room.id)}}"target="_blank">{{ room.shelves.count()}}</a>
