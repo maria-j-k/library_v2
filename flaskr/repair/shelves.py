@@ -18,8 +18,14 @@ def shelves_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
-        shelves = Shelf.fuzzy_search('name', name)
-        s = Shelf.query.filter(Shelf.id.in_([item['id'] for item in shelves]))
+        shelves, total = Shelf.fuzzy_search(name, page, 20)
+        print(total)
+        next_url = url_for('repair.shelves_list', name=name, page=page + 1) \
+            if total > page * 20 else None
+        prev_url = url_for('repair.shelves_list', name=name, page=page - 1) \
+            if page > 1 else None
+        return render_template('repair/shelves_list.html', page=page,
+                shelves=shelves, form=form, next_url=next_url, prev_url=prev_url)
     elif val:
         s = Shelf.query.filter_by(room_id=val)
     else:

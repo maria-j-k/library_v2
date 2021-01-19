@@ -93,8 +93,23 @@
     </tbody>
 </table>
 <button type="submit" class="btn btn-info">Merge</button>
-</form>
+    </form>
+    <br>    
 {% if b %}
-{{ render_pagination(b) }}
+    {{ render_pagination(b) }}
+{% endif %}
+{% if page %}
+        <nav aria-label="...">
+          <ul class="pagination">
+              <li class="page-item {% if not prev_url %}  disabled {% endif %}">
+                  <a class="page-link" href="{{ prev_url }}">Previous</a>
+            </li>
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ page }}</span>
+            </li>
+            <li class="page-item {% if not next_url %}  disabled {% endif %}">
+            <a class="page-link" href="{{ next_url }}">Next</a></li>
+          </ul>
+        </nav>
 {% endif %}
 {% endblock %}    

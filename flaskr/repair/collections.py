@@ -14,10 +14,14 @@ def collections_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
-        collections = Collection.fuzzy_search('name', name)
-        c = Collection.query.filter(Collection.id.in_(
-            [item['id'] for item in collections])
-            ).order_by('name').paginate(page, 20, False)
+        collections, total = Collection.fuzzy_search(name, page, 20)
+        print(total)
+        next_url = url_for('repair.collections_list', name=name, page=page + 1) \
+            if total > page * 20 else None
+        prev_url = url_for('repair.collections_list', name=name, page=page - 1) \
+            if page > 1 else None
+        return render_template('repair/collections_list.html', page=page,
+                collections=collections, form=form, next_url=next_url, prev_url=prev_url)
         
     elif scope == 'incorrect':
         c = Collection.query.filter_by(incorrect=True).order_by(

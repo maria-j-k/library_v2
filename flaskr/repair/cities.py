@@ -15,9 +15,14 @@ def cities_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
-        cities = City.fuzzy_search('name', name)
-        c = City.query.filter(City.id.in_([item['id'] for item in cities])
-                ).order_by('name').paginate(page, 20, False)
+        cities, total = City.fuzzy_search(name, page, 20)
+        print(total)
+        next_url = url_for('repair.cities_list', name=name, page=page + 1) \
+            if total > page * 20 else None
+        prev_url = url_for('repair.cities_list', name=name, page=page - 1) \
+            if page > 1 else None
+        return render_template('repair/cities_list.html', cities=cities, form=form,
+                           page=page, next_url=next_url, prev_url=prev_url)
         
     elif scope == 'incorrect':
         c = City.query.filter_by(incorrect=True).order_by(

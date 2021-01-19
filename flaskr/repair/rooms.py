@@ -15,10 +15,14 @@ def rooms_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
-        rooms = Room.fuzzy_search('name', name)
-        r = Room.query.filter(Room.id.in_(
-            [item['id'] for item in rooms])).paginate(page, 20, False)
-
+        rooms, total = Room.fuzzy_search(name, page, 20)
+        print(total)
+        next_url = url_for('repair.rooms_list', name=name, page=page + 1) \
+            if total > page * 20 else None
+        prev_url = url_for('repair.rooms_list', name=name, page=page - 1) \
+            if page > 1 else None
+        return render_template('repair/rooms_list.html', page=page,
+                rooms=rooms, form=form, next_url=next_url, prev_url=prev_url)
         
     elif scope == 'incorrect':
         r = Room.query.filter_by(incorrect=True).order_by(

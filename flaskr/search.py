@@ -24,12 +24,10 @@ def create_body(sayt_field):
           },
         "mappings":{
             "properties": {
-                "id": {"type": "integer"},
             }
         }
     }
-    for item in sayt_field:
-        body['mappings']['properties'][item] = field
+    body['mappings']['properties'][sayt_field] = field
     return body
 
 
@@ -46,9 +44,8 @@ def add_to_index(index, model):
         return
     if not current_app.elasticsearch.indices.exists(index=index):
         create_index(index, model)
-    body = {}
-    for key, val in model.to_dict().items():
-        body[key] = val
+    field = model.__sayt__
+    body = {field: getattr(model, field)}
     current_app.elasticsearch.index(index=index, id=model.id, body=body)
 
 
@@ -58,7 +55,7 @@ def remove_from_index(index, model):
     current_app.elasticsearch.delete(index=index, id=model.id)
 
 
-def es_fuzzy_search(index, field, query):
+def es_fuzzy_search(index, field, query, page, per_page):
     if not current_app.elasticsearch:
         return [], 0
     search_res = current_app.elasticsearch.search(
@@ -72,18 +69,13 @@ def es_fuzzy_search(index, field, query):
                     "fuzziness": "auto"
                   }
                 }
-              }
+              },
+              'from': (page - 1) * per_page, 
+              'size': per_page
             })
 
-#    search_res = [(hit['_id'],hit['_source']['name']) for hit in hits]
-#    print(list(hit for hit in search_res['hits']['hits']))
-#    x = list(hit for hit in search_res['hits']['hits']['_source'])
-    search_res = [hit['_source'] for hit in search_res['hits']['hits']]
-    return search_res
-#    return  [{'id': hit['_id']} 
-#            for hit in search_res['hits']['hits']]
-
-
+    ids = [int(hit['_id']) for hit in search_res['hits']['hits']]
+    return ids, search_res['hits']['total']['value']
 
 #def autocomplete(index, query):
 #    if not current_app.elasticsearch:
