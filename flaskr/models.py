@@ -17,9 +17,16 @@ class SearchableMixin(object):
 #        return res
 #
     @classmethod
-    def fuzzy_search(cls, field, expression):
-        res = es_fuzzy_search(cls.__tablename__, field, expression)
-        return res
+    def fuzzy_search(cls, expression, page, per_page):
+        field = cls.__sayt__
+        ids, total = es_fuzzy_search(cls.__tablename__, field, expression, page, per_page)
+        if total == 0:
+            return cls.query.filter_by(id=0), 0
+        when = []
+        for i in range(len(ids)):
+            when.append((ids[i], i))
+        return cls.query.filter(cls.id.in_(ids)).order_by(
+            db.case(when, value=cls.id)), total
     
 
 #    @classmethod
@@ -50,7 +57,6 @@ class SearchableMixin(object):
 
     @classmethod
     def reindex(cls):
-        print('reindex')
         for obj in cls.query:
             add_to_index(cls.__tablename__, obj)
 
@@ -76,9 +82,9 @@ class FlagMixin(object):
 
     @classmethod
     def to_dict(cls, obj):
-        return [{x.__str__().split('.')[1]: getattr(obj, x.__str__().split('.')[1])} 
-                for x in cls.__table__.columns]
-    
+        data = {x.__str__().split('.')[1]: getattr(obj, x.__str__().split('.')[1]) for x in cls.__table__.columns}
+        return data
+
     def toggle_incorrect(obj):
         if obj.incorrect:
             obj.incorrect = False
@@ -110,7 +116,7 @@ class BookRoles(enum.Enum):
 
 
 class Person(SearchableMixin, FlagMixin, db.Model):
-    __searchable__=['name']
+    __sayt__ = 'name'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
     born = db.Column(db.String(64), nullable=True) # wylatuje
@@ -136,10 +142,11 @@ class Person(SearchableMixin, FlagMixin, db.Model):
 
     def introduction(self):
         return Creator.query.filter_by(role = 'I', person=self)
+    
 
 
 class City(SearchableMixin, FlagMixin, db.Model):
-    __searchable__ = ['name']
+    __sayt__ = 'name'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
     books = db.relationship('Book', backref='city', lazy='dynamic') 
@@ -149,11 +156,11 @@ class City(SearchableMixin, FlagMixin, db.Model):
 
     @property
     def is_incorrect(self):
-        return self.incorrect 
+        return self.incorrect
 
 
 class Publisher(SearchableMixin, FlagMixin, db.Model):
-    __searchable__=['name']
+    __sayt__ = 'name'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), index=True)
     series = db.relationship('Serie', backref='publisher', lazy='dynamic')
@@ -162,22 +169,13 @@ class Publisher(SearchableMixin, FlagMixin, db.Model):
     def __str__(self):
         return self.name
 
-    def to_dict(self):
-        data = {
-                'id': self.id,
-                'name': self.name,
-                'series': [s.id for s in self.series],
-                'books': self.books.count()
-                }
-        return data
-    
     @property
     def is_incorrect(self):
         return self.incorrect or any((x.incorrect for x in self.series))
 
 
 class Serie(SearchableMixin, FlagMixin, db.Model):
-    __searchable__=['name', 'publisher_id']
+    __sayt__ = 'name'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     publisher_id = db.Column(db.Integer, db.ForeignKey('publisher.id'))
@@ -185,15 +183,14 @@ class Serie(SearchableMixin, FlagMixin, db.Model):
     
     def __str__(self):
         return self.name
-
-
+    
     @property
     def is_incorrect(self):
         return self.incorrect 
 
 
 class Collection(SearchableMixin, FlagMixin, db.Model):
-    __searchable__=['name']
+    __sayt__ = 'name'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     copies = db.relationship('Copy', backref='collection', lazy='dynamic')
@@ -201,11 +198,9 @@ class Collection(SearchableMixin, FlagMixin, db.Model):
     def __str__(self):
         return self.name
 
-
     @property
     def is_incorrect(self):
         return self.incorrect 
-
 
 #class Location(SearchableMixin, FlagMixin, db.Model):
 #    __searchable__=['room']
@@ -222,7 +217,8 @@ class Collection(SearchableMixin, FlagMixin, db.Model):
 #        return self.incorrect 
 #
 
-class Room(FlagMixin, db.Model):
+class Room(SearchableMixin, FlagMixin, db.Model):
+    __sayt__ = 'name'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))# wymagane
     shelves = db.relationship('Shelf', backref='room', lazy='dynamic')
@@ -235,7 +231,8 @@ class Room(FlagMixin, db.Model):
         return self.incorrect or any(x.incorrect for x in self.shelves)
 
 
-class Shelf(FlagMixin, db.Model):
+class Shelf(SearchableMixin, FlagMixin, db.Model):
+    __sayt__ = 'name'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))# wymagane
     room_id = db.Column(db.Integer, db.ForeignKey('room.id'))
@@ -261,7 +258,7 @@ class FictionChoices(enum.Enum):
 
 
 class Book(SearchableMixin, FlagMixin, db.Model):
-    __searchable__=['title']
+    __sayt__ = 'title'
     id = db.Column(db.Integer, primary_key=True)
     ISBN_REGEX=r'^(97(8|9))?\d{9}(\d|X)$'
     isbn = db.Column(db.String(13), nullable=True)
@@ -360,8 +357,6 @@ class Copy(FlagMixin, db.Model):
     ordering = db.Column(db.String(255), nullable=True)
     remarques = db.Column(db.String(255), nullable=True)
     collection_id = db.Column(db.Integer, db.ForeignKey('collection.id'), nullable=True)
-    #location_id = db.Column(db.Integer, db.ForeignKey('location.id'), nullable=True)
-    # location wyrzucić ze skryptu
     shelf_id = db.Column(db.Integer, db.ForeignKey('shelf.id'), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
     # układ - enum
@@ -369,3 +364,4 @@ class Copy(FlagMixin, db.Model):
     @property
     def is_incorrect(self):
         return any((self.incorrect, self.book.is_incorrect, self.location.incorrect, self.collection.incorrect))
+    

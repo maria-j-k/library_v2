@@ -26,7 +26,7 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.series_list', name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.shelves_list', name="") }}">Search</a></button>
     </div>
     {% for error in form.name.errors %}
         <span style="color: red">{{ error }}</span>   
@@ -83,7 +83,22 @@
 </table>
 <button type="submit" class="btn btn-info">Merge</button>
 </form>
+    <br>    
 {% if s %}
-{{ render_pagination(s) }}
+    {{ render_pagination(s) }}
+{% endif %}
+{% if page %}
+        <nav aria-label="...">
+          <ul class="pagination">
+              <li class="page-item {% if not prev_url %}  disabled {% endif %}">
+                  <a class="page-link" href="{{ prev_url }}">Previous</a>
+            </li>
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ page }}</span>
+            </li>
+            <li class="page-item {% if not next_url %}  disabled {% endif %}">
+            <a class="page-link" href="{{ next_url }}">Next</a></li>
+          </ul>
+        </nav>
 {% endif %}
 {% endblock %}    

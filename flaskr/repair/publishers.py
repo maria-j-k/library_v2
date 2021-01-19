@@ -15,10 +15,14 @@ def publishers_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
-        publishers = Publisher.fuzzy_search('name', name)
-        pubs = Publisher.query.filter(Publisher.id.in_(
-            [item['id'] for item in publishers])).paginate(page, 20, False)
-
+        publishers, total = Publisher.fuzzy_search(name, page, 20)
+        print(total)
+        next_url = url_for('repair.publishers_list', name=name, page=page + 1) \
+            if total > page * 20 else None
+        prev_url = url_for('repair.publishers_list', name=name, page=page - 1) \
+            if page > 1 else None
+        return render_template('repair/publishers_list.html', page=page,
+                publishers=publishers, form=form, next_url=next_url, prev_url=prev_url)
         
     elif scope == 'incorrect':
         pubs = Publisher.query.filter_by(incorrect=True).order_by(

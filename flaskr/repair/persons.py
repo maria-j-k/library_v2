@@ -15,10 +15,14 @@ def persons_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
-        persons = Person.fuzzy_search('name', name)
-        p = Person.query.filter(Person.id.in_([item['id'] for item in persons])
-                ).order_by('name').paginate(page, 20, False)
-        
+        persons, total = Person.fuzzy_search(name, page, 20)
+        print(total)
+        next_url = url_for('repair.persons_list', name=name, page=page + 1) \
+            if total > page * 20 else None
+        prev_url = url_for('repair.persons_list', name=name, page=page - 1) \
+            if page > 1 else None
+        return render_template('repair/persons_list.html', page=page,
+                persons=persons, form=form, next_url=next_url, prev_url=prev_url)
     elif scope == 'incorrect':
         p = Person.query.filter_by(incorrect=True).order_by(
                 'name').paginate(page, 20, False)

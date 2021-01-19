@@ -23,8 +23,14 @@ def books_list():
 
     b = Book.query
     if name:
-        books = Book.fuzzy_search('title', name)
-        b = b.filter(Book.id.in_([item['id'] for item in books]))
+        books, total = Book.fuzzy_search(name, page,20)
+        print(total)
+        next_url = url_for('repair.books_list', name=name, page=page + 1) \
+            if total > page * 20 else None
+        prev_url = url_for('repair.books_list', name=name, page=page - 1) \
+        if page > 1 else None
+        return render_template('repair/books_list.html', books=books, form=form, 
+                page=page,next_url=next_url, prev_url=prev_url)
     elif domain:
         if domain == 'pub':
             b = b.filter_by(publisher_id=val)
