@@ -5,6 +5,7 @@
         {% elif scope == 'incorrect' %}
             <h3><a href="{{ url_for(request.endpoint, filter='all', domain=domain, val=val) }}">Correct / Incorrect</a></h3>
         {% endif %}
-    {% else %}
+    {% elif page %}
         <h3><a href="{{ url_for(request.endpoint) }}">Show all</a></h3>
+        <h3><a href="{{ url_for(request.endpoint, filter='incorrect', name=request.args.get('name')) }}">Incorrect</a></h3>
     {% endif %}

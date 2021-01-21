@@ -25,6 +25,7 @@ let toggleInc = document.querySelectorAll('.toggle-inc')
     toggleInc.forEach(btn => {
         btn.addEventListener('click', e => {
             let thisUrl = btn.querySelector('a').href
+            console.log(thisUrl)
             $.ajax({
                 type: "POST",
                 url: thisUrl,

@@ -15,7 +15,7 @@ def books_list():
     session['ids'] = []
 
     scope = request.args.get('filter', 'all', type=str)
-    name = request.args.get('name', None)
+    name = request.args.get('name', None, type=str)
     val = request.args.get('val', None, type=int)
     domain = request.args.get('domain', None, type=str)
     
@@ -36,6 +36,8 @@ def books_list():
 
     if name:
         books, total = Book.fuzzy_search(name, page,20)
+        if scope == 'incorrect':
+            books = books.filter_by(incorrect=True)
         print(total)
         next_url = url_for('repair.books_list', name=name, page=page + 1) \
             if total > page * 20 else None
@@ -69,8 +71,9 @@ def books_list():
     if scope == 'all':
         b = b.order_by('title').paginate(page, 20, False)
     elif scope == 'incorrect':
+        print('domain')
         b = b.filter_by(incorrect=True).order_by(
-                'title').paginate(page, 20, False)
+            'title').paginate(page, 20, False)
     return render_template('repair/books_list.html', books=b.items, 
             b=b, form=form, scope=scope, domain=domain, val=val, name=name)
 
