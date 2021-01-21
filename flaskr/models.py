@@ -264,13 +264,13 @@ class Book(SearchableMixin, FlagMixin, db.Model):
     isbn = db.Column(db.String(13), nullable=True)
     title = db.Column(db.String(255), nullable=False)
     origin_title = db.Column(db.String(255), nullable=True)
-    first_print = db.Column(db.Boolean(), default=False)
+    first_print = db.Column(db.Boolean(), nullable=True)
     origin_language = db.Column(db.String(32), nullable=True) # enum?
     pub_year = db.Column(db.String(32), nullable=True) 
 #    pub_place = db.Column(db.String(64)) # do osobnego modelu m2m
     first_edition = db.Column(db.String(64), nullable=True) 
-    genre = db.Column(db.String(64), nullable=True) # enum?
     literary_form = db.Column(db.Enum(FormChoices), nullable=True)
+    genre = db.Column(db.String(64), nullable=True) # enum?
 
     #fiction = db.Column(db.Enum(FictionChoices), nullable=True)
     fiction = db.Column(db.Boolean(), nullable=True)

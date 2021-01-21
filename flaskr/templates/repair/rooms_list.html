@@ -7,15 +7,8 @@
      <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
  {% endblock %}
 {% block content %}
-    {% if scope == 'all' %}
-        <h3><a href="{{ url_for('repair.rooms_list', filter='incorrect') }}">Show incorrect</a></h3>
-    {% elif scope == 'incorrect' %}
-        <h3><a href="{{ url_for('repair.rooms_list', filter='all') }}">Show all</a></h3>
-    {% else %}
-        <h3><a href="{{ url_for('repair.rooms_list', filter='incorrect') }}">Show incorrect</a></h3>
-        <h3><a href="{{ url_for('repair.rooms_list', filter='all') }}">Show all</a></h3>
-    {% endif %}
     {{ super() }} 
+     {% include 'repair/list_header' %}
     <form action="" method="post" accept-charset="utf-8">
     {{ form.hidden_tag() }}
     <div class="container row mb-3">

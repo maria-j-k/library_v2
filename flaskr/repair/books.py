@@ -1,3 +1,4 @@
+import math
 from flask import flash, redirect, render_template, request, session, url_for, current_app
 from flask_login import login_required
 
@@ -22,15 +23,27 @@ def books_list():
     page = request.args.get('page', 1, type=int)
 
     b = Book.query
+    if request.method == 'POST':
+        id_list = request.form.getlist('book_id')
+        if len(id_list) > 4:
+            flash("You can't merge more than 4 items at once.")
+            return redirect(url_for('repair.books_list', name=name))
+        elif len(id_list) < 2:
+            flash("You need at least 2 items to merge.")
+            return redirect(url_for('repair.books_list', name=name))
+        session['ids'] = id_list
+        return redirect(url_for('repair.books_merge'))
+
     if name:
         books, total = Book.fuzzy_search(name, page,20)
         print(total)
         next_url = url_for('repair.books_list', name=name, page=page + 1) \
             if total > page * 20 else None
         prev_url = url_for('repair.books_list', name=name, page=page - 1) \
-        if page > 1 else None
+            if page > 1 else None
+        total_pages = math.ceil(total/20)
         return render_template('repair/books_list.html', books=books, form=form, 
-                page=page,next_url=next_url, prev_url=prev_url)
+                page=page,next_url=next_url, prev_url=prev_url, total_pages=total_pages)
     elif domain:
         if domain == 'pub':
             b = b.filter_by(publisher_id=val)
@@ -58,20 +71,9 @@ def books_list():
     elif scope == 'incorrect':
         b = b.filter_by(incorrect=True).order_by(
                 'title').paginate(page, 20, False)
-    if request.method == 'POST':
-        id_list = request.form.getlist('book_id')
-        if len(id_list) > 4:
-            flash("You can't merge more than 4 items at once.")
-            return render_template('repair/books_list.html', 
-            books=b.items, b=b, form=form, scope=scope)
-        elif len(id_list) < 2:
-            flash("You need at least 2 items to merge.")
-            return render_template('repair/books_list.html', 
-            books=b.items, b=b, form=form, scope=scope)
-        session['ids'] = id_list
-        return redirect(url_for('repair.books_merge'))
-    return render_template('repair/books_list.html', 
-            books=b.items, b=b, form=form, scope=scope)
+    return render_template('repair/books_list.html', books=b.items, 
+            b=b, form=form, scope=scope, domain=domain, val=val, name=name)
+
 
 @bp.route('/books/<int:id>', methods=['GET'])
 def book_details(id):

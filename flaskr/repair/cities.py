@@ -15,6 +15,8 @@ def cities_list():
     form = SearchForm()
     page = request.args.get('page', 1, type=int)
     if name:
+        if scope == 'incorrect':
+            cities, total = City.fuzzy_search(name, page, 20)
         cities, total = City.fuzzy_search(name, page, 20)
         print(total)
         next_url = url_for('repair.cities_list', name=name, page=page + 1) \

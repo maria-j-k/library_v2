@@ -6,16 +6,9 @@
         <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
      <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
  {% endblock %}
-{% block content %}
-    {% if scope == 'all' %}
-        <h3><a href="{{ url_for('repair.books_list', filter='incorrect') }}">Show incorrect</a></h3>
-    {% elif scope == 'incorrect' %}
-        <h3><a href="{{ url_for('repair.books_list', filter='all') }}">Show all</a></h3>
-    {% else %}
-        <h3><a href="{{ url_for('repair.books_list', filter='incorrect') }}">Show incorrect</a></h3>
-        <h3><a href="{{ url_for('repair.books_list', filter='all') }}">Show all</a></h3>
-    {% endif %}
+ {% block content %}
     {{ super() }} 
+    {% include 'repair/list_header.html' %}
     <form action="" method="post" accept-charset="utf-8">
     {{ form.hidden_tag() }}
     <div class="container row mb-3">
@@ -26,7 +19,7 @@
         {{ form.name(class_="form-control search-input") }}
     </div>
     <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for('repair.books_list', name="") }}">Search</a></button>
+        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for(request.endpoint, name="") }}">Search</a></button>
         
     </div>
     {% for error in form.name.errors %}

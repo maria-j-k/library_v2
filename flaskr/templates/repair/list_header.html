@@ -1,0 +1,10 @@
+
+    {% if not page %}
+        {% if scope == 'all' %}
+            <h3><a href="{{ url_for(request.endpoint, filter='incorrect', domain=domain, val=val) }}">Show incorrect</a></h3>
+        {% elif scope == 'incorrect' %}
+            <h3><a href="{{ url_for(request.endpoint, filter='all', domain=domain, val=val) }}">Correct / Incorrect</a></h3>
+        {% endif %}
+    {% else %}
+        <h3><a href="{{ url_for(request.endpoint) }}">Show all</a></h3>
+    {% endif %}
