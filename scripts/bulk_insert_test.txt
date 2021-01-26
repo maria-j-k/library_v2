@@ -182,4 +182,26 @@ Series created: 251
 Roles created: 3788
 Roles got from database: 270
 End of transcript
+*3Thursday, 21/01/2021, 19:50:25
+Rows in total: 8695
+Publishers got from database: 7473
+Cities got: 8470
+Series got from database: 1489
+Rooms created: 27
+Shelves created: 106
+Persons got from database: 7475
+Books got from database: 496
+Collections got from database: 8565
+Copies created: 8695
+Publishers created: 1222
+Cities created: 225
+Books created: 8199
+Collections created: 23
+Persons created: 5655
+Roles created: 3808
+Rooms got form database: 8668
+Shelves got from database: 8589
+Series created: 254
+Roles got from database: 279
+End of transcript
 *3
