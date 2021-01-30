@@ -67,10 +67,12 @@ with open(books_path) as csv_file:
         book = utils.complete_book(book=book, **book_data)
         if collection:
             coll_obj, created = utils.create_collection(coll=collection)
+        else:
+            coll_obj = None
         copy = utils.create_copy(book=book,  shelf=shelf, collection=coll_obj, **copy_data)
         db.session.add(copy)
         db.session.commit()
-        row_count += 1
+#        row_count += 1
 #        if row_count == 20:
 #            break
 

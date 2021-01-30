@@ -133,7 +133,7 @@ def create_shelf(room, shelf):
     return obj, created
 
 def create_copy(book, collection, shelf, **copy_data):
-    obj = Copy(book_id=book.id,  collection_id=collection.id, shelf=shelf, **copy_data)
+    obj = Copy(book_id=book.id,  collection=collection, shelf=shelf, **copy_data)
     copy_created()
     return obj
 

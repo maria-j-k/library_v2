@@ -204,4 +204,96 @@ Shelves got from database: 8589
 Series created: 254
 Roles got from database: 279
 End of transcript
+*3Saturday, 30/01/2021, 16:42:43
+Rows in total: 20
+Publishers got from database: 6
+Cities got: 13
+Series got from database: 1
+Rooms got form database: 10
+Shelves got from database: 10
+Persons got from database: 69
+Books got from database: 1
+Roles got from database: 3
+Copies created: 20
+Publishers created: 14
+Cities created: 7
+Rooms created: 10
+Shelves created: 10
+Books created: 19
+Roles created: 58
+Collections created: 3
+Persons created: 12
+Collections got from database: 2
+Series created: 1
+End of transcript
+*3Saturday, 30/01/2021, 16:48:10
+Rows in total: 20
+Publishers got from database: 20
+Cities got: 20
+Series got from database: 2
+Rooms got form database: 20
+Shelves got from database: 20
+Persons got from database: 81
+Books got from database: 20
+Roles got from database: 61
+Copies created: 20
+Collections got from database: 5
+End of transcript
+*3Saturday, 30/01/2021, 16:50:09
+Rows in total: 20
+Publishers got from database: 20
+Cities got: 20
+Series got from database: 2
+Rooms got form database: 20
+Shelves got from database: 20
+Persons got from database: 81
+Books got from database: 20
+Roles got from database: 61
+Copies created: 20
+Collections got from database: 5
+End of transcript
+*3Saturday, 30/01/2021, 19:05:47
+Rows in total: 8695
+Publishers created: 1223
+Cities created: 226
+Series created: 255
+Rooms created: 27
+Shelves created: 106
+Persons created: 5644
+Books created: 8199
+Persons got from database: 29970
+Roles created: 25108
+Copies created: 8695
+Collections created: 19
+Cities got: 8469
+Rooms got form database: 8668
+Shelves got from database: 8589
+Collections got from database: 2217
+Publishers got from database: 7472
+Series got from database: 1488
+Books got from database: 496
+Roles got from database: 1463
+End of transcript
+*3Saturday, 30/01/2021, 20:54:49
+Rows in total: 8695
+Publishers created: 1223
+Cities created: 226
+Series created: 255
+Rooms created: 27
+Shelves created: 106
+Persons created: 5644
+Books created: 8199
+Persons got from database: 29970
+Roles created: 25108
+Copies created: 8695
+Collections created: 19
+Cities got: 8469
+Rooms got form database: 8668
+Shelves got from database: 8589
+Collections got from database: 2217
+Publishers got from database: 7472
+Series got from database: 1488
+Books got from database: 496
+Roles got from database: 1463
+End of transcript
 *3
