@@ -1,179 +1,225 @@
+import difflib
 import re
 from itertools import chain
 
+def single_similar(a, b):
+    '''
+    Returns if the two strings has the similarity ratio of at least 0.8.
+    Accepts: two strings.
+    Returns: boolean
+    '''
+    return difflib.SequenceMatcher(None, a, b).ratio() >= 0.8
 
-def set_location(location):
-    if location in ['słownik', 'słowniki']:
-        return 'Słowniki'
-    else:
-        return location.capitalize().strip()
+def similar_to_list(term, lst):
+    '''
+    Returns if the string matches at least one string of a list.
+    Accepts: string and list of strings.
+    Returns: boolean
+    '''
+    return any(difflib.get_close_matches(term, lst))
 
-def parse_location(row):
-    if row['MIEJSCE'] == "":
-        return None
-    return set_location(row['MIEJSCE'])
+def valid_chars(char):
+    allowed_chars = [' ', '\'', '-']
+    return char.isalpha() or char in allowed_chars
 
+def strip_invalid(term):
+    if term.count('-'):
+        if len(term) == term.count('-'):
+            return ''
+        elif term.count('-') == 1:
+            return ''.join(filter(valid_chars, term)).strip()
+        else:
+            print(term)
+            term = [char for char in term]
+            ind = term.index('-')
+            while ind+1 < len(term):
+                if not term[ind+1].isalpha():
+                    del term[ind+1]
+                elif term[ind+1].isalpha():
+                    try:
+                        ind = term.index('-', ind+1)
+                    except ValueError:
+                        break
+    return ''.join(filter(valid_chars, term)).strip()
 
 def set_person(person):
     """Cleaning person's data
     Accepts: string stripped of white spaces
     Returns: person's name, unified spelling of 'anonim', 'antology', 'collective' or None if author is not specified."""
-    if person in ['Anonim', 'anonim', 'anonimowy']:
-        return "Anonimowy"
-    elif person in [
-                'zbiorowe', 'zbiorowy', 'Zbiorowy', 'zbiorowa', 'zbirowy',
-                'wiele', 'Praca zbiorowa', 'praca zbiorowa', 'Praca Zbiorowa'
-        ]:
-        return "Praca zbiorowa"
-    elif person in ['Antologia', 'antologia']:
-        return "Antologia"
-    elif person in ['?', '??', '???', '-------', '—', '']:
-        return None
+    anonym = 'anonim'
+    antology = 'Antologia'
+    collective = ['Zbiorowy', 'wiele', 'Praca zbiorowa']
+    if single_similar(person, anonym):
+        return 'Anonimowy'
+    elif single_similar(person, antology):
+        return 'Antologia'
+    elif similar_to_list(person, collective):
+        return 'Praca zbiorowa'
     else:
-        return person
+        person = strip_invalid(person)
+        if person:
+            return person
+        else:
+            return 'Brak'
 
 def parse_person(row):
+    auth =  row['Autor_ka']
+    trans =  row['Tłumacz_ka']
+    red =  row['Opracowanie, redakcja [Nazwisko Imię]']
+    intro =  row['Wstęp, posłowie']
     authors = [set_person(name.strip())
-            for name in re.split(', |/|;', row['Autor/autorka [Nazwisko Imię]'])
-            if set_person(name.strip())]
-    translation = [set_person(name.strip())
-            for name in re.split(', |/|;', row['Tłumacz_ka'])
-            if set_person(name.strip())]
+            for name in re.split(', |/|;', auth) if set_person(name.strip())]
+    translation = [set_person(name.strip()) 
+            for name in re.split(', |/|;', trans) if set_person(name.strip())]
     redaction = [set_person(name.strip())
-            for name in  re.split(', |/|;', row['Opracowanie, redakcja [Nazwisko Imię]'])
-            if set_person(name.strip())]
+            for name in  re.split(', |/|;', red) if set_person(name.strip())]
     intro = [set_person(name.strip())
-            for name in re.split(', |/|;', row['Wstęp, posłowie'])
-            if set_person(name.strip())]
+            for name in re.split(', |/|;', intro) if set_person(name.strip())]
     return chain(authors, translation, redaction, intro)
 
 
 def parse_author(row):
-    authors = [set_person(name.strip())
-            for name in re.split(', |/|;',row['Autor_ka'])
+    creators = row['Autor_ka']
+    return [set_person(name.strip()) for name in re.split(', |/|;', creators) 
             if set_person(name.strip())]
-    return authors
-
+    
 def parse_translator(row):
-    creators = [set_person(name.strip())
-            for name in re.split(', |/|;', row['Tłumacz_ka'])
+    creators =  row['Tłumacz_ka']
+    return [set_person(name.strip()) for name in re.split(', |/|;', creators)
             if set_person(name.strip())]
-    return creators
+
 
 def parse_redaction(row):
-    creators = [set_person(name.strip())
-            for name in  re.split(', |/|;', row['Opracowanie, redakcja'])
+    creators =  row['Opracowanie, redakcja']
+    return [set_person(name.strip()) for name in re.split(', |/|;', creators)
             if set_person(name.strip())]
-    return creators
 
 def parse_intro(row):
-    """Splits the row on different separators, strips trailing spaces, eliminates empty strings.
-    Accepts: row form csv.reader iterator
-    Returns list of creators"""
-    creators = [set_person(name.strip())
-            for name in re.split(', |/|;', row['Wstęp, posłowie'])
+    creators =  row['Wstęp, posłowie']
+    return [set_person(name.strip()) for name in re.split(', |/|;', creators)
             if set_person(name.strip())]
-    return creators
 
+
+def parse_room(row):
+    term = row['MIEJSCE'] 
+    if term == '':
+        return 'Brak'
+    return term.capitalize().strip()
+
+def parse_shelf(row):
+    term = row['DZIAŁ'] 
+    if term == '':
+        return 'Brak'
+    return term.capitalize().strip()
 
 def set_collection(coll):
     """
     Accepts: value of collection key of a row in csv.dictreader
     Returns: string normalised to unified spelling of collection name
     """
-    if coll in ['Jedlickiego', 'jedlickiego',]:
-        collection = 'Jedlickiego'
-    elif coll in ['WLH', 'wlh',]:
+    jedlickiego = 'J. Jedlickiego'
+    if single_similar(coll.strip(), jedlickiego):
+        collection = jedlickiego
+    elif coll.strip().lower() == 'wlh':
         collection = 'WLH'
-    elif coll in ['J. i Z. Baumana', 'bauman']:
-        collection = 'J. i Z. Baumana'
-    elif coll in ['bibl. IFiS', 'bibl.IFiS', 'Bibl. IFiS', 'Bibl.IFiS']:
-        collection = 'Bibl. IFiS'
-    elif coll in ['Marcel', 'marcel']:
-        collection = 'Marcel'
-    elif coll in ['PS', 'Ps', 'ps']:
+    elif coll.strip().lower() == 'ps':
         collection = 'PS'
     else:
-        collection = coll
-    return collection
+        collection = strip_invalid(coll)
+        if collection:
+            return collection
+        else:
+            return None
 
 def parse_collection(row):
     """
     Accepts row of csv.reader iterator
     Returns: string representing collection name
     """
-    if row['Z tajnych archiwów'] == "":
+    term =  row['Z tajnych archiwów']
+    if term == "":
         return None
-    coll = set_collection(row['Z tajnych archiwów'])
-    return coll
+    collection = set_collection(term)
+    return collection
 
 def parse_publisher(row):
     """
     Accepts row of csv.reader iterator
     Returns: publisher's.
     """
-    if row['Wydawnictwo'] == "":
+    term =row['Wydawnictwo']
+    if term == "":
         return None
-    name = row['Wydawnictwo'].strip()
+    name = term.strip()
     return name
 
 def parse_city(row):
-    if row['Miejsce wydania'] == "":
+    term = row['Miejsce wydania']
+    if term == "":
         return None
-    name = row['Miejsce wydania'].strip().title()
+    name = term.strip().title()
     return name
 
-
 def parse_serie(row):
-    if row['Nazwa serii'] == "":
+    term = row['Nazwa serii']
+    if term == "":
         return None
-    serie = row['Nazwa serii'].strip()
+    serie = term.strip()
     return serie
 
-def set_form(row):
-    if row in ['proza narracyjna', 'proza narracyjna ', 'prozs narracyjna ',]:
+def set_form(term):
+    prose = 'proza narracyjna'
+    poetry = 'poezja'
+    drama = 'dramat'
+    if single_similar(prose, term):
         return 'PR'
-    elif row in ['poezja', 'poezja ',]:
+    elif single_similar(poetry, term):
         return 'PO'
-    elif row == 'dramat':
+    elif single_similar(drama, term):
         return 'DR'
     else:
         return None
 
-def set_fiction(row):
-    if row in ['F', 'F ', ]:
+def set_fiction(term):
+    if single_similar(term.lower(), 'f'):
         return True
-    elif row in ['NF', 'NF ?',]:
+    elif single_similar(term.lower(), 'nf'):
         return False
     else: 
         return None
 
 def parse_book(row):
+    title = row['Tytuł'].strip()
+    pub_year = row['Rok wydania'].strip()
+    origin_language = row['Język oryginału'].strip()
+    first_edition = row['rok pierwszego wydania'].strip()
+    literary_form = row['Rodzaj'].strip()
+    fict = row['F/NF'].strip()
+    precision = row['Uszczegółowienie'].strip()
+    nukat = row['tematy NUKAT '].strip()
+
     book_data = {
-            'title': row['Tytuł'].strip(),
-            'pub_year': row['Rok wydania'].strip(),
-            'origin_language': row['Język oryginału'].strip(),
-            'first_edition': row['rok pierwszego wydania'].strip(),
-            'fiction': set_fiction(row['F/NF']),
-#            'genre': row['Gatunek '].strip(),
-            'literary_form': set_form(row['Rodzaj']),
-#            'subject': row['TEMAT'].strip(),
-            'precision': row['Uszczegółowienie'].strip(),
-            'nukat': row['tematy NUKAT '].strip(),
+            'title': title,
+            'pub_year': pub_year,
+            'origin_language': origin_language,
+            'first_edition': first_edition,
+            'literary_form': set_form(literary_form),
+            'fiction': set_fiction(fict),
+            'precision': precision,
+            'nukat': nukat,
             }
     return book_data
 
-def set_shelf(row):
-    if row.lower().strip() == 'x':
-        return True
-    else:
-        return False
 
 def parse_copy(row):
+    section = row['DZIAŁ'].strip(),
+    ordering = row['układ'].strip(),
+    remarques = row['Uwagi do książki'].strip(),
     copy_data = {
-            'on_shelf': set_shelf(row['czy jest na półce?']),
-            'section': row['DZIAŁ'].strip(),
-            'remarques': row['Uwagi do książki'].strip(),
+            'on_shelf': False,
+            'section': section,
+            'ordering': ordering,
+            'remarques': remarques,
             }
     return copy_data
 

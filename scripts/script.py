@@ -3,9 +3,9 @@ from datetime import datetime
 from time import perf_counter
 
 from flaskr import db
-from scripts import utils
-from scripts.utils import counter
-from scripts import parsers
+from . import utils
+from .utils import counter
+from . import parsers
 
 books_path = '/home/maria/Downloads/Katalog_biblioteczny_ksiazki_WLH.csv'
 periodics_path = '/home/maria/Downloads/Katalog_biblioteczny_czasopisma_WLH.csv'
@@ -35,12 +35,15 @@ with open(books_path) as csv_file:
         city = parsers.parse_city(row)
         serie = parsers.parse_serie(row) or None
         book_data = parsers.parse_book(row)
-        location = parsers.parse_location(row)
+        room = parsers.parse_room(row)
+        shelf = parsers.parse_shelf(row)
         copy_data = parsers.parse_copy(row)
 
         publisher, _ = utils.create_pub(publisher)
         pub_place, _ = utils.create_city(city)
         serie, _ = utils.create_serie(serie, publisher)
+        room, _ = utils.create_room(room)
+        shelf, _ = utils.create_shelf(room, shelf)
         authors_list = []
         if authors:
             for author in authors:
@@ -64,12 +67,12 @@ with open(books_path) as csv_file:
         book = utils.complete_book(book=book, **book_data)
         if collection:
             coll_obj, created = utils.create_collection(coll=collection)
-        if location:
-            loc_obj, created = utils.create_location(location=location)
-        copy = utils.create_copy(book=book, location=loc_obj, collection=coll_obj, **copy_data)
+        else:
+            coll_obj = None
+        copy = utils.create_copy(book=book,  shelf=shelf, collection=coll_obj, **copy_data)
         db.session.add(copy)
         db.session.commit()
-        row_count += 1
+#        row_count += 1
 #        if row_count == 20:
 #            break
 
