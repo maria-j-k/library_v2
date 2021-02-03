@@ -10,27 +10,32 @@ from .forms import PublisherForm, SearchForm
 @bp.route('/publishers', methods=['GET', 'POST'])
 def publishers_list():
     session['ids'] = []
+    
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
-    form = SearchForm()
     page = request.args.get('page', 1, type=int)
-    if name:
-        publishers, total = Publisher.fuzzy_search(name, page, 20)
-        print(total)
-        next_url = url_for('repair.publishers_list', name=name, page=page + 1) \
-            if total > page * 20 else None
-        prev_url = url_for('repair.publishers_list', name=name, page=page - 1) \
-            if page > 1 else None
-        return render_template('repair/publishers_list.html', page=page,
-                publishers=publishers, form=form, next_url=next_url, prev_url=prev_url)
-        
-    elif scope == 'incorrect':
-        pubs = Publisher.query.filter_by(incorrect=True).order_by(
-                    'name').paginate(page, 20, False)
-    elif scope == 'all':
-        pubs = Publisher.query.order_by('name').paginate(
-                        page, 20, False)
-    if request.method == 'POST':
+    
+    form = SearchForm()
+    if request.method == 'GET':
+        if name:
+            publishers, total = Publisher.fuzzy_search(name, page, 20)
+            if scope == 'incorrect':
+                publishers = publishers.filter_by(incorrect=True)
+            next_url = url_for('repair.publishers_list', name=name, page=page + 1) \
+                if total > page * 20 else None
+            prev_url = url_for('repair.publishers_list', name=name, page=page - 1) \
+                if page > 1 else None
+            return render_template('repair/publishers_list.html', page=page,
+                    publishers=publishers, form=form, next_url=next_url, prev_url=prev_url)
+            
+        elif scope == 'incorrect':
+            pubs = Publisher.query.filter_by(incorrect=True).order_by(
+                        'name').paginate(page, 20, False)
+        elif scope == 'all':
+            pubs = Publisher.query.order_by('name').paginate(
+                            page, 20, False)
+    
+    elif request.method == 'POST':
         id_list = request.form.getlist('publisher_id')
         if len(id_list) > 4:
             flash("You can't merge more than 4 items at once.")

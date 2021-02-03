@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pagination %}
+    {% block scripts %}
+        {{ super() }}
+     <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
+ {% endblock %}
+ {% block content %}
+    {{ super() }} 
+    {% include 'repair/list_header.html' %}
+    <form action="" method="post" accept-charset="utf-8">
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Merge</th>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Serie</th>
+            <th>Publication place</th>
+            <th>Publication date</th>
+            <th>Collection</th>
+            <th>Room</th>
+            <th>Shelf</th>
+            <th>Incorrect</th>
+            <th>Approuved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for copy in copies %}
+        <tr>
+            <td>{{ copy.id }}</td>
+            <td>
+                <div class="form-check">
+                    <input class="form-check-input" name="copy_id" type="checkbox" value="{{ copy.id }}" id="flexCheckDefault">
+                </div>
+            </td>
+            <td>{{ copy.book.isbn }}</td>
+            <td><a href="{{ url_for('repair.book_details', id=copy.book.id) }}">{{ copy.book.title }}</a></td>
+            <td>
+           {% for author in copy.book.authors().all() %}
+               <a href="{{ url_for('repair.person_details', id=author.person.id) }}" target="_blank">{{ author.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td> {% if copy.book.publisher_id %}
+                    <a href="{{ url_for('repair.publisher_details', id=copy.book.publisher.id) }}" target="_blank">{{ copy.book.publisher.name}}</a>
+            {% endif %}</td>
+            <td> {% if copy.book.serie_id %}
+                    <a href="{{ url_for('repair.serie_details', id=copy.book.serie.id) }}" target="_blank">{{ copy.book.serie.name}}</a>
+            {% endif %}</td>
+            <td> {% if copy.book.city_id %}
+                    <a href="{{ url_for('repair.city_details', id=copy.book.city.id) }}" target="_blank">{{ copy.book.city.name}}</a>
+            {% endif %}</td>
+            <td>{{ copy.book.pub_year }}</td>
+            <td>{{ copy.collection.name }}</td>
+            <td>{{ copy.shelf.room.name }}</td>
+            <td>{{ copy.shelf.name }}</td> 
+            <td style="color: red;">
+            {% if copy.incorrect %}
+                {{ copy.incorrect }}
+            {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=copy.id, m='copy') }}">X</a></button>
+            {% endif %}
+            </td>
+            <td>{{ copy.approuved }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<button type="submit" class="btn btn-info">Merge</button>
+    </form>
+    <br>    
+{% if c %}
+    {{ render_pagination(c) }}
+{% endif %}
+{% endblock %}    

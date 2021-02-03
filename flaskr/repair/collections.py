@@ -9,26 +9,32 @@ from .forms import CollectionForm, SearchForm
 @bp.route('/collections', methods=['GET', 'POST'])
 def collections_list():
     session['ids'] = []
+
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
-    form = SearchForm()
     page = request.args.get('page', 1, type=int)
-    if name:
-        collections, total = Collection.fuzzy_search(name, page, 20)
-        print(total)
-        next_url = url_for('repair.collections_list', name=name, page=page + 1) \
-            if total > page * 20 else None
-        prev_url = url_for('repair.collections_list', name=name, page=page - 1) \
-            if page > 1 else None
-        return render_template('repair/collections_list.html', page=page,
-                collections=collections, form=form, next_url=next_url, prev_url=prev_url)
-        
-    elif scope == 'incorrect':
-        c = Collection.query.filter_by(incorrect=True).order_by(
-                'name').paginate(page, 20, False)
-    elif scope == 'all':
-        c = Collection.query.order_by('name').paginate(page, 20, False)
-    if request.method == 'POST':
+    
+    form = SearchForm()
+    
+    if request.method == 'GET':
+        if name:
+            collections, total = Collection.fuzzy_search(name, page, 20)
+            if scope == 'incorrect':
+                collections = collections.filter_by(incorrect=True)
+            next_url = url_for('repair.collections_list', name=name, page=page + 1) \
+                if total > page * 20 else None
+            prev_url = url_for('repair.collections_list', name=name, page=page - 1) \
+                if page > 1 else None
+            return render_template('repair/collections_list.html', collections=collections, 
+                    form=form, page=page, next_url=next_url, prev_url=prev_url)
+            
+        elif scope == 'incorrect':
+            c = Collection.query.filter_by(incorrect=True).order_by(
+                    'name').paginate(page, 20, False)
+        elif scope == 'all':
+            c = Collection.query.order_by('name').paginate(page, 20, False)
+    
+    elif request.method == 'POST':
         id_list = request.form.getlist('collection_id')
         if len(id_list) > 4:
             flash("You can't merge more than 4 items at once.")

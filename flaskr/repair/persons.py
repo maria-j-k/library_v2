@@ -10,25 +10,30 @@ from .forms import SearchForm, PersonForm
 @bp.route('/persons', methods=['GET', 'POST'])
 def persons_list():
     session['ids'] = []
+
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
-    form = SearchForm()
     page = request.args.get('page', 1, type=int)
-    if name:
-        persons, total = Person.fuzzy_search(name, page, 20)
-        print(total)
-        next_url = url_for('repair.persons_list', name=name, page=page + 1) \
-            if total > page * 20 else None
-        prev_url = url_for('repair.persons_list', name=name, page=page - 1) \
-            if page > 1 else None
-        return render_template('repair/persons_list.html', page=page,
-                persons=persons, form=form, next_url=next_url, prev_url=prev_url)
-    elif scope == 'incorrect':
-        p = Person.query.filter_by(incorrect=True).order_by(
-                'name').paginate(page, 20, False)
-    elif scope == 'all':
-        p = Person.query.order_by('name').paginate(page, 20, False)
-    if request.method == 'POST':
+    
+    form = SearchForm()
+    if request.method == 'GET':
+        if name:
+            persons, total = Person.fuzzy_search(name, page, 20)
+            if scope == 'incorrect':
+                persons = persons.filter_by(incorrect=True)
+            next_url = url_for('repair.persons_list', name=name, page=page + 1) \
+                if total > page * 20 else None
+            prev_url = url_for('repair.persons_list', name=name, page=page - 1) \
+                if page > 1 else None
+            return render_template('repair/persons_list.html', page=page,
+                    persons=persons, form=form, next_url=next_url, prev_url=prev_url)
+        elif scope == 'incorrect':
+            p = Person.query.filter_by(incorrect=True).order_by(
+                    'name').paginate(page, 20, False)
+        elif scope == 'all':
+            p = Person.query.order_by('name').paginate(page, 20, False)
+    
+    elif request.method == 'POST':
         id_list = request.form.getlist('person_id')
         if len(id_list) > 4:
             flash("You can't merge more than 4 items at once.")

@@ -29,7 +29,6 @@ def strip_invalid(term):
         elif term.count('-') == 1:
             return ''.join(filter(valid_chars, term)).strip()
         else:
-            print(term)
             term = [char for char in term]
             ind = term.index('-')
             while ind+1 < len(term):
@@ -55,12 +54,8 @@ def set_person(person):
         return 'Antologia'
     elif similar_to_list(person, collective):
         return 'Praca zbiorowa'
-    else:
-        person = strip_invalid(person)
-        if person:
-            return person
-        else:
-            return 'Brak'
+    person = strip_invalid(person)
+    return person if person else 'Brak'
 
 def parse_person(row):
     auth =  row['Autor_ka']
@@ -102,34 +97,23 @@ def parse_intro(row):
 
 def parse_room(row):
     term = row['MIEJSCE'] 
-    if term == '':
-        return 'Brak'
-    return term.capitalize().strip()
+    return term.capitalize().strip() if term else 'Brak'
 
 def parse_shelf(row):
     term = row['DZIAŁ'] 
-    if term == '':
-        return 'Brak'
-    return term.capitalize().strip()
+    return term.capitalize().strip() if term else 'Brak'
 
 def set_collection(coll):
-    """
-    Accepts: value of collection key of a row in csv.dictreader
-    Returns: string normalised to unified spelling of collection name
-    """
     jedlickiego = 'J. Jedlickiego'
     if single_similar(coll.strip(), jedlickiego):
         collection = jedlickiego
     elif coll.strip().lower() == 'wlh':
-        collection = 'WLH'
+        collection = coll.strip().capitalize()
     elif coll.strip().lower() == 'ps':
-        collection = 'PS'
+        collection =  coll.strip().capitalize()
     else:
         collection = strip_invalid(coll)
-        if collection:
-            return collection
-        else:
-            return None
+    return collection if collection else 'Brak'
 
 def parse_collection(row):
     """
@@ -137,10 +121,8 @@ def parse_collection(row):
     Returns: string representing collection name
     """
     term =  row['Z tajnych archiwów']
-    if term == "":
-        return None
-    collection = set_collection(term)
-    return collection
+    return set_collection(term) 
+    
 
 def parse_publisher(row):
     """
@@ -148,24 +130,16 @@ def parse_publisher(row):
     Returns: publisher's.
     """
     term =row['Wydawnictwo']
-    if term == "":
-        return None
-    name = term.strip()
-    return name
+    return term.strip() if term else 'Brak'
+
 
 def parse_city(row):
     term = row['Miejsce wydania']
-    if term == "":
-        return None
-    name = term.strip().title()
-    return name
+    return term.strip().title() if term else 'Brak'
 
 def parse_serie(row):
     term = row['Nazwa serii']
-    if term == "":
-        return None
-    serie = term.strip()
-    return serie
+    return term.strip() if term else 'Brak'
 
 def set_form(term):
     prose = 'proza narracyjna'
@@ -187,9 +161,9 @@ def set_fiction(term):
         return False
     else: 
         return None
-
+    
 def parse_book(row):
-    title = row['Tytuł'].strip()
+    title = row['Tytuł'].strip() or 'Brak'
     pub_year = row['Rok wydania'].strip()
     origin_language = row['Język oryginału'].strip()
     first_edition = row['rok pierwszego wydania'].strip()

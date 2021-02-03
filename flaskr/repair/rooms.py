@@ -10,27 +10,32 @@ from .forms import SearchForm, RoomForm
 @bp.route('/rooms', methods=['GET', 'POST'])
 def rooms_list():
     session['ids'] = []
+    
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
-    form = SearchForm()
     page = request.args.get('page', 1, type=int)
-    if name:
-        rooms, total = Room.fuzzy_search(name, page, 20)
-        print(total)
-        next_url = url_for('repair.rooms_list', name=name, page=page + 1) \
-            if total > page * 20 else None
-        prev_url = url_for('repair.rooms_list', name=name, page=page - 1) \
-            if page > 1 else None
-        return render_template('repair/rooms_list.html', page=page,
-                rooms=rooms, form=form, next_url=next_url, prev_url=prev_url)
-        
-    elif scope == 'incorrect':
-        r = Room.query.filter_by(incorrect=True).order_by(
-                    'name').paginate(page, 20, False)
-    elif scope == 'all':
-        r = Room.query.order_by('name').paginate(
-                        page, 20, False)
-    if request.method == 'POST':
+    
+    form = SearchForm()
+    
+    if request.method == 'GET':
+        if name:
+            rooms, total = Room.fuzzy_search(name, page, 20)
+            if scope == 'incorrect':
+                rooms = rooms.filter_by(incorrect=True)
+            next_url = url_for('repair.rooms_list', name=name, page=page + 1) \
+                if total > page * 20 else None
+            prev_url = url_for('repair.rooms_list', name=name, page=page - 1) \
+                if page > 1 else None
+            return render_template('repair/rooms_list.html', page=page,
+                    rooms=rooms, form=form, next_url=next_url, prev_url=prev_url)
+            
+        elif scope == 'incorrect':
+            r = Room.query.filter_by(incorrect=True).order_by(
+                        'name').paginate(page, 20, False)
+        elif scope == 'all':
+            r = Room.query.order_by('name').paginate(
+                            page, 20, False)
+    elif request.method == 'POST':
         id_list = request.form.getlist('room_id')
         if len(id_list) > 4:
             flash("You can't merge more than 4 items at once.")

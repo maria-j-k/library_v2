@@ -11,33 +11,37 @@ from .publishers import publisher_details
 @bp.route('/series', methods=['GET', 'POST'])
 def series_list():
     session['ids'] = []
+
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
     val = request.args.get('val', None, type=int)
+    page = request.args.get('page', 1, type=int)
 
     form = SearchForm()
-    page = request.args.get('page', 1, type=int)
-    if name:
-        series, total = Serie.fuzzy_search(name, page, 20)
-        print(total)
-        next_url = url_for('repair.series_list', name=name, page=page + 1) \
-            if total > page * 20 else None
-        prev_url = url_for('repair.series_list', name=name, page=page - 1) \
-            if page > 1 else None
-        return render_template('repair/series_list.html', page=page,
-                series=series, form=form, next_url=next_url, prev_url=prev_url)
-    elif val:
-        s = Serie.query.filter_by(publisher_id=val)
-    else:
-        s = Serie.query
-    
-    if scope == 'all':
-        s = s.order_by('publisher_id', 'name').paginate(
-                        page, 20, False)
-    elif scope == 'incorrect':
-        s = s.filter_by(incorrect=True).order_by('publisher_id',
-                    'name').paginate(page, 20, False)
-    if request.method == 'POST':
+
+    if request.method == 'GET':
+        if name:
+            series, total = Serie.fuzzy_search(name, page, 20)
+            if scope == 'incorrect':
+                series = series.filter_by(incorrect=True)
+            next_url = url_for('repair.series_list', name=name, page=page + 1) \
+                if total > page * 20 else None
+            prev_url = url_for('repair.series_list', name=name, page=page - 1) \
+                if page > 1 else None
+            return render_template('repair/series_list.html', page=page,
+                    series=series, form=form, next_url=next_url, prev_url=prev_url)
+        elif val:
+            s = Serie.query.filter_by(publisher_id=val)
+        else:
+            s = Serie.query
+        
+        if scope == 'all':
+            s = s.order_by('publisher_id', 'name').paginate(
+                            page, 20, False)
+        elif scope == 'incorrect':
+            s = s.filter_by(incorrect=True).order_by('publisher_id',
+                        'name').paginate(page, 20, False)
+    elif request.method == 'POST':
         id_list = request.form.getlist('serie_id')
         if len(id_list) > 4:
             flash("You can't merge more than 4 items at once.")

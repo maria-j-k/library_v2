@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+    {% block scripts %}
+        {{ super() }}
+     <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
+ {% endblock %}
+{% block content %}
+    {{ super() }} 
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <td>{{ copy.book.title }}</td>
+        </tr>
+        <tr>
+            <th>ISBN</th>
+            <td>{{ copy.book.isbn or ""}}</td>
+        </tr>
+        {% if copy.book.authors().count() %}
+        <tr>
+            <th>Authors</th>
+            <td>
+           {% for author in copy.book.authors().all() %}
+               <a href="{{url_for('repair.person_details', id=author.person.id) }}" target="_blank">{{ author.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set a_ids=[] %}
+                {% for author  in copy.book.authors().all()  %}
+                    {% do a_ids.append(author.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=a_ids) }}" target="_blank">Merge</a>
+            </td>
+        </tr>
+        {% endif %}
+        {% if copy.book.translators().count() %}
+        <tr>
+            <th>Translators</th>
+            <td>
+           {% for translator in copy.book.translators().all() %}
+               <a href="{{ url_for('repair.person_details',
+                   id=translator.person.id) }}" target="_blank">{{ translator.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set t_ids=[] %}
+                {% for translator  in copy.book.translators().all()  %}
+                    {% do t_ids.append(translator.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=t_ids) }}" target="_blank">Merge</a>
+            </td>
+        </tr>
+        {% endif %}
+        {% if copy.book.redaction().count() %}
+        <tr>
+            <th>Redaction</th>
+            <td>
+           {% for red in copy.book.redaction().all() %}
+               <a href="{{ url_for('repair.person_details', id=red.person.id) }}" target="_blank">{{ red.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set r_ids=[] %}
+                {% for red  in copy.book.redaction().all()  %}
+                    {% do r_ids.append(red.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=r_ids) }}" target="_blank">Merge</a>
+            </td>
+        </tr>
+        {% endif %}
+        {% if copy.book.introduction().count() %}
+        <tr>
+            <th>Introduction</th>
+            <td>
+           {% for intro in copy.book.introduction().all() %}
+               <a href="{{ url_for('repair.person_details', id=intro.person.id)}}" target="_blank">{{ intro.person.name }}</a>
+           {% endfor %} 
+            </td>
+            <td>
+                {% set i_ids=[] %}
+                {% for intro  in copy.book.introduction().all()  %}
+                    {% do i_ids.append(intro.person.id) %}
+                    
+                {% endfor %}
+                <a href="{{ url_for('repair.persons_merge_helper',
+                    ids=i_ids) }}" target="_blank">Merge</a>
+            </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Publisher</th>
+            <td>
+                {% if copy.book.publisher_id %}
+                    <a href="{{ url_for('repair.publisher_details', id=copy.book.publisher_id) }}" target="_blank">{{ copy.book.publisher.name }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Serie</th>
+            <td>
+                {% if copy.book.serie_id %}
+                    <a href="{{ url_for('repair.serie_details', id=copy.book.serie_id) }}" target="_blank">{{ copy.book.serie.name }}</a>
+                {% endif%}
+            </td>
+        </tr>
+        <tr>
+            <th>Publication place</th>
+            <td>
+                {% if copy.book.city_id %}
+                    <a href="{{ url_for('repair.city_details', id=copy.book.city_id) }}" target="_blank">{{ copy.book.city.name }}</a>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Publication year</th>
+            <td>{{ copy.book.pub_year }}</td>
+        </tr>
+        <tr>
+            <th>Origin language</th>
+            <td>{{ copy.book.origin_language }}</td>
+        </tr>
+        <tr>
+            <th>Literary form</th>
+            <td>{{ copy.book.literary_form.value }}</td>
+        </tr>
+        <tr>
+            <th>Genre</th>
+            <td>{{ copy.book.genre  or "" }}</td>
+        </tr>
+        <tr>
+            <th>Fiction</th>
+            <td>{{ copy.book.fiction or "" }}</td>
+        </tr>
+        <tr>
+            <th>Precision</th>
+            <td>{{ copy.book.precision }}</td>
+        </tr>
+        <tr>
+            <th>NUKAT themes</th>
+            <td>{{ copy.book.nukat }}</td>
+        </tr>
+        <tr>
+            <th>N of all copies:</th>
+            <td>{{ copy.book.copies.count() }}</td>
+        </tr>
+        <tr>
+        <tr>
+            <th>Signature mark</th>
+            <td>{{ copy.signature_mark }}</td>
+        </tr>
+            <th>Incorrect?</th>
+            <td style="color: red;">
+            {% if copy.incorrect %}
+                {{ copy.incorrect }}
+            {% else %}
+                <button class="fake toggle-inc btn btn-sm btn-light"><a href="{{ url_for('es_api.toggle_incorrect', id_=copy.id, m='copy') }}">Change</a></button>
+            {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Approuved</th>
+            <td> {% if copy.approuved %}
+                    Approuved
+                {% else %}
+             <a href="" >Change</a> 
+            {% endif %}</td>
+        </tr>
+    </table>
+
+    <p><a href="">Back to list</a></p>
+    <p><a href="{{ url_for('repair.book_edit', id=copy.book.id)}}">Edit</a></p>
+{% endblock %}    

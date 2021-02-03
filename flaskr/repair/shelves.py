@@ -11,31 +11,35 @@ from .publishers import publisher_details
 @bp.route('/shelves', methods=['GET', 'POST'])
 def shelves_list():
     session['ids'] = []
+    
     scope = request.args.get('filter', 'all', type=str)
     name = request.args.get('name', None)
     val = request.args.get('val', None, type=int)
+    page = request.args.get('page', 1, type=int)
 
     form = SearchForm()
-    page = request.args.get('page', 1, type=int)
-    if name:
-        shelves, total = Shelf.fuzzy_search(name, page, 20)
-        print(total)
-        next_url = url_for('repair.shelves_list', name=name, page=page + 1) \
-            if total > page * 20 else None
-        prev_url = url_for('repair.shelves_list', name=name, page=page - 1) \
-            if page > 1 else None
-        return render_template('repair/shelves_list.html', page=page,
-                shelves=shelves, form=form, next_url=next_url, prev_url=prev_url)
-    elif val:
-        s = Shelf.query.filter_by(room_id=val)
-    else:
-        s = Shelf.query
     
-    if scope == 'all':
-        s = s.order_by('name').paginate(page, 20, False)
-    elif scope == 'incorrect':
-        s = s.filter_by(incorrect=True).order_by('name').paginate(page, 20, False)
-    if request.method == 'POST':
+    if request.method == 'GET':
+        if name:
+            shelves, total = Shelf.fuzzy_search(name, page, 20)
+            if scope == 'incorrect':
+                shelves = shelves.filter_by(incorrect=True)
+            next_url = url_for('repair.shelves_list', name=name, page=page + 1) \
+                if total > page * 20 else None
+            prev_url = url_for('repair.shelves_list', name=name, page=page - 1) \
+                if page > 1 else None
+            return render_template('repair/shelves_list.html', page=page,
+                    shelves=shelves, form=form, next_url=next_url, prev_url=prev_url)
+        elif val:
+            s = Shelf.query.filter_by(room_id=val)
+        else:
+            s = Shelf.query
+        
+        if scope == 'all':
+            s = s.order_by('name').paginate(page, 20, False)
+        elif scope == 'incorrect':
+            s = s.filter_by(incorrect=True).order_by('name').paginate(page, 20, False)
+    elif request.method == 'POST':
         id_list = request.form.getlist('shelf_id')
         if len(id_list) > 4:
             flash("You can't merge more than 4 items at once.")

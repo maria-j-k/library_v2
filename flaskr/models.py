@@ -202,20 +202,6 @@ class Collection(SearchableMixin, FlagMixin, db.Model):
     def is_incorrect(self):
         return self.incorrect 
 
-#class Location(SearchableMixin, FlagMixin, db.Model):
-#    __searchable__=['room']
-#    id = db.Column(db.Integer, primary_key=True)
-#    room = db.Column(db.String(64))# wymagane
-#    shelf = db.Column(db.String(3), nullable=True)# DZIAŁ enum?
-#    copies = db.relationship('Copy', backref='location', lazy='dynamic')
-#    
-#    def __str__(self):
-#        return self.name
-#
-#    @property
-#    def is_incorrect(self):
-#        return self.incorrect 
-#
 
 class Room(SearchableMixin, FlagMixin, db.Model):
     __sayt__ = 'name'
@@ -229,7 +215,12 @@ class Room(SearchableMixin, FlagMixin, db.Model):
     @property
     def is_incorrect(self):
         return self.incorrect or any(x.incorrect for x in self.shelves)
-
+    
+    @property
+    def copies_count(self):
+        return Copy.query.join(Shelf, Shelf.id==Copy.shelf_id).join(
+                Room, Room.id == Shelf.room_id).filter(
+                        Room.id==self.id).count()
 
 class Shelf(SearchableMixin, FlagMixin, db.Model):
     __sayt__ = 'name'

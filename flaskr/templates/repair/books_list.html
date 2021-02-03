@@ -2,30 +2,14 @@
 {% from 'bootstrap/pagination.html' import render_pagination %}
     {% block scripts %}
         {{ super() }}
-        {#}<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
-        <script src="//code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>{#}
      <script type="text/javascript" src="{{ url_for('static', filename='list_fuzzy.js') }}"></script>
  {% endblock %}
  {% block content %}
     {{ super() }} 
     {% include 'repair/list_header.html' %}
     <form action="" method="post" accept-charset="utf-8">
-    {{ form.hidden_tag() }}
-    <div class="container row mb-3">
-    <div class="coll-sm-3">
-        {{ form.name.label }}
-    </div>
-    <div class="col-sm-6">
-        {{ form.name(class_="form-control search-input") }}
-    </div>
-    <div class="coll-sm-2">
-        <button class="btn btn-light fake search"><a id="search-link" href="{{ url_for(request.endpoint, name="") }}">Search</a></button>
-        
-    </div>
-    {% for error in form.name.errors %}
-        <span style="color: red">{{ error }}</span>   
-    {% endfor %}
-  </div>
+        {{ form.hidden_tag() }}
+    {% include 'repair/search_form.html' %}
 <table class="table">
     <thead>
         <tr>
@@ -72,7 +56,9 @@
                     <a href="{{ url_for('repair.city_details', id=book.city.id) }}" target="_blank">{{ book.city.name}}</a>
             {% endif %}</td>
             <td>{{ book.pub_year }}</td>
-            <td>{{ book.copies.count() }}</td>
+            <td> {% if book.copies.count() %}
+                    <a href="{{ url_for('repair.copies_list', val=book.id, domain='book') }}" target="_blank">{{ book.copies.count() }}</a>
+            {% endif %}</td>
             <td style="color: red;">
             {% if book.incorrect %}
                 {{ book.incorrect }}
