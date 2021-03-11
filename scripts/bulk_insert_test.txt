@@ -1,0 +1,65 @@
+Wednesday, 03/02/2021, 19:59:16
+Rows in total: 8695
+Publishers created: 1223
+Cities created: 226
+Series created: 1465
+Rooms created: 27
+Shelves created: 106
+Persons created: 5644
+Books created: 8199
+Persons got from database: 29970
+Roles created: 25108
+Collections created: 23
+Copies created: 8695
+Cities got: 8469
+Collections got from database: 8672
+Rooms got form database: 8668
+Shelves got from database: 8589
+Publishers got from database: 7472
+Series got from database: 7230
+Books got from database: 496
+Roles got from database: 1463
+End of transcript
+*3Thursday, 11/03/2021, 11:50:45
+Rows in total: 20
+Publishers created: 15
+Cities created: 8
+Series created: 2
+Rooms created: 11
+Shelves created: 11
+Persons created: 13
+Books created: 20
+Persons got from database: 68
+Roles created: 61
+Collections created: 6
+Copies created: 20
+Cities got: 12
+Collections got from database: 14
+Rooms got form database: 9
+Shelves got from database: 9
+Publishers got from database: 5
+End of transcript
+
+Thursday, 11/03/2021, 11:59:31
+Rows in total: 8695
+Publishers created: 1182
+Cities created: 226
+Series created: 234
+Rooms created: 27
+Shelves created: 106
+Persons created: 5644
+Books created: 8196
+Persons got from database: 29970
+Roles created: 25101
+Collections created: 25
+Copies created: 8695
+Cities got: 8469
+Collections got from database: 8670
+Rooms got form database: 8668
+Shelves got from database: 8589
+Publishers got from database: 7513
+Series got from database: 1509
+Books got from database: 499
+Roles got from database: 1470
+End of transcript
+

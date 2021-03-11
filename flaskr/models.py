@@ -82,7 +82,8 @@ class FlagMixin(object):
 
     @classmethod
     def to_dict(cls, obj):
-        data = {x.__str__().split('.')[1]: getattr(obj, x.__str__().split('.')[1]) for x in cls.__table__.columns}
+        data = {x.__str__().split('.')[1]: getattr(obj, x.__str__().split('.')[1]) 
+                for x in cls.__table__.columns}
         return data
 
     def toggle_incorrect(obj):
@@ -95,14 +96,14 @@ class FlagMixin(object):
         return obj
 
 def get_class_by_tablename(tablename):
-  """Return class reference mapped to table.
+    """Return class reference mapped to table.
 
-  :param tablename: String with name of table.
-  :return: Class reference or None.
-  """
-  for c in db.Model._decl_class_registry.values():
-    if hasattr(c, '__tablename__') and c.__tablename__ == tablename:
-      return c
+    :param tablename: String with name of table.
+    :return: Class reference or None.
+    """
+    for c in db.Model._decl_class_registry.values():
+        if hasattr(c, '__tablename__') and c.__tablename__ == tablename:
+            return c
 
 
 

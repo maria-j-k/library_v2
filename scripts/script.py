@@ -91,7 +91,8 @@ with open(books_path) as csv_file:
             log_file.write(f'{key}{val}')
             log_file.write('\n')
         log_file.write('End of transcript')
-        log_file.write('\n*3')
+        log_file.write('\n')
+        log_file.write('\n')
 
     for key, val in counter.items():
         print(key, val)

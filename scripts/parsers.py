@@ -97,49 +97,44 @@ def parse_intro(row):
 
 def parse_room(row):
     term = row['MIEJSCE'] 
-    return term.capitalize().strip() if term else 'Brak'
+    term = term.capitalize().strip() 
+    return term if term else 'Brak'
 
 def parse_shelf(row):
     term = row['DZIAŁ'] 
-    return term.capitalize().strip() if term else 'Brak'
+    term = term.capitalize().strip() 
+    return term if term else 'Brak'
 
-def set_collection(coll):
-    jedlickiego = 'J. Jedlickiego'
-    if single_similar(coll.strip(), jedlickiego):
-        collection = jedlickiego
-    elif coll.strip().lower() == 'wlh':
-        collection = coll.strip().capitalize()
-    elif coll.strip().lower() == 'ps':
-        collection =  coll.strip().capitalize()
-    else:
-        collection = strip_invalid(coll)
-    return collection if collection else 'Brak'
 
 def parse_collection(row):
     """
-    Accepts row of csv.reader iterator
+    Accepts row of csv.reader
     Returns: string representing collection name
     """
     term =  row['Z tajnych archiwów']
-    return set_collection(term) 
+    term = term.capitalize().strip() 
+    return term if term else 'Brak'
     
 
 def parse_publisher(row):
     """
-    Accepts row of csv.reader iterator
+    Accepts row of csv.reader
     Returns: publisher's.
     """
     term =row['Wydawnictwo']
-    return term.strip() if term else 'Brak'
+    term = term.strip().capitalize() 
+    return term if term else 'Brak'
 
 
 def parse_city(row):
     term = row['Miejsce wydania']
-    return term.strip().title() if term else 'Brak'
+    term = term.strip().title() 
+    return term if term else 'Brak'
 
 def parse_serie(row):
     term = row['Nazwa serii']
-    return term.strip() if term else 'Brak'
+    term = term.strip().capitalize() 
+    return term if term else None
 
 def set_form(term):
     prose = 'proza narracyjna'
